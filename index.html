@@ -875,7 +875,7 @@ IT.T3=IT.sB+.4+(IT.n3-1)*IT.sI+.9;                                   // tổng t
 const MD={crD:14,crCd:.5,rot:2.4,crR:46,crHr:26,cr:0,contact:12,heal:50,gC:10,gM:.8,gL:4,gW:6,gD:1.5,   // Đòn thường Gunbai: sát thương, hồi giữa 2 lần trúng (mỗi chiếc/mỗi địch), tốc độ xoay, khoảng cách so với mép bóng, bán kính va chạm, số Gunbai, sát thương va chạm thân; Nội tại: lượng máu hồi mỗi lần dùng chiêu
  cd1:11,w1:.5,pop1:.3,hold1:.75,T1:.9,van1:.3,n1:5,d1:12,L1:380,hs1:.27,off1:2.2,sc1:.85,rB:200,dB:60,   // Chiêu 1: hồi, thời gian kết ấn, thời gian phân thân nhảy ra, thời gian chờ trước khi phun, thời gian phun lửa, thời gian phân thân tan, số nhịp đốt, sát thương mỗi nhịp mỗi luồng, tầm lửa, nửa góc luồng lửa (rad), khoảng cách phân thân (x bán kính), tỉ lệ kích thước phân thân, bán kính vụ nổ một lượt ở khu vực lửa hội tụ khi dứt phun, sát thương vụ nổ
  cd2:16,R2:400,t2:1.8,F2:1.6,n2:8,d2a:102,d2t:12,H2:900,dx:0,dy:-1,         // Chiêu 2: hồi, bán kính, thời gian thiên thạch rơi, thời gian cột lửa, số nhịp đốt, sát thương va chạm, sát thương mỗi nhịp, độ cao bắt đầu rơi, hướng rơi
- cd3:20,sB:1.5,SP3:3,sw3:4.4,fl3:.2,hold3:.9,sEnd:.7,R3:600,sS:1.15,d3a:195,d3b:200,sl3:3};   // Chiêu 3: hồi, thời gian dựng (chém bắt đầu sau đó), độ rộng cung quét (rad), thời gian quét, thời gian hất kiếm, thời gian giữ sau nổ, thời gian vỡ tan, bán kính chém / Arc Slash 360°, hệ số phóng to Susanoo, sát thương lúc quét, sát thương Arc Slash, làm chậm
+ cd3:20,sB:1.5,SP3:3,sw3:1.2,fl3:.2,hold3:.9,sEnd:.7,R3:600,sS:1.15,d3a:195,d3b:200,sl3:3,fi3:.3};   // Chiêu 3: hồi, thời gian dựng (chém bắt đầu sau đó), độ rộng cung quét (rad), thời gian quét, thời gian hất kiếm, thời gian giữ sau nổ, thời gian vỡ tan, bán kính chém / Arc Slash 360°, hệ số phóng to Susanoo, sát thương lúc quét, sát thương Arc Slash, làm chậm, thời gian Frame Impact trắng đen khi Arc Slash 360° bung
 {const n=Math.hypot(MD.dx,MD.dy);MD.dx/=n;MD.dy/=n}MD.g3=[];MD.end1=MD.van1;
 /* ---------- Hakari Kinji (Jujutsu Kaisen): Private Pure Love Train · Idle Death Gamble (sát thương gốc, chưa nhân hệ số DM) ---------- */
 const HK={hp:1750,spd:150,contact:14,                                   // Máu, tốc độ, sát thương va chạm thân
@@ -1150,7 +1150,7 @@ madara:{n:'Madara Uchiha',e:'🌋',ac:'#7c3aed',tag:'Madara Uchiha, Ma Thần C�
  skills:[
   {n:'Katon: Gōka Mekkyaku',e:'🔥',cd:MD.cd1,can:b=>!mdBusy(b)&&!!near(b),b:'Phân thân 2 bên|3 luồng lửa|Nổ cả khu khi dứt phun',d:`Đứng yên kết ấn, hai phân thân nhỏ hơn nhảy ra đứng hai bên. Sau ${MD.hold1} giây, cả ba cùng phun ba luồng lửa vào kẻ địch gần nhất, để lại vệt cháy trong ${MD.T1} giây, đốt ${MD.n1} nhịp, mỗi nhịp ${MD.d1} sát thương cho mỗi luồng chạm địch (trúng cả ba luồng nhận tối đa ${MD.d1*3*MD.n1}). Dứt phun, khu vực lửa hội tụ nổ tung hạt lửa và khói bụi, gây ${MD.dB} sát thương trong bán kính ${MD.rB}, rồi các bóng tan biến.`,f:b=>mdC1(b)},
   {n:'Tengai Shinsei',e:'☄️',cd:MD.cd2,can:b=>!!near(b),b:'Thiên thạch khổng lồ|Cột lửa trào lên trời',d:`Thiên thạch giáng xuống chỗ kẻ địch gần nhất, nổ ${MD.d2a} sát thương trong bán kính ${MD.R2} và hất văng địch. Sau đó cột lửa bốc lên trong ${MD.F2} giây, thiêu địch trong vùng ${MD.n2} nhịp, mỗi nhịp ${MD.d2t} sát thương.`,f:b=>mdC2(b)},
-  {n:'Susanoo: Kanzentai',e:'⚔️',cd:MD.cd3,can:b=>!mdBusy(b),b:'Chém cung chậm|Arc Slash 360°|Đứng yên',d:`Đứng yên, sau ${MD.sB} giây Susanoo quét kiếm một cung chậm, gây ${MD.d3a} sát thương cho địch bị lưỡi kiếm lướt qua. Cuối cung, kiếm bung Arc Slash 360° quanh thân: ${MD.d3b} sát thương trong bán kính ${MD.R3}, đẩy lùi và làm chậm ${MD.sl3} giây.`,f:b=>mdC3(b)}],
+  {n:'Susanoo: Kanzentai',e:'⚔️',cd:MD.cd3,can:b=>!mdBusy(b),b:'Chém cung nhanh|Arc Slash 360°|Miễn sát thương',d:`Đứng yên và miễn nhiễm sát thương trong suốt chiêu. Sau ${MD.sB} giây Susanoo quét kiếm một cung nhanh (${MD.sw3} giây), gây ${MD.d3a} sát thương cho địch bị lưỡi kiếm lướt qua. Cuối cung, kiếm bung Arc Slash 360° quanh thân: ${MD.d3b} sát thương trong bán kính ${MD.R3}, đẩy lùi và làm chậm ${MD.sl3} giây.`,f:b=>mdC3(b)}],
  pas:{n:'Eien no Mangekyō',d:`Mỗi lần thi triển chiêu, hồi ${MD.heal} máu (ghi nhận đúng lượng máu thực tế hồi được). Mỗi ${MD.gC} giây, khi nhận sát thương từ chiêu của người chơi khác (trừ đòn thường và Chiêu 3), triệu hồi bản sao vai trò đó cạnh Madara, tụ lực ${MD.gD} giây rồi thi triển lại chiêu đó với ${Math.round(MD.gM*100)}% sát thương gốc rồi tan biến.`}},
 luffy:{n:'Luffy',e:'👒',ac:'#e11d48',tag:'Monkey D. Luffy · Thuyền Trưởng Băng Mũ Rơm · Gomu Gomu no Mi',hp:LF.hp,spd:LF.spd*LF.spdP,dmg:LF.contact,cr:LF.cr,cd:LF.cd,contact:LF.contact,
  basic:`Va chạm với bóng địch gây ${LF.contact} sát thương (mỗi 0.6 giây). Sức mạnh nằm ở các đòn Gomu Gomu và 3 dạng Gear (mỗi dạng kéo dài ${LF.T} giây).`,
@@ -2705,7 +2705,7 @@ function mdDrawMet(f,a){const m=f.st;if(m.done){f.l=0;return}const GA=ctx.global
 /* ---------- Chiêu 3: Susanoo: Kanzentai ---------- */
 function mdC3(b){const s=mdS(b);if(mdBusy(b))return;mdPas(b);mdLock(b,s);const e=near(b);
  s.k3={t:0,tb:MD.sB,a:e?Math.atan2(e.y-b.y,e.x-b.x):(b.fa||0),sg:Math.random()<.5?1:-1,ba:-1.2,hit:{},dn:0,bd:0,sh:0,em:0,T:MD.sB+MD.sw3+MD.fl3+MD.hold3};
- ring(b.x,b.y,b.r+70,'#6366f1',MD.sB);ring(b.x,b.y,b.r+130,'#a78bfa',MD.sB*.8);hs=Math.max(hs,.05);shake=Math.min(.6,shake+.2)}
+ b.inv=Math.max(b.inv||0,s.k3.T+.05);ring(b.x,b.y,b.r+70,'#6366f1',MD.sB);ring(b.x,b.y,b.r+130,'#a78bfa',MD.sB*.8);hs=Math.max(hs,.05);shake=Math.min(.6,shake+.2)}
 function mdSusDone(b){ring(b.x,b.y,b.r+100,'#eef2ff',.5);ring(b.x,b.y,b.r+170,'#6366f1',.6);burst(b.x,b.y,'#a5b4fc',Math.round(20*PQ()));shake=Math.min(.8,shake+.4);hs=Math.max(hs,.06);flashA=Math.max(flashA,.2)}
 function mdK3(b,s,u,dt){u.t+=dt;const e=near(b),ts=u.tb,te=ts+MD.sw3,tf=te+MD.fl3,sg=u.sg;
  if(u.t<ts)u.a=angTo(u.a,e?Math.atan2(e.y-b.y,e.x-b.x):u.a,dt*3);
@@ -2725,7 +2725,7 @@ function mdK3(b,s,u,dt){u.t+=dt;const e=near(b),ts=u.tb,te=ts+MD.sw3,tf=te+MD.fl
  if(!u.bd&&u.t>=tf){u.bd=1;u.ba=a1+sg*.5;mdBurst(b,u)}
  if(!u.sh&&u.t>=u.T){u.sh=1;mdShatter(b);mdUnlock(b,s)}
  if(u.t>=u.T+MD.sEnd){s.k3=null}}
-function mdBurst(b,u){const R=MD.R3,sg=u.sg;shake=1;hs=Math.max(hs,.1);flashA=Math.max(flashA,.35);
+function mdBurst(b,u){const R=MD.R3,sg=u.sg;shake=1;hs=Math.max(hs,.1);flashA=Math.max(flashA,.35);mdFrameImpact(b.x,b.y);
  for(const e of foes(b)){if(Math.hypot(e.x-b.x,e.y-b.y)<R+e.r){hurt(e,MD.d3b,b);e.slow=Math.max(e.slow||0,MD.sl3);let ax=e.x-b.x,ay=e.y-b.y;if(Math.hypot(ax,ay)<1)ax=1;kb(e,ax,ay,420);burst(e.x,e.y,'#a5b4fc',Math.round(10*PQ()));ring(e.x,e.y,e.r+40,'#eef2ff',.4)}}
  arcSlash(b,u.ba,6.2832,R*.96,{pal:'susa',sg,sw:.16,hold:.22,l:.8,wr:.4,al:1});
  arcSlash(b,u.ba+3.1,6.2832,R*.74,{pal:'susa',sg:-sg,sw:.2,hold:.25,l:.8,wr:.36,al:.9});
@@ -3132,6 +3132,35 @@ function acFIDraw(){const F=acFI;if(!F)return;
  else{const p=Math.min(1,(t-FS[4])/Math.max(.01,F.d-FS[4])),al=1-p;ctx.globalAlpha=al*.85;rays('#fff',60,160+p*600,1.2);ctx.globalAlpha=al*.9;band('#fff',70*(1-p)+8,.2);ctx.globalAlpha=al*.55;full('#fff');
   ctx.globalAlpha=al;ctx.strokeStyle='#fff';ctx.lineWidth=26*al+2;ctx.beginPath();ctx.arc(x,y,p*1800,0,7);ctx.stroke();ctx.strokeStyle='#ef4444';ctx.lineWidth=8*al+1;ctx.beginPath();ctx.arc(x,y,p*1500,0,7);ctx.stroke()}
  if(fr>=0&&fr<4){ctx.setTransform(ctx.getTransform());}
+ ctx.restore();
+ if(fr>=0&&fr<4){ctx.save();const bh=(VY1-VY0)*.08;ctx.fillStyle='#000';ctx.fillRect(X0,Y0,WW,bh+300);ctx.fillRect(X0,VY1-bh,WW,bh+300);ctx.restore()}}
+/* ===== FRAME IMPACT TRẮNG ĐEN của Madara (Chiêu 3, lúc Arc Slash 360° bung) =====
+   Khác Acheron (dải chém thẳng theo hướng): toàn hình tròn đối xứng quanh thân Madara, không có vệt chém thẳng.
+   Game đóng băng MD.fi3 giây, cắt cứng qua các khung: trắng lóa -> đảo màu + tia + vệt chém vòng -> nền đen, vòng chém trắng
+   -> nền trắng, vòng Sharingan đen -> nền đen -> tan sóng xung kích. Chỉ dùng đen/trắng. */
+let mdFI=null;
+function mdFrameImpact(x,y,d){d=d||MD.fi3;mdFI={x,y,t:0,d,sd:(Math.random()*1e6)|0};hs=Math.max(hs,d);shake=1}
+function mdFIAdv(dt){if(mdFI){mdFI.t+=dt;if(mdFI.t>=mdFI.d)mdFI=null}}
+function mdFIDraw(){const F=mdFI;if(!F)return;
+ const t=F.t,x=F.x,y=F.y,X0=VX0-300,Y0=VY0-300,WW=VX1-VX0+600,HH=VY1-VY0+600,R=MD.R3,k=F.d/.3,TP=6.2832,L=2600,
+  FS=[.02,.07,.12,.17,.22].map(v=>v*k),
+  fr=t<FS[0]?-1:t<FS[1]?0:t<FS[2]?1:t<FS[3]?2:t<FS[4]?3:4,rs=acRng((F.sd+fr*131+7)|0);
+ ctx.save();ctx.globalAlpha=1;ctx.globalCompositeOperation='source-over';ctx.lineCap='round';ctx.lineJoin='round';
+ const full=c=>{ctx.fillStyle=c;ctx.fillRect(X0,Y0,WW,HH)},
+  inv=()=>{ctx.globalCompositeOperation='difference';ctx.fillStyle='#fff';ctx.fillRect(X0,Y0,WW,HH);ctx.globalCompositeOperation='source-over'},
+  rays=(c,n,r0,wd)=>{ctx.fillStyle=c;for(let i=0;i<n;i++){const an=rs()*TP,ri=r0*(.5+rs()*1.4),wb=wd*(.3+rs()*.9)*14,c1=Math.cos(an),s1=Math.sin(an);ctx.beginPath();ctx.moveTo(x+c1*ri,y+s1*ri);ctx.lineTo(x+c1*L-s1*wb,y+s1*L+c1*wb);ctx.lineTo(x+c1*L+s1*wb,y+s1*L-c1*wb);ctx.closePath();ctx.fill()}},
+  rg=(c,rad,w,dash)=>{ctx.strokeStyle=c;ctx.lineWidth=w;if(dash){ctx.setLineDash([rad*(.5+rs()*1.2),rad*(.08+rs()*.25)]);ctx.lineDashOffset=rs()*rad*6}ctx.beginPath();ctx.arc(x,y,rad,0,TP);ctx.stroke();ctx.setLineDash([])},
+  lp=(c,rad,W,jag)=>{const N=56,a0=rs()*TP,top=[],bot=[];for(let i=0;i<=N;i++){const u=i/N,an=a0+u*TP,h=W*Math.pow(Math.sin(u*Math.PI),.6),j1=1+(rs()-.5)*jag,j2=1+(rs()-.5)*jag,ca=Math.cos(an),sa=Math.sin(an);top.push([x+ca*(rad+h*j1),y+sa*(rad+h*j1)]);bot.push([x+ca*(rad-h*.3*j2),y+sa*(rad-h*.3*j2)])}
+   ctx.beginPath();top.forEach((q,i)=>i?ctx.lineTo(q[0],q[1]):ctx.moveTo(q[0],q[1]));for(let i=N;i>=0;i--)ctx.lineTo(bot[i][0],bot[i][1]);ctx.closePath();ctx.fillStyle=c;ctx.fill()},
+  tomoe=(c,rad)=>{const a0=rs()*TP;ctx.fillStyle=c;ctx.strokeStyle=c;ctx.lineWidth=16;ctx.beginPath();ctx.arc(x,y,rad,0,TP);ctx.stroke();ctx.beginPath();ctx.arc(x,y,rad*.22,0,TP);ctx.fill();
+   for(let i=0;i<3;i++){const an=a0+i*TP/3;ctx.beginPath();ctx.arc(x+Math.cos(an)*rad*.62,y+Math.sin(an)*rad*.62,rad*.17,0,TP);ctx.fill();ctx.lineWidth=rad*.09;ctx.beginPath();ctx.arc(x,y,rad*.62,an+.25,an+1.05);ctx.stroke()}};
+ if(fr>=0&&fr<4)ctx.translate((rs()-.5)*18,(rs()-.5)*18);
+ if(fr===-1)full('#fff');
+ else if(fr===0){inv();rays('#000',90,120,1.6);lp('#000',R*.5,110,.3);rg('#000',R*.3,10,1);rg('#000',R*.62,6,1)}
+ else if(fr===1){full('#000');rays('#fff',110,100,1.5);lp('#fff',R*.46,130,.35);rg('#fff',R*.22,12,1);rg('#fff',R*.4,6,1);rg('#fff',R*.66,8,1);ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(x,y,46,0,TP);ctx.fill()}
+ else if(fr===2){full('#fff');rays('#000',120,90,1.4);lp('#000',R*.6,150,.4);tomoe('#000',R*.36)}
+ else if(fr===3){full('#000');rays('#fff',80,110,1.7);lp('#fff',R*.7,110,.25);rg('#fff',R*.5,10,1);rg('#fff',R*.9,5,1)}
+ else{const p=Math.min(1,(t-FS[4])/Math.max(.01,F.d-FS[4])),al=1-p;ctx.globalAlpha=al*.85;rays('#fff',60,160+p*600,1.2);ctx.globalAlpha=al*.9;lp('#fff',R*(.4+p*.8),70*(1-p)+8,.2);ctx.globalAlpha=al*.55;full('#fff');ctx.globalAlpha=al;rg('#fff',p*1800,26*al+2);rg('#000',p*1500,8*al+1)}
  ctx.restore();
  if(fr>=0&&fr<4){ctx.save();const bh=(VY1-VY0)*.08;ctx.fillStyle='#000';ctx.fillRect(X0,Y0,WW,bh+300);ctx.fillRect(X0,VY1-bh,WW,bh+300);ctx.restore()}}
 function acPetals(x,y,n,v0,v1,c,l0,l1){n=Math.round(n*Math.max(.55,Math.min(1,PQ())));
@@ -4601,7 +4630,7 @@ function start(){
   return `<div class="cp ${S.cls}" id="cp${b.k}" style="--tc:${T.c}"><b class="clk"></b><div class="who" data-k="${b.k}"><span>${R_.e}</span><span>${R_.n}</span><em>${(window.__chaosRun||window.__crownRun||window.__zoneRun||window.__betRun)?'Màu '+T.n:window.__kingRun?(b.king?'👑 Quân Vương':'🛡️ Đồng minh'):window.__hpRun?'Màu '+T.n:window.__coreRun?'Hộ vệ lõi':'Đội '+T.n}</em></div>${window.__bossRun?`<div class="boss-respawn" id="br${b.k}"><span class="br-label">♻️ Lượt hồi sinh <b class="br-count">3/3</b></span><span class="br-orbs"><i></i><i></i><i></i></span></div>`:''}<div class="hbar"><u></u><i></i><span></span></div><div class="sk">${R_.skills.map((s,j)=>`<div class="sw"><button class="sb" data-k="${b.k}" data-i="${j}" aria-label="${s.n}">${skImg(b.role+'_'+(j+1)+'.png',s.e,'skic')}<span class="cdo"></span><span class="cdn"></span><span class="key">${S.keys[j].toUpperCase()}</span></button>${s.st?'<span class="chg">'+s.st+'</span>':''}<small>${s.n}</small></div>`).join('')}</div>${b.role==='flins'?FLHTML:''}</div>`}).join('');
  for(const b of balls){const cp=$('#cp'+b.k);b.el={cp,k:cp.querySelector('.clk'),u:cp.querySelector('.hbar u'),i:cp.querySelector('.hbar i'),n:cp.querySelector('.hbar span'),sb:[...cp.querySelectorAll('.sb')],cn:[...cp.querySelectorAll('.cdn')],co:[...cp.querySelectorAll('.cdo')],resp:cp.querySelector('.boss-respawn'),c:[],cg:[],t:''}}
  document.querySelectorAll('.joy').forEach(x=>x.remove());for(const b of balls)if(b.role==='elsu'||b.role==='whitebeard'||b.role==='archon'){const d=document.createElement('div');d.className='joy';d.id='joy'+b.k;d.hidden=true;d.style.setProperty('--tc',TEAMS[b.team].c);d.innerHTML='<i></i>';$('#game').appendChild(d)}
- shots=[];fx=[];acg=[];acFI=null;delays=[];zones=[];pzs=[];lumis=[];lfx=[];phTeam={};axes=[];doms=[];kps=[];kfx=[];NUMS=[];decals=[];azg=[];itB=[];mdM=[];hkd=[];gwalls=[];gcs=null;flashA=0;time=0;R=R0;speed=1;paused=false;infoPaused=false;running=true;cdown=3;fightT=0;shake=0;burning=false;hs=0;ban=null;
+ shots=[];fx=[];acg=[];acFI=null;mdFI=null;delays=[];zones=[];pzs=[];lumis=[];lfx=[];phTeam={};axes=[];doms=[];kps=[];kfx=[];NUMS=[];decals=[];azg=[];itB=[];mdM=[];hkd=[];gwalls=[];gcs=null;flashA=0;time=0;R=R0;speed=1;paused=false;infoPaused=false;running=true;cdown=3;fightT=0;shake=0;burning=false;hs=0;ban=null;
  $('#spd').textContent='×1';$('#pz').textContent='⏸';
  $('#lobby').hidden=true;$('#game').hidden=false;$('#over').hidden=true;$('#bossHud').hidden=!(window.__bossRun||window.__coreRun);$('#bossHud').classList.toggle('corehud',!!window.__coreRun);$('#game').classList.toggle('bossrun',!!(window.__bossRun||window.__coreRun||window.__crownRun||window.__zoneRun));$('#bossNotice').hidden=true;resize();requestAnimationFrame(placeBossHud);if(window.__bossRun&&bossWave===1&&!bossRunData.started){bossRunData.started=true;showBossIntro();}
 }
@@ -6239,7 +6268,7 @@ function draw(){
   else{if(!f.nb&&(!COARSE||fx.length<300))glow(f.x,f.y,f.r*3,f.c,.8);ctx.globalCompositeOperation='lighter';ctx.fillStyle=f.c;ctx.beginPath();ctx.arc(f.x,f.y,f.r*(f.sh?a:1),0,7);ctx.fill();ctx.globalCompositeOperation='source-over'}
  }
  ctx.globalAlpha=1;
- jtOver();acFIDraw();if(gcs)drawGilCine();
+ jtOver();acFIDraw();mdFIDraw();if(gcs)drawGilCine();
   if(ban){const p=1-ban.l/ban.m,z=1.3-.3*Math.min(1,p*5);ctx.save();ctx.globalAlpha=Math.max(0,Math.min(1,ban.l*2,p*6));ctx.translate(C,C-60);ctx.scale(z,z);ctx.textAlign='center';ctx.textBaseline='middle';ctx.lineJoin='round';
   ctx.font='800 110px "Be Vietnam Pro",system-ui';ctx.lineWidth=34;ctx.strokeStyle='rgba(255,59,48,.3)';ctx.strokeText(ban.t,0,0);ctx.lineWidth=18;ctx.strokeStyle='#10122a';ctx.strokeText(ban.t,0,0);ctx.fillStyle='#ff6b5a';ctx.fillText(ban.t,0,0);
   ctx.font='700 38px "Be Vietnam Pro",system-ui';ctx.lineWidth=8;ctx.strokeText(ban.s,0,80);ctx.fillStyle='#ffe08a';ctx.fillText(ban.s,0,80);ctx.restore()}
@@ -6292,7 +6321,7 @@ function loop(now){
  if(fr>0&&fr<250&&running&&cdown<=0&&!paused){fEma=fEma*.92+fr*.08;
   if(fEma>27&&Q>.5){slowFor+=fr;if(slowFor>1500){Q=Math.max(.5,Q*.8);slowFor=0;fEma=18;resize()}}else slowFor=0}
  if(!paused){
-  let tsc=1;if(LFSLOW.t>0){LFSLOW.t-=dt;tsc=LFSLOW.k}if(JTS&&JTS.ph==='intro')tsc=.12;jtAdv(dt*Math.min(1,speed));acFIAdv(dt);if(gcs){tsc=GL.slow3;gcs.t+=dt;if(gcs.t>=gcs.d){const g=gcs;gcs=null;tsc=1;g.fin()}}
+  let tsc=1;if(LFSLOW.t>0){LFSLOW.t-=dt;tsc=LFSLOW.k}if(JTS&&JTS.ph==='intro')tsc=.12;jtAdv(dt*Math.min(1,speed));acFIAdv(dt);mdFIAdv(dt);if(gcs){tsc=GL.slow3;gcs.t+=dt;if(gcs.t>=gcs.d){const g=gcs;gcs=null;tsc=1;g.fin()}}
    if(cdown>0){if(KC)kcTick(dt);else{cdown-=dt;if(cdown<=0)fightT=1}}
   else{fightT=Math.max(0,fightT-dt);if(hs>0)hs-=dt;else if(running)for(let i=0;i<Math.max(1,speed);i++)step(dt*Math.min(1,speed)*tsc)}
   updFx(dt*Math.min(1,speed)*tsc);
