@@ -274,8 +274,8 @@ html,body{overscroll-behavior:none}#game,#panels,.sb{touch-action:none;-webkit-u
 #bossHud.anchorhud .bhbar{height:17px;background:#0b1530;border:1.5px solid #bae6fdcc;border-radius:6px 13px 13px 6px}
 #bossHud.anchorhud .bhbar i{border-radius:4px 11px 11px 4px;background:linear-gradient(180deg,#fda4af,#fb7185 45%,#e11d48)}
 #bossHud.anchorhud .bhbar::after{content:"";position:absolute;inset:0 0 55% 0;background:linear-gradient(180deg,#ffffff55,transparent);z-index:2;pointer-events:none}
-#bossHud.brave .bhbar i{background:linear-gradient(180deg,#fed7aa,#fb923c 45%,#c2410c)}
-#bossHud.brave{--bc:#fb923c;box-shadow:0 0 28px -4px #fb923c}
+#bossHud.brave .bhbar i{background:linear-gradient(180deg,#e0f2fe,#38bdf8 45%,#0369a1)}
+#bossHud.brave{--bc:#38bdf8;box-shadow:0 0 28px -4px #38bdf8}
 .bhx{flex:none;font-size:14px;font-weight:900;color:#fde68a}
 .bhsh{height:7px;margin-top:4px;width:80%;background:#0b1530;border:1px solid #7dd3fcaa;border-radius:6px;overflow:hidden}.bhsh i{display:block;height:100%;width:100%;background:linear-gradient(90deg,#38bdf8,#e0f2fe);transition:width .15s}
 .bhring{position:relative;display:flex;align-items:center;gap:7px;margin-top:5px}.bhring[hidden]{display:none}
@@ -6783,18 +6783,18 @@ $('#pf').onchange=async e=>{
 };
 
 /* ---------- Boss Mode v2: 1 boss tự chọn · Kẻ Neo Sóng ---------- */
-const BOSS_TYPES=[{name:'Kẻ Neo Sóng',sub:'Khát Khao Song Lớn',icon:'⚓',color:'#38bdf8',hp:8500,spd:50,dmg:1,desc:'Gã khổng lồ vác mỏ neo, say rượu thơm để tích Dũng Mãnh.'}];
-const BOSS_MOVESETS={'Kẻ Neo Sóng':[{name:'Đánh Thường',kind:'normal'},{name:'Vung Biển Khơi',kind:'leap'},{name:'Khạc Biển Khơi',kind:'laser'},{name:'Vung Đuôi',kind:'tail'}]};
-const BOSS_SIGNATURES={'Kẻ Neo Sóng':['normal','leap','laser','tail']};
-const BOSS_PASSIVE_LOADOUTS={'Kẻ Neo Sóng':[{name:'Men Say Dũng Mãnh',desc:'Kháng 25%. Uống rượu tích Dũng Mãnh.'}]};
+const BOSS_TYPES=[{id:'boss_anchor',name:'Kẻ Neo Sóng',sub:'Khát Khao Song Lớn',icon:'⚓',color:'#38bdf8',hp:5000,spd:50,dmg:1,desc:'Gã khổng lồ vác mỏ neo, say rượu thơm để tích Dũng Mãnh.'},{id:'boss_sentinel',name:'Thiết Bị Giám Sát',sub:'Cỗ Máy Càn Quét',icon:'👁️',color:'#22d3ee',hp:10000,spd:80,dmg:1,kind:'sentinel',desc:'Cỗ máy giám sát xoay tia nước quét sàn, tích Động Năng Lỏng để mạnh dần.'}];
+const BOSS_MOVESETS={'Kẻ Neo Sóng':[{name:'Đánh Thường',kind:'normal'},{name:'Vung Biển Khơi',kind:'leap'},{name:'Khạc Biển Khơi',kind:'laser'},{name:'Vung Đuôi',kind:'tail'}],'Thiết Bị Giám Sát':[{name:'Thủy Kiếm',kind:'sword'},{name:'Xoáy Nước',kind:'vortex'},{name:'Xung Kích',kind:'dash'},{name:'Giam Lỏng',kind:'cage'}]};
+const BOSS_SIGNATURES={'Kẻ Neo Sóng':['normal','leap','laser','tail'],'Thiết Bị Giám Sát':['sword','vortex','dash','cage']};
+const BOSS_PASSIVE_LOADOUTS={'Kẻ Neo Sóng':[{name:'Men Say Dũng Mãnh',desc:'Kháng 25%. Uống rượu tích Dũng Mãnh.'}],'Thiết Bị Giám Sát':[{name:'Động Năng Lỏng',desc:'Chế Độ Càn Quét: tia nước mạnh dần theo Động Năng Lỏng.'}]};
 let boss=null,bossWave=1,bossTime=0,bossDefeated=false,bossWarning=null,bossAttackCd=2,bossAttackIndex=0,bossRespawnTimers={},bossStats={},bossRunData=null,bossFx=[],bossScorch=[],bossScars=[];
 const DIFF={easy:{hp:.72,dmg:.95,spd:.85,time:105},normal:{hp:1,dmg:1,spd:1,time:100},hard:{hp:1.65,dmg:1.05,spd:1.12,time:105},extreme:{hp:2.5,dmg:1.1,spd:1.25,time:115}};
 const BR=(a,b)=>a+Math.random()*(b-a),angd=(a,b)=>Math.atan2(Math.sin(a-b),Math.cos(a-b)),PCOL=['#38bdf8','#fb7185','#facc15','#4ade80'];
-const bossRes=b=>b.weak?-.5:b.broken?0:b.brave?.75:b.resT>0?.5:.25;
+const bossRes=b=>b.kind==='sentinel'?snRes(b):b.weak?-.5:b.broken?0:b.brave?.75:b.resT>0?.5:.25;
 function createBoss(){
- const t=BOSS_TYPES[0],df=DIFF[bossRunData.difficulty]||DIFF.easy,pl=Math.max(1,balls.length);
- boss={...t,typeName:t.name,moves:BOSS_MOVESETS[t.name],x:C,y:C-40,vx:0,vy:0,r:66,max:Math.round(t.hp*df.hp*(1+.5*(pl-1))),hp:0,lag:0,lagT:0,kx:0,ky:0,stun:0,slow:0,zs:0,gs:0,es:0,enk:0,alive:true,team:0,role:'sword',k:9000,spd:t.spd*df.spd,dmg:df.dmg,flash:0,ang:Math.PI/2,passives:[],shield:0,shieldMax:0,bars:1,gauge:0,brave:false,braveDmg:0,braveBy:{},gaugeCut:0,resT:0,drink:null,drinkN:0,drinkCd:BR(7,13),act:null,calm:BR(1.5,2.5),goal:null,idleT:1,lastMv:-1,sw:0,swT:0,z:0,tailSpin:0,passive:'none',passive2:'none'};
- boss.baseDmg=boss.dmg;boss.baseSpd=boss.spd;boss.hp=boss.max;boss.lag=boss.max;bossFx=[];bossScorch=[];bossScars=[];
+ const t=BOSS_TYPES.find(x=>x.id===(bossRunData&&bossRunData.boss))||BOSS_TYPES[0],df=DIFF[bossRunData.difficulty]||DIFF.easy,pl=Math.max(1,balls.length);
+ wfSprites();boss={...t,typeName:t.name,moves:BOSS_MOVESETS[t.name],x:C,y:C-40,vx:0,vy:0,r:66,max:Math.round(t.hp*df.hp*(1+.5*(pl-1))),hp:0,lag:0,lagT:0,kx:0,ky:0,stun:0,slow:0,zs:0,gs:0,es:0,enk:0,alive:true,team:0,role:'sword',k:9000,spd:t.spd*df.spd,dmg:df.dmg,flash:0,ang:Math.PI/2,passives:[],shield:0,shieldMax:0,bars:1,gauge:0,brave:false,braveDmg:0,braveBy:{},gaugeCut:0,resT:0,drink:null,drinkN:0,drinkCd:BR(7,13),act:null,calm:BR(1.5,2.5),goal:null,idleT:1,lastMv:-1,sw:0,swT:0,z:0,tailSpin:0,passive:'none',passive2:'none'};
+ boss.baseDmg=boss.dmg;boss.baseSpd=boss.spd;boss.hp=boss.max;boss.lag=boss.max;bossFx=[];bossScorch=[];bossScars=[];if(t.kind==='sentinel')snInit();
  bossRunData.currentBoss=t.name;bossRunData.wave=1;bossRunData.waveTime=300;bossTime=0;bossDefeated=false;bossWarning=null;
  $('#bossHud').classList.add('anchorhud');$('#bossHud').style.setProperty('--bc',t.color);$('#bhname').textContent=`${t.icon} ${t.name} · ${t.sub}`;$('#bhfill').style.width='100%';$('#bhdelay').style.width='100%';$('#bhpas').textContent='';$('#bhring').hidden=false;$('#bhsh').hidden=true;$('#bhx').hidden=true;
 }
@@ -6816,7 +6816,7 @@ function bossSeaArc(a,rad,sp,big){const b=boss,full=sp>=6.2,x=b.x,y=b.y,sg=b.arc
  arBubbles(x,y,big?8:4,rad*.4)}
 function bossArc(a,rad,sp,dmg,big){const b=boss;bossSeaArc(a,rad,sp,big);bossScars.push({k:'arc',x:b.x,y:b.y,a,rad,sp,l:4.5,m:4.5,s:Math.random()*6});if(bossScars.length>36)bossScars.shift();shake=Math.min(1,shake+(big?.22:.14));hs=big?.05:.03;
  for(const p of balls)if(p.alive){const dx=p.x-b.x,dy=p.y-b.y,d=Math.hypot(dx,dy);if(d<rad+p.r&&(sp>=6.2||Math.abs(angd(Math.atan2(dy,dx),a))<sp/2+Math.atan2(p.r,d||1))){bossDamagePlayer(p,dmg*b.dmg);arSplash(p.x,p.y,8,160,240);arSparks(p.x,p.y,14,480)}}}
-function bossFall(x,y,rad,dmg,lite){const L=1.5+rad/100;bossFx.push({k:'wf',x,y,rad,l:L,m:L,s:Math.random()*9},{k:'rip',x,y,rad:rad*1.7,l:2.2,m:2.2,n:lite?2:4,s:Math.random()*9});shake=Math.min(1,shake+(lite?.05:.1)+rad/900);ring(x,y,rad*1.2,'#e0f2fe',.5);if(!lite)ring(x,y,rad*.7,'#38bdf8',.6);arSplash(x,y,Math.round((10+rad*.3)*(lite?.5:1)),300,420);arSparks(x,y,lite?6:14,460,-1.57,1.2);arBubbles(x,y,lite?2:5,rad*.5);for(const p of balls)if(p.alive&&Math.hypot(p.x-x,p.y-y)<rad+p.r)bossDamagePlayer(p,dmg*boss.dmg)}
+function bossFall(x,y,rad,dmg,lite){const L=lite?1.2+rad/130:1.5+rad/100;bossFx.push({k:'wf',x,y,rad,l:L,m:L,s:Math.random()*9,lt:lite?1:0},{k:'rip',x,y,rad:rad*1.7,l:lite?1.3:2.2,m:lite?1.3:2.2,n:lite?2:4,s:Math.random()*9});shake=Math.min(1,shake+(lite?.05:.1)+rad/900);ring(x,y,rad*1.2,'#e0f2fe',.5);ring(x,y,rad*.7,'#38bdf8',.6);arSplash(x,y,Math.round((10+rad*.3)*(lite?.6:1)),300,420);arSparks(x,y,lite?8:14,460,-1.57,1.2);arBubbles(x,y,lite?3:5,rad*.5);for(const p of balls)if(p.alive&&Math.hypot(p.x-x,p.y-y)<rad+p.r)bossDamagePlayer(p,dmg*boss.dmg)}
 function bossImpact(x,y,rad,lv){const n=lv>=3?1.6:1;
  bossFx.push({k:'cas',x,y,rad,lv,l:2.4,m:2.4,s:Math.random()*9},{k:'rip',x,y,rad:rad*1.25,l:3.6,m:3.6,n:lv>=3?9:6,s:Math.random()*9},{k:'crk',x,y,rad:rad*1.05,l:6,m:6,s:Math.random()*9},{k:'wav',x,y,rad,l:2.8,m:2.8},{k:'wav',x,y,rad:rad*.7,l:2.2,m:2.2});
  bossScars.push({k:'pit',x,y,rad:rad*.55,l:5,m:5,s:Math.random()*9});if(bossScars.length>36)bossScars.shift();
@@ -6828,9 +6828,10 @@ function bossBoom(x,y,rad,dmg,big){shake=Math.min(1.2,shake+(big?.5:.1));if(big)
   for(let i=0;i<8;i++)arCrescent(x,y,i*.7854+rnd(-.1,.1),rad*.2,rad*1.1,.85,28,.42,1);arSweep(null,x,y,rad*.9,rnd(0,6),6.2832,3,36,.45,0);arSplash(x,y,40,460,460);arSparks(x,y,34,620);arBubbles(x,y,12,rad*.5);arFoam(x,y,200,0,8)}
  else{ring(x,y,rad*1.1,'#7dd3fc',.3);arSplash(x,y,14,260,330);arSparks(x,y,12,420);arBubbles(x,y,4,rad*.4);arCrescent(x,y,rnd(0,6.28),rad*.2,rad,1.2,18,.3,0)}
  for(const p of balls)if(p.alive&&Math.hypot(p.x-x,p.y-y)<rad+p.r)bossDamagePlayer(p,dmg*boss.dmg)}
-function bossCancel(){const b=boss;if(!b)return;b.act=null;b.leap=null;b.z=0;b.swT=0;b.lfT=0;b.crT=0;b.leanT=0;b.coilT=0;b.chg=null;b.spin=0;b.spinA=0;b.spinE=0;b.drink=null;bossFx=bossFx.filter(f=>f.k!=='tele')}
+function bossCancel(){const b=boss;if(!b)return;b.act=null;b.leap=null;b.z=0;b.swT=0;b.lfT=0;b.crT=0;b.leanT=0;b.coilT=0;b.chg=null;b.spin=0;b.spinA=0;b.spinE=0;b.drink=null;b.dash=null;bossFx=bossFx.filter(f=>f.k!=='tele')}
 function bossBreakDrink(){const b=boss,it=b.drink.item;b.drink=null;b.drinkCd=BR(7,13);b.broken=true;b.stun=5;b.stunStart=bossTime;b.stunImm=0;bossFx.push({k:'spl',x:b.x,y:b.y-30,rad:130,big:true,l:.8,m:.8,s:1});shake=Math.min(1,shake+.4);bossCinematicCue('💥 Vỡ '+(it==='jug'?'bình rượu':'thùng rượu')+'! Choáng 5 giây','#fde047')}
-function bossBraveEnd(){const b=boss;b.brave=false;b.gauge=0;b.drinkCd=BR(15,25);const td=Math.min(b.braveDmg*1.2,b.max*.25);if(td>0){b.hp=Math.max(0,b.hp-td);const tot=b.braveDmg||1;for(const k in b.braveBy)if(bossStats[k])bossStats[k].damage+=td*b.braveBy[k]/tot;num(b.x,b.y,Math.round(td),'c',50,b);shake=Math.min(1,shake+.5)}b.braveDmg=0;b.braveBy={};b.resT=0;bossCinematicCue('Hết Dũng Mãnh · sát thương CHUẨN '+Math.round(td),'#fde047');if(b.hp<=0){b.alive=false;bossDefeated=true}else{b.weak=true;b.stun=8;b.stunStart=bossTime;b.stunImm=0;b.drink=null;bossCinematicCue('😵 Kiệt sức! Choáng 8 giây · Kháng -50%','#fde047');bossFx.push({k:'spl',x:b.x,y:b.y-30,rad:150,big:true,l:.8,m:.8,s:2})}}
+function bossGlassBurst(x,y){bossFx.push({k:'glass',x,y,rad:300,l:1.2,m:1.2,s:Math.random()*9});ring(x,y,150,'#ffffff',.45);ring(x,y,260,'#38bdf8',.7);ring(x,y,360,'#e0f2fe',.9);for(let i=0;i<46&&fx.length<1400*PQ();i++){const a=rnd(0,6.2832),sp=rnd(180,620);fx.push({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,l:rnd(.6,1.2),m:1.2,c:i%3?'#bae6fd':'#ffffff',r:rnd(2,5),nb:1})}shake=Math.min(1.3,shake+.7);hs=Math.max(hs,.1)}
+function bossBraveEnd(){const b=boss;b.brave=false;b.gauge=0;b.drinkCd=BR(15,25);const td=Math.min(b.braveDmg*1.2,b.max*.25);if(td>0){b.hp=Math.max(0,b.hp-td);const tot=b.braveDmg||1;for(const k in b.braveBy)if(bossStats[k])bossStats[k].damage+=td*b.braveBy[k]/tot;num(b.x,b.y,Math.round(td),'c',50,b);shake=Math.min(1,shake+.5)}b.braveDmg=0;b.braveBy={};b.resT=0;bossGlassBurst(b.x,b.y);bossCinematicCue('Hết Dũng Mãnh · sát thương CHUẨN '+Math.round(td),'#fde047');if(b.hp<=0){b.alive=false;bossDefeated=true}else{b.weak=true;b.stun=15;b.stunStart=bossTime;b.stunImm=0;b.drink=null;bossCinematicCue('😵 Kiệt sức! Choáng 15 giây · Kháng -50%','#fde047');bossFx.push({k:'spl',x:b.x,y:b.y-30,rad:150,big:true,l:.8,m:.8,s:2})}}
 function bossHurt(s,d,o,rz){
  const b=boss;if(!b||!b.alive||!s||s===b||b.hp<=0)return 0;
  d*=rz(1-bossRes(b));if(s.role==='archon')d*=AR.bossM;
@@ -6846,6 +6847,7 @@ function bossHurt(s,d,o,rz){
  if(b.drink){b.drink.dmg+=tot;if(b.drink.dmg>=b.max*.1)bossBreakDrink()}
  if(b.brave){b.braveDmg+=tot;b.braveBy[ow.k]=(b.braveBy[ow.k]||0)+tot;if(bossTime-(b.gHitT||-9)>=.1){b.gHitT=bossTime;b.gauge=Math.max(0,b.gauge-.01)}}
 
+ if(b.kind==='sentinel')snHit(b,o);
  if(b.hp<=0){b.alive=false;bossDefeated=true;burst(b.x,b.y,'#38bdf8',55);ring(b.x,b.y,150,'#38bdf8',.8)}
  return tot}
 /* Trạng thái khống chế của boss (choáng / đẩy lùi / làm chậm). Boss không nằm trong balls nên tự xử lý ở đây, cùng quy tắc với người chơi */
@@ -6866,13 +6868,14 @@ function bossTick(dt){
  const stunned=b.stun>0,tg=bossTgt();b.walking=false;
  if(b.leap){const L=b.leap;L.t+=dt;const p=Math.min(1,L.t/L.d),e=p<.5?2*p*p:1-Math.pow(-2*p+2,2)/2;b.x=L.x0+(L.x1-L.x0)*e;b.y=L.y0+(L.y1-L.y0)*e;b.z=Math.sin(p*Math.PI)*150;if(p<.7){b.lfT=1;b.swT=-1.3;b.fastT=0;b.crT=-.4}else{b.lfT=.1;b.swT=1.6;b.fastT=.2}b.ang=Math.atan2(L.y1-L.y0,L.x1-L.x0)}
  if(b.act&&!stunned){const A=b.act;A.t+=dt;for(const e of A.ev)if(!e[2]&&A.t>=e[0]){e[2]=1;e[1]()}if(A.t>=A.end){b.act=null;b.swT=0;b.calm=BR(1.3,2.4)}}
+ if(b.kind==='sentinel')snTick(dt,stunned,tg);else{
  /* Uống rượu / Dũng Mãnh */
- if(b.brave){b.gauge-=.0025*dt;if(b.gauge<=0)bossBraveEnd();if(!bossDefeated&&Math.random()<dt*35)fx.push({x:b.x+rnd(-b.r*1.4,b.r*1.4),y:b.y-b.z-b.r*.4,vx:rnd(-30,30),vy:rnd(-160,-50),l:.8,m:.8,c:Math.random()<.5?'#fb923c':'#fde047',r:rnd(2,6),nb:1})}
+ if(b.brave){b.gauge-=.0025*dt;if(b.gauge<=0)bossBraveEnd();if(!bossDefeated&&Math.random()<dt*35)fx.push({x:b.x+rnd(-b.r*1.4,b.r*1.4),y:b.y-b.z-b.r*.4,vx:rnd(-30,30),vy:rnd(-160,-50),l:.8,m:.8,c:Math.random()<.5?'#38bdf8':'#e0f2fe',r:rnd(2,6),nb:1})}
  else if(b.drink&&!stunned){const D=b.drink;D.t+=dt;
   if(!D.pl&&D.t>=D.dur*.15){D.pl=1;const wx=b.x-Math.sin(b.ang)*b.r*1.25,wy=b.y+b.r*.95;ring(wx,wy,100,'#e0f2fe',.4);ring(wx,wy,60,'#94a3b8',.5);bossSpray(wx,wy,18,320,'#94a3b8',true);arSparks(wx,wy,10,380);bossScars.push({k:'pit',x:wx,y:wy,rad:40,l:4,m:4,s:1});shake=Math.min(1,shake+.2)}
   if(!D.cr&&D.t>=D.dur*.92){D.cr=1;const mxw=b.x+Math.cos(b.ang)*b.r*.8,myw=b.y-30+Math.sin(b.ang)*b.r*.65;bossSpray(mxw,myw,26,360,D.item==='jug'?'#fbbf24':'#b45309',true);bossSpray(mxw,myw,14,300,'#fde68a',true);ring(mxw,myw,70,'#fde68a',.4);shake=Math.min(1,shake+.25)}
   b.gauge=Math.min(1,b.gauge+D.amt/D.dur*dt);b.swT=0;if(D.t>=D.dur){b.drink=null;b.drinkN++;b.drinkCd=BR(7,13);b.swT=0}}
- if(!b.brave&&b.gauge>=1){b.gauge=1;b.brave=true;b.braveDmg=0;b.braveBy={};b.drink=null;b.act=null;b.leap=null;b.z=0;b.calm=1.2;bossFx=bossFx.filter(f=>f.k!=='tele');bossCinematicCue('🔥 DŨNG MÃNH! Kháng 75% · chiêu cường hóa','#fb923c');shake=Math.min(1,shake+.6);ring(b.x,b.y,200,'#fb923c',.8)}
+ if(!b.brave&&b.gauge>=1){b.gauge=1;b.brave=true;b.braveDmg=0;b.braveBy={};b.drink=null;b.act=null;b.leap=null;b.z=0;b.calm=1.2;bossFx=bossFx.filter(f=>f.k!=='tele');bossCinematicCue('🌊 DŨNG MÃNH! Kháng 75% · chiêu cường hóa','#38bdf8');shake=Math.min(1,shake+.6);ring(b.x,b.y,200,'#38bdf8',.8)}
  if(!b.brave&&!b.drink)b.drinkCd-=dt;
 if(!stunned&&!b.act&&!b.drink){
   if(!b.brave&&b.drinkCd<=0){const jug=b.drinkN%2===0;b.drink={t:0,dur:8,amt:jug?.4:.6,item:jug?'jug':'barrel',dmg:0};b.goal=null;bossCinematicCue(jug?'🍶 Uống rượu thơm (+40%)':'🛢️ Uống thùng rượu (+60%)','#fbbf24')}
@@ -6885,7 +6888,7 @@ if(!stunned&&!b.act&&!b.drink){
      const dx=b.goal.x-b.x,dy=b.goal.y-b.y,dd=Math.hypot(dx,dy)||1,sp=b.spd*(b.ccM||1);b.walking=true;b.vx+=(dx/dd*sp-b.vx)*Math.min(1,dt*2);b.vy+=(dy/dd*sp-b.vy)*Math.min(1,dt*2);b.x+=b.vx*dt;b.y+=b.vy*dt;bossClamp(b);b.ang+=angd(Math.atan2(dy,dx),b.ang)*Math.min(1,dt*3);
      if(dd<(b.chase?b.r+150:24)){b.goal=null;b.chase=false;b.idleT=BR(.2,.7)}}}
   }}
- else if(!b.leap){b.vx=b.vy=0}
+ else if(!b.leap){b.vx=b.vy=0}}
  /* hiệu ứng */
  if(!isFinite(b.x)||!isFinite(b.y)){b.x=C;b.y=C-40;b.vx=b.vy=0;b.goal=null}
  if(!stunned&&!b.act&&!b.drink&&!b.leap){b.stillT=Math.hypot(b.vx,b.vy)<8?(b.stillT||0)+dt:0;if(b.stillT>2){b.stillT=0;b.idleT=0;b.goal=null;b.calm=Math.min(b.calm,.1)}}else b.stillT=0;
@@ -6900,11 +6903,22 @@ if(!stunned&&!b.act&&!b.drink){
  {const hpT=`${Math.ceil(b.hp).toLocaleString()} / ${b.max.toLocaleString()}`,tmT='⏱ '+mmss(Math.max(0,Math.ceil(bossRunData.waveTime-bossTime))),e1=$('#bhhp'),e2=$('#bhtime');if(e1.textContent!==hpT)e1.textContent=hpT;if(e2.textContent!==tmT)e2.textContent=tmT}
  $('#bhx').hidden=b.bars<=1;if(b.bars>1)$('#bhx').textContent='×'+cb;
  $('#bhsh').hidden=!(b.shieldMax>0);if(b.shieldMax>0)$('#bhshf').style.width=(100*b.shield/b.shieldMax)+'%';
- {const g=Math.max(0,Math.min(1,b.gauge));$('#bhrfg').style.strokeDashoffset=119.4*(1-g);$('#bhrico').textContent=b.brave?'🔥':b.drink?(b.drink.item==='jug'?'🍶':'🛢️'):b.broken?'💥':'⚓';$('#bhrtxt').textContent=Math.round(g*100)+'% · Kháng '+Math.round(bossRes(b)*100)+'%';$('#bossHud').classList.toggle('brave',b.brave)}
+ if(b.kind==='sentinel')snHud(b);else{const g=Math.max(0,Math.min(1,b.gauge));$('#bhrfg').style.strokeDashoffset=119.4*(1-g);$('#bhrico').textContent=b.brave?'🌊':b.drink?(b.drink.item==='jug'?'🍶':'🛢️'):b.broken?'💥':'⚓';$('#bhrtxt').textContent=Math.round(g*100)+'% · Kháng '+Math.round(bossRes(b)*100)+'%';$('#bossHud').classList.toggle('brave',b.brave)}
  if(bossTime>=bossRunData.waveTime){bossRunData.failed=true;bossWaveClear(true)}
 }
 const sr=(s,i)=>{const x=Math.sin(s*12.9898+i*78.233)*43758.5453;return x-Math.floor(x)};
 function bossSpray(x,y,n,sp,col,up){for(let i=0;i<n&&fx.length<1400*PQ();i++){const a=Math.random()*6.283,s=rnd(sp*.3,sp);fx.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-(up?rnd(40,sp):0),l:rnd(.4,.9),m:.9,c:col||(Math.random()<.5?'#e0f2fe':'#38bdf8'),r:rnd(2,5.5),nb:1})}}
+let _wfs=null;
+function wfSprites(){if(_wfs)return _wfs;const mk=(w,h)=>{const k=document.createElement('canvas');k.width=w;k.height=h;return k};
+ const col=mk(128,256),g=col.getContext('2d');let gr=g.createLinearGradient(0,256,0,0);gr.addColorStop(0,'rgba(2,132,199,.95)');gr.addColorStop(.35,'rgba(56,189,248,.9)');gr.addColorStop(.7,'rgba(186,230,253,.95)');gr.addColorStop(1,'rgba(255,255,255,1)');
+ g.fillStyle=gr;g.beginPath();g.moveTo(0,256);g.quadraticCurveTo(19,102,35,0);g.lineTo(93,0);g.quadraticCurveTo(109,102,128,256);g.closePath();g.fill();
+ g.globalCompositeOperation='destination-in';const hm=g.createLinearGradient(0,0,128,0);hm.addColorStop(0,'rgba(0,0,0,.15)');hm.addColorStop(.22,'rgba(0,0,0,1)');hm.addColorStop(.78,'rgba(0,0,0,1)');hm.addColorStop(1,'rgba(0,0,0,.15)');g.fillStyle=hm;g.fillRect(0,0,128,256);g.globalCompositeOperation='source-over';
+ const cg=g.createLinearGradient(40,0,88,0);cg.addColorStop(0,'rgba(255,255,255,0)');cg.addColorStop(.5,'rgba(255,255,255,.55)');cg.addColorStop(1,'rgba(255,255,255,0)');g.fillStyle=cg;g.fillRect(40,0,48,256);
+ g.fillStyle='rgba(255,255,255,.9)';for(let i=0;i<12;i++){g.beginPath();g.arc(128*(.28+.44*((i*37)%12)/12),6+((i*53)%10),6+((i*17)%7),0,7);g.fill()}
+ const st=mk(128,128),h=st.getContext('2d');h.lineCap='round';for(let i=0;i<10;i++){const x=12+((i*47)%104),len=40+((i*29)%60),y0=((i*71)%128);h.strokeStyle='rgba(255,255,255,'+(.35+((i*13)%5)/10)+')';h.lineWidth=2+(i%3);for(const dy of[-128,0]){h.beginPath();h.moveTo(x,y0+dy);h.lineTo(x,y0+len+dy);h.stroke()}}
+ const gl=mk(64,64),q=gl.getContext('2d'),rg=q.createRadialGradient(32,32,1,32,32,32);rg.addColorStop(0,'rgba(255,255,255,.95)');rg.addColorStop(.4,'rgba(186,230,253,.5)');rg.addColorStop(1,'rgba(56,189,248,0)');q.fillStyle=rg;q.fillRect(0,0,64,64);
+ const base=mk(128,128),b=base.getContext('2d'),bg=b.createRadialGradient(64,64,2,64,64,62);bg.addColorStop(0,'rgba(224,242,254,.8)');bg.addColorStop(.45,'rgba(14,165,233,.45)');bg.addColorStop(1,'rgba(14,165,233,0)');b.fillStyle=bg;b.fillRect(0,0,128,128);b.fillStyle='rgba(255,255,255,.7)';for(let i=0;i<14;i++){const a=i*2.4,r=14+((i*23)%40);b.beginPath();b.arc(64+Math.cos(a)*r,64+Math.sin(a)*r,2+(i%3),0,7);b.fill()}
+ return _wfs={col,st,gl,base}}
 function drawBossFx(layer){
  const c=ctx,t=time;
  for(const f of bossFx){const p=Math.max(0,Math.min(1,1-f.l/f.m));
@@ -6913,14 +6927,26 @@ function drawBossFx(layer){
     if(f.s==='arc'||f.s==='cir'){const arc=f.s==='arc',h=arc?f.sp/2:0,a=arc?f.a:0;
      const g=c.createRadialGradient(x,y,f.rad*.1,x,y,f.rad);g.addColorStop(0,'rgba(14,116,144,.05)');g.addColorStop(.7,`rgba(56,189,248,${.16+.1*bl})`);g.addColorStop(1,`rgba(224,242,254,${.45+.3*bl})`);
      c.fillStyle=g;c.beginPath();if(arc){c.moveTo(x,y);c.arc(x,y,f.rad,a-h,a+h);c.closePath()}else c.arc(x,y,f.rad,0,7);c.fill();
-     c.shadowColor='#38bdf8';c.shadowBlur=14;c.strokeStyle='#e0f2fe';c.lineWidth=3;c.setLineDash([14,9]);c.lineDashOffset=-t*70;c.stroke();c.setLineDash([]);
+     if(f.lt){c.save();c.globalAlpha=.3;c.strokeStyle='#38bdf8';c.lineWidth=9;c.stroke();c.restore()}c.shadowColor='#38bdf8';c.shadowBlur=f.lt?0:14;c.strokeStyle='#e0f2fe';c.lineWidth=3;c.setLineDash([14,9]);c.lineDashOffset=-t*70;c.stroke();c.setLineDash([]);
      c.globalCompositeOperation='lighter';c.fillStyle='rgba(125,211,252,.4)';c.beginPath();if(arc){c.moveTo(x,y);c.arc(x,y,f.rad*p,a-h,a+h);c.closePath()}else c.arc(x,y,f.rad*p,0,7);c.fill();
      c.strokeStyle='#fff';c.lineWidth=3;c.globalAlpha=.8;c.beginPath();c.arc(x,y,f.rad*p,arc?a-h:0,arc?a+h:7);c.stroke();c.globalCompositeOperation='lighter';for(let j=0;j<3;j++){c.globalAlpha=.35+.25*bl;c.strokeStyle=j?'#7dd3fc':'#e0f2fe';c.lineWidth=2+j;c.setLineDash([6+j*5,10]);c.lineDashOffset=t*(j%2?60:-60);c.beginPath();c.arc(x,y,f.rad*(.35+.24*j),arc?a-h:0,arc?a+h:7);c.stroke()}c.setLineDash([]);c.globalAlpha=.5;c.strokeStyle='#fff';c.lineWidth=1.5;for(let i=0;i<24;i++){const an=arc?a-h+(i+.5)/24*2*h:i/24*6.2832,r1=f.rad*.9,r0=f.rad*(.82-.1*sr(i,5)+.04*Math.sin(t*8+i));c.beginPath();c.moveTo(x+Math.cos(an)*r0,y+Math.sin(an)*r0);c.lineTo(x+Math.cos(an)*r1,y+Math.sin(an)*r1);c.stroke()}}
     else{c.globalCompositeOperation='lighter';for(let j=0;j<3;j++){c.globalAlpha=p*(1-j*.25);c.strokeStyle=j?'#38bdf8':'#fff';c.lineWidth=5-j;c.beginPath();c.arc(x,y,f.rad*(1.6-.9*p)*(1+j*.18),0,7);c.stroke()}
      c.fillStyle='#fff';for(let i=0;i<14;i++){const a=i/14*6.283+t*3,d=f.rad*(1.8-1.3*p)*(.7+.4*sr(i,3));c.globalAlpha=p;c.beginPath();c.arc(x+Math.cos(a)*d,y+Math.sin(a)*d*.8,2.5,0,7);c.fill()}
      const g=c.createRadialGradient(x,y,0,x,y,f.rad*.9*p+8);g.addColorStop(0,'rgba(255,255,255,.9)');g.addColorStop(1,'rgba(56,189,248,0)');c.globalAlpha=.7;c.fillStyle=g;c.beginPath();c.arc(x,y,f.rad*.9*p+8,0,7);c.fill()}
     c.restore()}
-   else if(f.k==='crk'){c.save();const al=Math.min(1,f.l/1.5);c.lineCap='round';c.lineJoin='round';
+   else if(f.k==='vor'){c.save();c.globalCompositeOperation='lighter';const al=Math.min(1,f.l*2,(f.m-f.l)*4+.2);
+     {const g=c.createRadialGradient(f.x,f.y,0,f.x,f.y,f.rad*1.15);g.addColorStop(0,'rgba(2,132,199,.55)');g.addColorStop(.7,'rgba(56,189,248,.28)');g.addColorStop(1,'rgba(56,189,248,0)');c.globalAlpha=al;c.fillStyle=g;c.beginPath();c.arc(f.x,f.y,f.rad*1.15,0,7);c.fill()}
+     for(let j=0;j<5;j++){c.globalAlpha=al*(.9-j*.1);c.strokeStyle=j%2?'#7dd3fc':'#e0f2fe';c.lineWidth=5-j*.5;c.beginPath();for(let k=0;k<=40;k++){const q=k/40,a=t*(5+j)+j*1.26+q*9,rr=f.rad*(.15+.85*q),px=f.x+Math.cos(a)*rr,py=f.y+Math.sin(a)*rr*.9;k?c.lineTo(px,py):c.moveTo(px,py)}c.stroke()}
+     c.globalAlpha=al*.6;c.setLineDash([10,8]);c.lineDashOffset=-t*40;c.strokeStyle='#bae6fd';c.lineWidth=3;c.beginPath();c.arc(f.x,f.y,f.rad,0,7);c.stroke();c.setLineDash([]);
+     if(f.l<.7){c.globalAlpha=(.5+.5*Math.sin(t*30))*.6;c.strokeStyle='#fff';c.lineWidth=4;c.beginPath();c.arc(f.x,f.y,f.rad*1.25,0,7);c.stroke()}
+     c.restore()}
+    else if(f.k==='cage'){c.save();const up=Math.min(1,p*6),al=Math.min(1,f.l*3),H=46*up;c.globalAlpha=al*.3;c.fillStyle='#0e7490';c.beginPath();c.arc(f.x,f.y,f.rad,0,7);c.fill();
+     c.globalCompositeOperation='lighter';c.globalAlpha=al;c.strokeStyle='#67e8f9';c.lineWidth=4;c.shadowColor='#22d3ee';c.shadowBlur=14;c.beginPath();c.arc(f.x,f.y,f.rad,0,7);c.stroke();c.shadowBlur=0;c.lineWidth=3;
+     for(let i=0;i<18;i++){const a=i/18*6.2832,x=f.x+Math.cos(a)*f.rad,y=f.y+Math.sin(a)*f.rad*.9;c.strokeStyle=i%2?'#bae6fd':'#22d3ee';c.beginPath();c.moveTo(x,y);c.lineTo(x,y-H);c.stroke()}
+     c.globalAlpha=al*.5;c.beginPath();c.ellipse(f.x,f.y-H,f.rad,f.rad*.9,0,0,7);c.stroke();
+     if(!f.o){c.globalAlpha=.5+.4*Math.sin(t*20);c.strokeStyle='#fff';c.beginPath();c.arc(f.x,f.y,f.rad*.55,0,7);c.stroke()}
+     c.restore()}
+    else if(f.k==='crk'){c.save();const al=Math.min(1,f.l/1.5);c.lineCap='round';c.lineJoin='round';
     for(let i=0;i<11;i++){const a=i/11*6.283+sr(f.s,i)*.5,n=6;let x=f.x,y=f.y,aa=a;const pts=[[x,y]];for(let j=1;j<=n;j++){aa+=(sr(f.s,i*9+j)-.5)*.9;const d=f.rad/n*(.7+sr(f.s,i+j)*.6);x+=Math.cos(aa)*d;y+=Math.sin(aa)*d;pts.push([x,y])}
      c.globalAlpha=al*.8;c.strokeStyle='#02050d';c.lineWidth=6;c.beginPath();pts.forEach((q,k)=>k?c.lineTo(q[0],q[1]):c.moveTo(q[0],q[1]));c.stroke();
      c.globalAlpha=al*.7;c.strokeStyle='#38bdf8';c.lineWidth=1.8;c.shadowColor='#38bdf8';c.shadowBlur=8;c.stroke();c.shadowBlur=0}c.restore()}
@@ -6945,13 +6971,13 @@ function drawBossFx(layer){
      c.globalAlpha=(1-p)*.85;const g=c.createLinearGradient(bx,by,bx,by-H);g.addColorStop(0,'rgba(56,189,248,.9)');g.addColorStop(1,'rgba(255,255,255,0)');c.fillStyle=g;const w=(f.big?9:5)*(1-p*.5);c.beginPath();c.moveTo(bx-w,by);c.lineTo(bx,by-H);c.lineTo(bx+w,by);c.closePath();c.fill();
      c.fillStyle='#fff';c.beginPath();c.arc(bx+Math.sin(i)*8,by-H-4*p,2.5*(1-p*.6),0,7);c.fill()}
     c.restore()}
-   else if(f.k==='wf'){c.save();c.globalCompositeOperation='lighter';const up=Math.min(1,p/.28),dn=p<.28?0:Math.min(1,(p-.28)/.72),H=f.rad*3.2*Math.sin(up*1.5708),Ht=H*(1-Math.pow(dn,1.7)),w=f.rad*.62*(1+.5*dn),al=1-dn*.55;
+   else if(f.k==='wf'){c.save();c.globalCompositeOperation='lighter';const W=wfSprites(),up=Math.min(1,p/.28),dn=p<.28?0:Math.min(1,(p-.28)/.72),H=f.rad*3.2*Math.sin(up*1.5708),Ht=H*(1-Math.pow(dn,1.7)),w=f.rad*.62*(1+.5*dn),al=1-dn*.55;
     const ell=(q,a)=>{c.globalAlpha=a;c.strokeStyle='#e0f2fe';c.lineWidth=5*(1-q);c.beginPath();c.ellipse(f.x,f.y,f.rad*(.5+1.1*q),f.rad*(.25+.55*q),0,0,7);c.stroke()};ell(Math.min(1,p*1.4),.8*(1-p));ell(Math.min(1,p*1.1),.5*(1-p));
-    c.globalAlpha=.6*al;c.fillStyle='rgba(14,165,233,.5)';c.beginPath();c.ellipse(f.x,f.y,w*1.5,w*.6,0,0,7);c.fill();
-    if(Ht>2){const g=c.createLinearGradient(0,f.y,0,f.y-Ht);g.addColorStop(0,'rgba(2,132,199,.85)');g.addColorStop(.5,'rgba(186,230,253,.9)');g.addColorStop(1,'rgba(255,255,255,.95)');c.globalAlpha=.75*al;c.fillStyle=g;c.beginPath();c.moveTo(f.x-w,f.y);c.quadraticCurveTo(f.x-w*.7,f.y-Ht*.6,f.x-w*.45,f.y-Ht);c.lineTo(f.x+w*.45,f.y-Ht);c.quadraticCurveTo(f.x+w*.7,f.y-Ht*.6,f.x+w,f.y);c.closePath();c.fill();
-     c.strokeStyle='#fff';c.lineWidth=3;c.setLineDash([22,12]);c.lineDashOffset=t*320;for(let i=0;i<8;i++){const o=(i/7-.5)*w*1.5*(1+dn*.3);c.globalAlpha=.6*al;c.beginPath();c.moveTo(f.x+o,f.y);c.lineTo(f.x+o*.6+Math.sin(t*9+i)*3,f.y-Ht);c.stroke()}c.setLineDash([]);
-     const tg=c.createRadialGradient(f.x,f.y-Ht,2,f.x,f.y-Ht,w*1.2);tg.addColorStop(0,'rgba(255,255,255,.9)');tg.addColorStop(1,'rgba(56,189,248,0)');c.globalAlpha=al;c.fillStyle=tg;c.beginPath();c.arc(f.x,f.y-Ht,w*1.2,0,7);c.fill()}
-    c.fillStyle='#fff';for(let i=0;i<18;i++){const sx=(sr(f.s,i)-.5)*f.rad*2.4*(.5+p*.7),k=sr(f.s,i+9),ph=Math.min(1,Math.max(0,(p-.1*k)/.9)),y=f.y-H*k*(1-ph)*Math.sin(ph*1.9+.6);c.globalAlpha=(1-ph)*.9;c.beginPath();c.arc(f.x+sx,y,1.5+k*2.5,0,7);c.fill()}
+    c.globalAlpha=.85*al;c.drawImage(W.base,f.x-w*1.5,f.y-w*.62,w*3,w*1.24);
+    if(Ht>2){c.globalAlpha=.85*al;c.drawImage(W.col,f.x-w,f.y-Ht,w*2,Ht);
+     const off=128-((t*110)%128),h1=Ht*(128-off)/128;c.globalAlpha=.6*al;if(128-off>.5)c.drawImage(W.st,0,off,128,128-off,f.x-w*.4,f.y-Ht,w*.8,h1);if(off>.5)c.drawImage(W.st,0,0,128,off,f.x-w*.4,f.y-Ht+h1,w*.8,Ht-h1);
+     c.globalAlpha=al;c.drawImage(W.gl,f.x-w*1.2,f.y-Ht-w*1.2,w*2.4,w*2.4)}
+    c.fillStyle='#fff';for(let i=0;i<(f.lt?10:18);i++){const sx=(sr(f.s,i)-.5)*f.rad*2.4*(.5+p*.7),k=sr(f.s,i+9),ph=Math.min(1,Math.max(0,(p-.1*k)/.9)),y=f.y-H*k*(1-ph)*Math.sin(ph*1.9+.6);c.globalAlpha=(1-ph)*.9;c.beginPath();c.arc(f.x+sx,y,1.5+k*2.5,0,7);c.fill()}
     c.restore()}
        else if(f.k==='cas'){c.save();c.globalCompositeOperation='lighter';const lv=f.lv>=3,up=Math.min(1,p/.22),dn=p<.22?0:Math.min(1,(p-.22)/.78),N=lv?64:44,H=f.rad*.62*Math.sin(up*1.5708)*(1-Math.pow(dn,1.5)),fl=Math.max(0,1-p*9);
      if(fl>0){const g=c.createRadialGradient(f.x,f.y,0,f.x,f.y,f.rad);g.addColorStop(0,`rgba(255,255,255,${fl})`);g.addColorStop(1,'rgba(56,189,248,0)');c.fillStyle=g;c.beginPath();c.arc(f.x,f.y,f.rad,0,7);c.fill()}
@@ -6963,6 +6989,10 @@ function drawBossFx(layer){
      if(H>2){const w=f.rad*.3*(1-dn*.4),g=c.createLinearGradient(0,f.y,0,f.y-H*1.7);g.addColorStop(0,'rgba(2,132,199,.9)');g.addColorStop(.6,'rgba(186,230,253,.9)');g.addColorStop(1,'rgba(255,255,255,.95)');c.globalAlpha=.8*(1-dn*.6);c.fillStyle=g;c.beginPath();c.moveTo(f.x-w,f.y);c.quadraticCurveTo(f.x-w*.6,f.y-H,f.x-w*.3,f.y-H*1.7);c.lineTo(f.x+w*.3,f.y-H*1.7);c.quadraticCurveTo(f.x+w*.6,f.y-H,f.x+w,f.y);c.closePath();c.fill()}
      c.fillStyle=lv?'#fde68a':'#fff';for(let i=0;i<(lv?70:42);i++){const a=sr(f.s,i+40)*6.2832,v=f.rad*(.5+.9*sr(f.s,i+7)),tau=Math.min(1,p*1.7),bx=f.x+Math.cos(a)*(f.rad*.2+v*tau),by=f.y+Math.sin(a)*(f.rad*.2+v*tau)*.85-(f.rad*.9*sr(f.s,i+11)*tau-f.rad*.9*sr(f.s,i+11)*tau*tau*.9);c.globalAlpha=(1-p)*.9;c.beginPath();c.arc(bx,by,1.6+sr(f.s,i)*3.2,0,7);c.fill()}
      c.restore()}
+    else if(f.k==='glass'){c.save();c.globalCompositeOperation='lighter';const e=1-Math.pow(1-p,2.2),al=1-p;c.lineCap='round';c.strokeStyle='#e0f2fe';
+     for(let i=0;i<14;i++){let x=f.x,y=f.y,aa=i/14*6.2832+sr(f.s,i)*.4;c.globalAlpha=al*.9;c.lineWidth=2.2*(1-p*.6);c.beginPath();c.moveTo(x,y);for(let j=1;j<=5;j++){aa+=(sr(f.s,i*7+j)-.5)*.7;const d=f.rad*e/5*(.8+sr(f.s,i+j)*.5);x+=Math.cos(aa)*d;y+=Math.sin(aa)*d;c.lineTo(x,y)}c.stroke()}
+     c.fillStyle='#bae6fd';for(let i=0;i<22;i++){const a=sr(f.s,i+30)*6.2832,d=f.rad*(.15+.95*sr(f.s,i+50))*e,sz=10+sr(f.s,i+70)*22,rot=a*3+p*6*(sr(f.s,i)>.5?1:-1),px=f.x+Math.cos(a)*d,py=f.y+Math.sin(a)*d;c.globalAlpha=al*.55;c.beginPath();c.moveTo(px+Math.cos(rot)*sz,py+Math.sin(rot)*sz);c.lineTo(px+Math.cos(rot+2.2)*sz*.7,py+Math.sin(rot+2.2)*sz*.7);c.lineTo(px+Math.cos(rot+4.1)*sz*.5,py+Math.sin(rot+4.1)*sz*.5);c.closePath();c.fill()}
+     const g=c.createRadialGradient(f.x,f.y,0,f.x,f.y,f.rad*.5);g.addColorStop(0,'rgba(255,255,255,'+(.85*al)+')');g.addColorStop(1,'rgba(56,189,248,0)');c.globalAlpha=1;c.fillStyle=g;c.beginPath();c.arc(f.x,f.y,f.rad*.5,0,7);c.fill();c.restore()}
     else if(f.k==='las'){if(f.dl>0){c.save();c.globalCompositeOperation='lighter';const q=1-f.dl/.2,g=c.createRadialGradient(f.x,f.y,0,f.x,f.y,70+40*q);g.addColorStop(0,'#fff');g.addColorStop(.4,'rgba(56,189,248,.8)');g.addColorStop(1,'rgba(56,189,248,0)');c.fillStyle=g;c.beginPath();c.arc(f.x+Math.cos(f.a)*40,f.y+Math.sin(f.a)*40*.8,70+40*q,0,7);c.fill();c.restore()}
     else{c.save();c.beginPath();c.arc(C,C,R0+8,0,7);c.clip();c.translate(f.x,f.y);c.rotate(f.a);c.globalCompositeOperation='lighter';const al=Math.min(1,f.l/.5),pu=1+.12*Math.sin(t*60),w=54*pu*(.5+.5*al);
      c.globalAlpha=.45*al;c.fillStyle='#0369a1';c.fillRect(0,-w*.9,f.len,w*1.8);c.globalAlpha=.8*al;c.fillStyle='#0ea5e9';c.fillRect(0,-w*.55,f.len,w*1.1);c.globalAlpha=.95*al;c.fillStyle='#bae6fd';c.fillRect(0,-w*.32,f.len,w*.64);c.fillStyle='#fff';c.fillRect(0,-w*.14,f.len,w*.28);
@@ -6993,7 +7023,7 @@ function bossStart(id){
  }else if(id===2){
   const n=br?3:1;L(.1,()=>{aim();b.leanT=-1;b.crT=-.3;wind(.1,.9,1,'mouth')});
   L(1.1,()=>{const a0=aim();b.leanT=1.2;b.crT=.4;b.mouth=1;for(let j=0;j<n;j++){const a=a0+(n>1?(j-1)*.5:0);bossFx.push({k:'las',x:b.x,y:b.y,a,len:0,max:R0*1.9,hit:[],dl:.2,l:1,m:1,last:0,j,lt:n>1});arSplash(b.x,b.y,n>1?10:24,300,380);arSparks(b.x,b.y,n>1?8:20,520);if(j===(n>1?1:0))ring(b.x,b.y,120,'#e0f2fe',.4);
-    {let pd=90;for(let i=0;i<8;i++){const rd=40+i*13,nx=b.x+Math.cos(a)*pd,ny=b.y+Math.sin(a)*pd,tt=2.3+i*.3;if(Math.hypot(nx-C,ny-C)<R0&&(n<2||j===1||i%4===3)){L(tt-.55,()=>bossFx.push({k:'tele',s:'cir',x:nx,y:ny,rad:rd,l:.55,m:.55}));L(tt,()=>bossFall(nx,ny,rd,16+i*4,n>1))}pd+=(rd*2+13)*.62}}}});
+    {let pd=90;for(let i=0;i<8;i++){const rd=40+i*13,nx=b.x+Math.cos(a)*pd,ny=b.y+Math.sin(a)*pd,tt=2.3+i*.3;if(Math.hypot(nx-C,ny-C)<R0&&(n<2||j===1||i%4===3)){L(tt-.55,()=>bossFx.push({k:'tele',s:'cir',x:nx,y:ny,rad:rd,l:.55,m:.55,lt:n>1}));L(tt,()=>bossFall(nx,ny,rd,16+i*4,n>1))}pd+=(rd*2+13)*.62}}}});
   L(1.8,()=>{b.leanT=0;b.crT=0});end=5.2
  }else{
   const hits=br?2:1;for(let i=0;i<hits;i++){L(.1+i*1.2,()=>{wind(.5,-1.2,.8,'body');b.coilT=1;b.crT=.8});L(.95+i*1.2,()=>{b.coilT=0;b.crT=-.4;hit(.1,1);b.tailT=.55;bossArc(b.ang,270,6.3,br?100:80,br)});L(1.3+i*1.2,()=>{b.crT=0})}
@@ -7001,13 +7031,156 @@ function bossStart(id){
  }
  b.act={t:0,ev,end,id};b.lastMv=id;
 }
+/* ---------- Boss 2: Thiết Bị Giám Sát · Chế Độ Càn Quét ---------- */
+const SN={e0:32,max:112,regen:3,loss:8,icd:.5,sweepT:90,downT:12,coWin:3,coDur:3,coBoost:2,openT:15,xfT:3.6,fly:62,gap:2.4,weakT:8,skills:4,res:{base:.25,sweep:.5,weak:-.4},rot:[0,.5,.8,1.1,1.4],dmg:[0,10,15,20,20],bw:[0,24,30,36,36]};
+const snTier=e=>e<10?0:e<30?1:e<60?2:e<100?3:4;
+const snRes=b=>b.ph==='weak'||(b.ph==='sweep'&&b.down)?SN.res.weak:b.ph==='sweep'?SN.res.sweep:SN.res.base;
+function snInit(){const b=boss;b.x=C;b.y=C;b.ph='skill';b.down=false;b.w0=null;b.boostT=0;b.skT=SN.openT;b.ek=SN.e0;b.ekHitT=-9;b.sa=rnd(0,6.2832);b.sdir=Math.random()<.5?-1:1;b.pt=0;b.skN=0;b.wg=0;b.wgT=0;b.dash=null;b.calm=1.2}
+function snStartXform(){const b=boss;b.x=C;b.y=C;b.vx=b.vy=0;b.ph='xform';b.xt=0;b.ek=SN.e0;b.ekHitT=-9;b.sa=rnd(0,6.2832);b.sdir=Math.random()<.5?-1:1;b.wgT=0;bossCinematicCue('⚙️ Chuyển hình · Chế Độ Càn Quét','#22d3ee');ring(b.x,b.y,160,'#22d3ee',.6);shake=Math.min(1,shake+.3)}
+function snStartSweep(){const b=boss;b.ph='sweep';b.down=false;b.w0=null;b.boostT=0;b.mt=SN.sweepT;b.ek=SN.e0;b.ekHitT=-9;b.skN=0;b.skT=null;b.wgT=0;bossCinematicCue('🌀 Chế Độ Càn Quét · '+SN.e0+' Động Năng','#22d3ee');ring(b.x,b.y,200,'#22d3ee',.7);shake=Math.min(1,shake+.4)}
+/* Mọi đòn trúng boss (kể cả va chạm) đều trừ Động Năng Lỏng, tối đa 1 lần mỗi SN.icd giây */
+function snHit(b,o){if(b.ph!=='sweep')return;
+ if(o&&o.col){if(b.w0==null&&!(b.boostT>0))b.w0=bossTime}else b.w0=null;/* chỉ va chạm trong coWin giây, không kỹ năng → nạp nhanh */
+ if(bossTime-b.ekHitT<SN.icd)return;b.ekHitT=bossTime;b.ek=Math.max(0,b.ek-SN.loss);ring(b.x,b.y,b.r+34,'#67e8f9',.35)}
+function snBeams(T){const b=boss,n=T>=4?4:2,w=SN.bw[T],d=SN.dmg[T],len=R0+20;
+ for(let i=0;i<n;i++){const a=b.sa+i*6.2832/n,cs=Math.cos(a),sn=Math.sin(a);
+  for(const q of balls)if(q.alive&&!(q.sbT>0)){const dx=q.x-b.x,dy=q.y-b.y,al=dx*cs+dy*sn,pp=Math.abs(-dx*sn+dy*cs);if(al>-b.r*.3&&al<=len&&pp<q.r+w*.5){q.sbT=.9;bossDamagePlayer(q,d*b.dmg);arSplash(q.x,q.y,6,160,240);arSparks(q.x,q.y,10,420)}}}}
+function snTick(dt,stunned,tg){const b=boss;
+ for(const q of balls)if(q.sbT>0)q.sbT-=dt;
+ b.wg+=(b.wgT-b.wg)*Math.min(1,dt*8);
+ if(b.ph==='sweep'||b.ph==='xform'){b.x=C;b.y=C;b.kx=b.ky=0;b.vx=b.vy=0}/* Càn Quét: đứng yên như tượng, không bị đẩy */
+ /* Xung Kích: lao thẳng, chạm người chơi thì gây sát thương */
+ if(b.dash&&!stunned){const D=b.dash;D.t+=dt;const p=Math.min(1,D.t/D.d),e=1-Math.pow(1-p,2);b.x=D.x0+(D.x1-D.x0)*e;b.y=D.y0+(D.y1-D.y0)*e;bossClamp(b);
+  for(const q of balls)if(q.alive&&!D.hit.includes(q)&&Math.hypot(q.x-b.x,q.y-b.y)<b.r+q.r+10){D.hit.push(q);bossDamagePlayer(q,D.dmg*b.dmg);arSplash(q.x,q.y,8,160,240);arSparks(q.x,q.y,14,480);shake=Math.min(1,shake+.25)}
+  if(Math.random()<.8)arSparks(b.x,b.y,2,320,D.a+Math.PI,.8);
+  if(p>=1)b.dash=null}
+ if(b.ph==='sweep'){
+  b.mt-=dt;
+  if(b.boostT>0)b.boostT-=dt;
+  if(b.w0!=null&&bossTime-b.w0>=SN.coWin){b.w0=null;b.boostT=SN.coDur;ring(b.x,b.y,b.r+70,'#fde047',.5);bossCinematicCue('🔋 Chỉ có va chạm · Động Năng nạp x'+SN.coBoost+' trong '+SN.coDur+' giây','#fde047')}
+  const rg=SN.regen*(b.boostT>0?SN.coBoost:1);
+  if(b.mt<=0){b.down=false;b.ph='skill';b.skN=0;b.skT=null;b.calm=1.2;b.wgT=0;bossFx=bossFx.filter(f=>f.k!=='tele');bossCinematicCue('👁️ Hết Chế Độ Càn Quét · boss tung chiêu','#22d3ee')}
+  else if(!stunned){
+   const dx=C-b.x,dy=C-b.y,dd=Math.hypot(dx,dy);if(dd>2){const st=Math.min(dd,500*dt);b.x+=dx/dd*st;b.y+=dy/dd*st}
+   if(b.down){b.dn-=dt;if(b.dn<=0)b.ek=Math.min(SN.max,b.ek+rg*dt);
+    if(b.ek>=10){b.down=false;ring(b.x,b.y,b.r+60,'#22d3ee',.5);bossCinematicCue('🌀 Động Năng phục hồi · tiếp tục bắn','#22d3ee')}}
+   else{b.ek=Math.min(SN.max,b.ek+rg*dt);const T=snTier(b.ek);
+    if(T===0){b.down=true;b.dn=SN.downT;bossFx.push({k:'spl',x:b.x,y:b.y-30,rad:150,big:true,l:.8,m:.8,s:2});shake=Math.min(1,shake+.5);bossCinematicCue('⚡ Cạn Động Năng! Ngừng bắn · Kháng '+Math.round(SN.res.weak*100)+'%','#fde047')}
+    else{b.sa+=b.sdir*SN.rot[T]*dt;snBeams(T)}}}}
+ else if(b.ph==='weak'){b.pt-=dt;if(Math.random()<dt*18)fx.push({x:b.x+rnd(-b.r,b.r),y:b.y+rnd(-b.r,b.r*.4),vx:rnd(-60,60),vy:rnd(-120,-30),l:.5,m:.5,c:'#fde047',r:rnd(2,4),nb:1});
+  if(b.pt<=0){b.ph='skill';b.skN=0;b.skT=null;b.calm=1.2;bossCinematicCue('👁️ Boss bắt đầu tung chiêu','#22d3ee')}}
+ else if(b.ph==='xform'){if(!stunned){b.xt+=dt;const p=Math.min(1,b.xt/SN.xfT);b.sa+=b.sdir*6*Math.sin(Math.PI*p)*dt;
+  if(p>.55&&Math.random()<dt*45){const a=b.sa+(Math.random()<.5?0:Math.PI),tx=b.x+Math.cos(a)*b.r*1.8,ty=b.y-30+Math.sin(a)*b.r*1.8,px=tx+rnd(-80,80),py=ty+rnd(-80,80);fx.push({x:px,y:py,vx:(tx-px)*2.8,vy:(ty-py)*2.8,l:.35,m:.35,c:'#67e8f9',r:rnd(2,4),nb:1})}
+  if(b.xt>=SN.xfT)snStartSweep()}}
+ else if(b.ph==='ret'){if(!stunned){const dx=C-b.x,dy=C-b.y,dd=Math.hypot(dx,dy);if(dd>8){const st=Math.min(dd,600*dt);b.x+=dx/dd*st;b.y+=dy/dd*st;b.walking=true}else{b.x=C;b.y=C;snStartXform()}}}
+ else if(b.ph==='skill'){
+  if(b.skT!=null&&b.skT>0)b.skT-=dt;
+  if(!stunned&&!b.act&&!b.dash){b.calm=Math.min(b.calm,SN.gap);b.calm-=dt;
+   if(b.calm<=0){
+    if(b.skT!=null?b.skT<=0:b.skN>=SN.skills){b.ph='ret';bossCinematicCue(b.skT!=null?'🌀 Khởi động Chế Độ Càn Quét':'↩ Trở về trung tâm sân đấu','#22d3ee')}
+    else if(tg){const d=Math.hypot(tg.x-b.x,tg.y-b.y),ws=[d<=340?3:.8,2,d>320?4:0,2.2];if(b.lastMv>=0)ws[b.lastMv]*=.3;let r=Math.random()*ws.reduce((x,y)=>x+y,0),id=0;while(id<3&&(r-=ws[id])>0)id++;bossCinematicCue('👁️ '+b.moves[id].name,b.color);b.skN++;snStart(id)}
+    else b.calm=.4}
+   else if(tg){const dx=tg.x-b.x,dy=tg.y-b.y,dd=Math.hypot(dx,dy)||1,sp=SN.fly*(b.ccM||1);b.ang+=angd(Math.atan2(dy,dx),b.ang)*Math.min(1,dt*6);
+    b.wpT=(b.wpT||0)-dt;
+    if(b.wpT<=0||!b.wp){b.wpT=rnd(.45,.95);const a=rnd(0,6.2832),rr=rnd(150,400);let wx=tg.x+Math.cos(a)*rr,wy=tg.y+Math.sin(a)*rr;const wd=Math.hypot(wx-C,wy-C),lim=R0-b.r-20;if(wd>lim){wx=C+(wx-C)/wd*lim;wy=C+(wy-C)/wd*lim}b.wp={x:wx,y:wy}}
+    const ux=b.wp.x-b.x,uy=b.wp.y-b.y,ud=Math.hypot(ux,uy)||1,k=Math.min(1,dt*5);
+    if(ud>24){b.vx+=(ux/ud*sp-b.vx)*k;b.vy+=(uy/ud*sp-b.vy)*k;b.walking=true}else{b.vx*=.88;b.vy*=.88;b.wpT=Math.min(b.wpT,.15)}
+    b.x+=b.vx*dt;b.y+=b.vy*dt;bossClamp(b)}}}
+ /* Xoáy Nước và Giam Lỏng */
+ for(const f of bossFx){
+  if(f.k==='vor'){f.tk-=dt;
+   for(const q of balls){if(!q.alive)continue;const dx=f.x-q.x,dy=f.y-q.y,d=Math.hypot(dx,dy)||1;if(d<f.rad*1.6){const pw=Math.min(d,(1-d/(f.rad*1.6)*.5)*130*dt);q.x+=dx/d*pw;q.y+=dy/d*pw}}
+   if(f.tk<=0){f.tk=.5;for(const q of balls)if(q.alive&&Math.hypot(q.x-f.x,q.y-f.y)<f.rad+q.r)bossDamagePlayer(q,f.d1*b.dmg)}
+   if(!f.ex&&f.l<=dt+.001){f.ex=1;bossBoom(f.x,f.y,f.rad*1.25,f.d2,true);bossImpact(f.x,f.y,f.rad*1.25,2)}}
+  else if(f.k==='cage'){
+   for(const q of f.tr){if(!q.alive)continue;const dx=q.x-f.x,dy=q.y-f.y,d=Math.hypot(dx,dy)||1,lim=f.rad-q.r-4;if(d>lim){q.x=f.x+dx/d*lim;q.y=f.y+dy/d*lim;const vn=q.vx*dx/d+q.vy*dy/d;if(vn>0){q.vx-=vn*dx/d;q.vy-=vn*dy/d}}}
+   if(!f.o&&f.l<=f.m-.9){f.o=1;bossFall(f.x,f.y,f.rad*.95,f.d,false)}}}}
+function snStart(id){const b=boss,ev=[],L=(t,f)=>ev.push([t,f]);let end=2;
+ const aim=()=>{const p=bossTgt();if(p)b.ang=Math.atan2(p.y-b.y,p.x-b.x);return b.ang};
+ const slash=(t,w,dmg,rad,sp,tilt)=>{let a=0,sg=1;L(t-w,()=>{a=aim()+(tilt||0);sg=b.arcSg=-(b.arcSg||1);b.fastT=0;b.lfT=.6;b.swT=-sg*1.55});L(t,()=>{b.ang=a;b.fastT=.32;b.lfT=.1;b.swT=sg*1.35;bossArc(a,rad,sp,dmg,false)});L(t+.3,()=>{b.lfT=0;b.swT=0})};
+ if(id===0){/* Thủy Kiếm: 2 nhát chém từ hai bên, có thể thêm nhát chém đôi */
+  slash(1.0,.7,30,370,1.6,.25);slash(2.1,.7,30,370,1.6,-.25);end=3.1;
+  if(Math.random()<.65){L(2.6,()=>{aim();b.lfT=1;b.swT=-1.6;b.fastT=0});L(3.5,()=>{const a=aim();b.fastT=.32;b.swT=1.4;b.lfT=.1;bossArc(a+.32,430,1.9,30,true);bossArc(a-.32,430,1.9,30,true)});L(3.8,()=>{b.lfT=0;b.swT=0});end=4.6}}
+ else if(id===1){/* Xoáy Nước: kéo người chơi vào, rồi phát nổ */
+  let x=b.x,y=b.y;L(.1,()=>{aim();b.wgT=.5});
+  L(.7,()=>{const p=bossTgt();if(p){x=p.x;y=p.y}bossFx.push({k:'tele',s:'cir',x,y,rad:170,l:.8,m:.8})});
+  L(1.5,()=>{b.wgT=0;const T=3.6;bossFx.push({k:'vor',x,y,rad:170,l:T,m:T,s:Math.random()*9,tk:.5,d1:6,d2:45,ex:0});ring(x,y,190,'#7dd3fc',.5);arSplash(x,y,16,300,360)});end=1.9}
+ else if(id===2){/* Xung Kích: dang cánh lao về phía người chơi 2-3 lần */
+  const n=Math.random()<.5?2:3;
+  for(let i=0;i<n;i++){const t0=.1+i*1.25;
+   L(t0,()=>{aim();b.wgT=1;const p=bossTgt();if(p)bossFx.push({k:'tele',s:'arc',x:b.x,y:b.y,a:Math.atan2(p.y-b.y,p.x-b.x),sp:.45,rad:Math.min(520,Math.hypot(p.x-b.x,p.y-b.y)+110),l:.6,m:.6})});
+   L(t0+.6,()=>{const p=bossTgt(),a=p?Math.atan2(p.y-b.y,p.x-b.x):b.ang,d=Math.min(520,(p?Math.hypot(p.x-b.x,p.y-b.y):300)+110);b.ang=a;b.dash={x0:b.x,y0:b.y,x1:b.x+Math.cos(a)*d,y1:b.y+Math.sin(a)*d,t:0,d:.5,hit:[],dmg:40,a};shake=Math.min(1,shake+.2);ring(b.x,b.y,100,'#e0f2fe',.4)});
+   L(t0+1.1,()=>{b.wgT=i===n-1?0:.6})}
+  end=.1+(n-1)*1.25+1.5}
+ else{/* Giam Lỏng: đánh dấu, dựng lồng giam rồi bắn cầu nước vào trong */
+  let x=b.x,y=b.y;L(.1,()=>{aim();b.wgT=.4;b.swT=-1;b.lfT=.8});
+  L(.7,()=>{const p=bossTgt();if(p){x=p.x;y=p.y}bossFx.push({k:'tele',s:'cir',x,y,rad:150,l:.9,m:.9})});
+  L(1.6,()=>{const tr=balls.filter(q=>q.alive&&Math.hypot(q.x-x,q.y-y)<150+q.r);bossFx.push({k:'cage',x,y,rad:150,l:1.8,m:1.8,s:Math.random()*9,tr,d:55,o:0});ring(x,y,170,'#7dd3fc',.6);shake=Math.min(1,shake+.2)});
+  L(2.1,()=>{b.wgT=0;b.swT=0;b.lfT=0});end=2.4}
+ b.act={t:0,ev,end,id};b.lastMv=id}
+function snHud(b){const sw=b.ph==='sweep',g=sw?Math.max(0,Math.min(1,b.ek/SN.max)):0;$('#bhrfg').style.strokeDashoffset=119.4*(1-g);$('#bhrico').textContent=sw?(b.down?'⚡':'🌀'):b.ph==='weak'?'⚡':b.ph==='xform'?'⚙️':'👁️';
+ $('#bhrtxt').textContent=(sw?(b.down?'Suy yếu · ':'')+Math.floor(b.ek)+' Động Năng · '+Math.ceil(Math.max(0,b.mt))+'s':b.ph==='weak'?'Suy yếu '+Math.ceil(Math.max(0,b.pt))+'s':b.ph==='xform'?'Chuyển hình...':'Đang tung chiêu')+' · Kháng '+Math.round(snRes(b)*100)+'%';$('#bossHud').classList.toggle('brave',sw&&snTier(b.ek)>=4)}
+function snDraw(){const b=boss,c=ctx,r=b.r,t=time,fa=b.ang,ca=Math.cos(fa),sa=Math.sin(fa),sw=b.ph==='sweep'&&!b.down,wk=b.ph==='weak'||(b.ph==='sweep'&&!!b.down),T=sw?snTier(b.ek):0,wg=b.wg||0;
+ if(sw&&T>0&&b.stun<=0){const n=T>=4?4:2,w=SN.bw[T]*(1+.1*Math.sin(t*40)),len=R0+20;c.save();c.beginPath();c.arc(C,C,R0+8,0,7);c.clip();c.globalCompositeOperation='lighter';
+  for(let i=0;i<n;i++){c.save();c.translate(b.x,b.y);c.rotate(b.sa+i*6.2832/n);
+   c.globalAlpha=.4;c.fillStyle='#0369a1';c.fillRect(0,-w*.9,len,w*1.8);c.globalAlpha=.8;c.fillStyle='#0ea5e9';c.fillRect(0,-w*.55,len,w*1.1);c.globalAlpha=.95;c.fillStyle='#bae6fd';c.fillRect(0,-w*.3,len,w*.6);
+   c.strokeStyle='#e0f2fe';c.lineWidth=2;c.globalAlpha=.7;for(let k=0;k<4;k++){c.beginPath();for(let x=0;x<=len;x+=14){const y=Math.sin(x*.05-t*34+k*2.1)*w*.4;x?c.lineTo(x,y):c.moveTo(x,y)}c.stroke()}
+   c.restore()}
+  c.restore()}
+ if(b.ph==='xform'&&b.stun<=0){const p=Math.min(1,b.xt/SN.xfT),al=Math.max(0,(p-.6)/.4);if(al>0){c.save();c.beginPath();c.arc(C,C,R0+8,0,7);c.clip();c.globalCompositeOperation='lighter';c.strokeStyle='#67e8f9';c.lineWidth=2+2*al;c.globalAlpha=.15+.35*al*(.6+.4*Math.sin(t*30));c.setLineDash([18,14]);for(let i=0;i<2;i++){const a=b.sa+i*Math.PI;c.beginPath();c.moveTo(b.x,b.y);c.lineTo(b.x+Math.cos(a)*(R0+20),b.y+Math.sin(a)*(R0+20));c.stroke()}c.restore()}}
+ c.save();c.translate(b.x,b.y);
+ c.fillStyle='rgba(0,0,0,.35)';c.beginPath();c.ellipse(0,r*.7,r*1.1,r*.45,0,0,7);c.fill();
+ c.translate(0,Math.sin(t*3)*5-14);
+ /* tượng đá: vòng khối đá + 4 mảnh lơ lửng */
+ const SPI=Math.PI,SGL=wk?.15:sw?.85+.15*Math.sin(t*8):.6,
+ SG=(x0,y0,x1,y1)=>{const g=c.createLinearGradient(x0,y0,x1,y1);if(b.flash){g.addColorStop(0,'#fff');g.addColorStop(1,'#e5e7eb')}else{g.addColorStop(0,'#efe9da');g.addColorStop(1,'#a39b88')}return g},
+ SBLK=(a0,a1,r0,r1)=>{const m=(a0+a1)/2;c.beginPath();c.arc(0,0,r1,a0,a1);c.arc(0,0,r0,a1,a0,true);c.closePath();c.fillStyle=SG(Math.cos(m)*r0,Math.sin(m)*r0,Math.cos(m)*r1,Math.sin(m)*r1);c.fill();c.strokeStyle='#4b463a';c.lineWidth=2;c.stroke()},
+ SGLOW=(rad,a0,a1,w)=>{c.save();c.lineCap='round';for(const [lw,col,al] of [[w*1.9,'#ea580c',.35*SGL+.08],[w,'#f59e0b',.9*SGL+.1],[w*.4,'#fef3c7',SGL]]){c.globalAlpha=al;c.strokeStyle=wk?'#78716c':col;c.lineWidth=lw;c.beginPath();c.arc(0,0,rad,a0,a1);c.stroke()}c.restore()},
+ SCLAW=(x,y,sg,rot,sz)=>{c.save();c.translate(x,y);c.scale(sg,1);c.rotate(rot);
+  c.beginPath();c.arc(0,0,sz,-.5,1.9);c.arc(0,0,sz*.6,1.9,-.5,true);c.closePath();c.fillStyle=SG(0,-sz,0,sz);c.fill();c.strokeStyle='#4b463a';c.lineWidth=2;c.stroke();
+  SGLOW(sz*.8,-.1,1.7,sz*.07);
+  const hx=Math.cos(-.5)*sz,hy=Math.sin(-.5)*sz;c.beginPath();c.moveTo(hx,hy);c.lineTo(hx+sz*.55,hy-sz*.5);c.lineTo(hx+sz*.05,hy+sz*.28);c.closePath();c.fillStyle=SG(hx,hy-sz*.5,hx+sz*.5,hy);c.fill();c.stroke();c.restore()};
+ for(const sg of[-1,1]){const fx0=ca*wg*r*.9,fy0=sa*wg*r*.6;
+  SCLAW(sg*r*1.55+fx0,-r*.95+Math.sin(t*2.2+sg*1.7)*4+fy0-16,sg,-1.25+wg*.5,r*.78);
+  SCLAW(sg*r*.95+fx0*.5,r*.95+Math.sin(t*2.6+sg*2.9)*4+fy0*.5-16,sg,.1,r*.5)}
+ c.save();c.translate(0,-16);
+ c.fillStyle='#3b3a44';c.beginPath();c.arc(0,0,r*.95,0,7);c.fill();c.strokeStyle='#4b463a';c.lineWidth=3;c.stroke();
+ SGLOW(r*.68,SPI*1.04,SPI*1.96,r*.07);SGLOW(r*.68,SPI*.12,SPI*.88,r*.05);
+ for(let i=0;i<7;i++)SBLK(SPI+i*SPI/7+.03,SPI+(i+1)*SPI/7-.03,r*.76,i===3?r*1.25:r*(i%2?1.04:1.12));
+ for(let i=0;i<3;i++)SBLK(SPI*.2+i*SPI*.2+.02,SPI*.2+(i+1)*SPI*.2-.02,r*.76,r*1.02);
+ c.fillStyle='#241a2e';c.beginPath();c.arc(0,0,r*.6,0,7);c.fill();c.restore();
+ /* vòng phát tia nước */
+ if(sw||wk){const n=T>=4?4:2;c.save();c.translate(0,-16);c.strokeStyle=sw?'#fbbf24':'#6b7280';c.lineWidth=5;c.beginPath();c.ellipse(0,0,r*1.08,r*.92,0,0,7);c.stroke();
+  for(let i=0;i<n;i++){const a=b.sa+i*6.2832/n;c.save();c.rotate(a);c.fillStyle=sw?'#efe9da':'#9ca3af';c.fillRect(r*.9,-9,r*.42,18);if(sw){c.globalCompositeOperation='lighter';const g=c.createRadialGradient(r*1.32,0,0,r*1.32,0,30);g.addColorStop(0,'rgba(255,255,255,.9)');g.addColorStop(1,'rgba(34,211,238,0)');c.fillStyle=g;c.beginPath();c.arc(r*1.32,0,30,0,7);c.fill()}c.restore()}c.restore()}
+ if(b.ph==='xform'){const p=Math.min(1,b.xt/SN.xfT),es=x=>x<.5?2*x*x:1-Math.pow(-2*x+2,2)/2,e1=es(Math.min(1,p/.3)),e2=es(Math.max(0,Math.min(1,(p-.25)/.45))),e3=Math.max(0,(p-.7)/.3);
+  c.save();c.translate(0,-16);
+  c.strokeStyle='#fbbf24';c.lineWidth=2+3*e1;c.globalAlpha=.5+.5*e1;c.beginPath();c.ellipse(0,0,r*(.9+.18*e1),r*(.8+.12*e1),0,0,7);c.stroke();
+  c.globalAlpha=.7*e1;c.lineWidth=2;c.setLineDash([14,10]);c.lineDashOffset=-t*70;c.beginPath();c.ellipse(0,0,r*1.4*e1,r*1.15*e1,0,0,7);c.stroke();c.setLineDash([]);c.globalAlpha=1;
+  for(let k=0;k<4;k++){c.save();c.rotate(k*1.5708+.785+b.sa*.3);const o=r*(.5+.55*e1);c.fillStyle='#a8a08c';c.strokeStyle='#fde68a';c.lineWidth=2;c.beginPath();c.moveTo(o,-12);c.lineTo(o+r*.32,-6);c.lineTo(o+r*.32,6);c.lineTo(o,12);c.closePath();c.fill();c.stroke();c.restore()}
+  for(let i=0;i<2;i++){c.save();c.rotate(b.sa+i*Math.PI);const L=r*(.1+1.0*e2);
+   for(let k=0;k<3;k++){const x0=r*.8+L*k*.33,sl=L*.36,h=13-3*k;c.fillStyle=k%2?'#d6cfc0':'#8d8672';c.strokeStyle='#fde68a';c.lineWidth=1.5;c.fillRect(x0,-h,sl,h*2);c.strokeRect(x0,-h,sl,h*2);c.fillStyle='#fbbf24';c.beginPath();c.arc(x0+sl,0,3.5,0,7);c.fill()}
+   const tx=r*.8+L*1.02,gr=10+34*e3*(.7+.3*Math.sin(t*50));c.globalCompositeOperation='lighter';const g=c.createRadialGradient(tx,0,0,tx,0,gr);g.addColorStop(0,'rgba(255,255,255,.95)');g.addColorStop(1,'rgba(251,191,36,0)');c.fillStyle=g;c.beginPath();c.arc(tx,0,gr,0,7);c.fill();c.restore()}
+  c.restore()}
+ /* mắt giám sát */
+ const ex=ca*r*.2,ey=sa*r*.16-18;
+ c.fillStyle='#1b1424';c.beginPath();c.arc(0,-18,r*.5,0,7);c.fill();c.strokeStyle=wk?'#78716c':'#d4a72c';c.lineWidth=4;c.stroke();
+ {const g=c.createRadialGradient(ex,ey,0,ex,ey,r*.4);if(wk){g.addColorStop(0,'#a8a29e');g.addColorStop(1,'rgba(68,64,60,0)')}else{g.addColorStop(0,'#fff7d6');g.addColorStop(.3,sw?'#fb923c':'#f59e0b');g.addColorStop(.7,'#9f1239');g.addColorStop(1,'rgba(88,28,135,0)')}c.fillStyle=g;c.beginPath();c.arc(ex,ey,r*.4,0,7);c.fill()}
+ c.fillStyle='#120a1a';c.beginPath();c.arc(ex+ca*3,ey+sa*3,r*.09,0,7);c.fill();
+ /* thủy kiếm */
+ if(b.ph==='skill'){const w2=fa+(b.sw||0),lf=b.lf||0,d=r*(.95-.5*lf),gx=Math.cos(w2)*d,gy=Math.sin(w2)*d*.8-22-lf*r*.5,len=r*1.9;
+  const tx=gx+Math.cos(w2)*len,ty=gy+Math.sin(w2)*len*.85;
+  bossLimb(c,-sa*r*.85,ca*r*.6-18,gx,gy,5,10);
+  c.save();c.globalCompositeOperation='lighter';c.lineCap='round';for(const [lw,col,al] of [[22,'#0ea5e9',.45],[12,'#7dd3fc',.8],[4,'#ffffff',.95]]){c.globalAlpha=al;c.strokeStyle=col;c.lineWidth=lw;c.beginPath();c.moveTo(gx,gy);c.lineTo(tx,ty);c.stroke()}c.restore()}
+ if(wk){c.font='30px serif';c.textAlign='center';c.fillStyle='#fde047';c.fillText('⚡',0,-r*1.4)}
+ if(b.stun>0){c.font='34px serif';c.textAlign='center';c.fillStyle='#fff';c.fillText('💫',0,-r*1.5)}
+ c.restore()}
 function bossLimb(c,sx,sy,ex,ey,bend,w){const mx=(sx+ex)/2,my=(sy+ey)/2,dx=ex-sx,dy=ey-sy,d=Math.hypot(dx,dy)||1,kx=mx-dy/d*bend,ky=my+dx/d*bend;
  for(const [lw,col,off] of [[w,'#0c4a6e',0],[w*.7,'#0e7490',-1],[w*.25,'#67e8f9',-2]]){c.strokeStyle=col;c.lineWidth=lw;c.beginPath();c.moveTo(sx+off*.4,sy+off*.4);c.quadraticCurveTo(kx+off*.4,ky+off*.4,ex+off*.4,ey+off*.4);c.stroke()}
  c.fillStyle='#164e63';c.beginPath();c.arc(ex,ey,w*.55,0,7);c.fill();c.fillStyle='#67e8f9';c.beginPath();c.arc(ex-1,ey-1,w*.2,0,7);c.fill()}
 function bossAnchorDraw(c,x,y,w,len,sc,hot,t){
  c.save();c.translate(x,y);c.rotate(w);c.scale(sc,sc);c.lineCap='round';c.lineJoin='round';
  const ar=len*.3,met=(p,lw,cols)=>{for(const [k,col,o] of cols){c.strokeStyle=col;c.lineWidth=lw*k;c.save();c.translate(o*.7,o);c.stroke(p);c.restore()}};
- const dark=hot?'#431407':'#1e293b',mid=hot?'#9a3412':'#64748b',lite=hot?'#fdba74':'#e2e8f0';
+ const dark=hot?'#082f49':'#1e293b',mid=hot?'#0369a1':'#64748b',lite=hot?'#bae6fd':'#e2e8f0';
  const cols=[[1,dark,1.5],[.74,mid,0],[.3,lite,-2]];
  let p=new Path2D();p.moveTo(-len*.18,0);p.lineTo(len-ar*.1,0);met(p,16,cols);
  p=new Path2D();p.moveTo(len*.1,-ar*1.05);p.lineTo(len*.1,ar*1.05);met(p,11,cols);
@@ -7017,9 +7190,9 @@ function bossAnchorDraw(c,x,y,w,len,sc,hot,t){
  for(const s of[-1,1]){const an=s*2.05,tx=len-ar+Math.cos(an)*ar,ty=Math.sin(an)*ar,tg=an+s*Math.PI/2;
   c.fillStyle=dark;c.beginPath();c.moveTo(tx+Math.cos(tg-.9)*20,ty+Math.sin(tg-.9)*20);c.lineTo(tx+Math.cos(tg)*26,ty+Math.sin(tg)*26);c.lineTo(tx+Math.cos(tg+.9)*20,ty+Math.sin(tg+.9)*20);c.lineTo(tx,ty);c.closePath();c.fill();
   c.fillStyle=mid;c.beginPath();c.moveTo(tx+Math.cos(tg-.8)*14,ty+Math.sin(tg-.8)*14);c.lineTo(tx+Math.cos(tg)*21,ty+Math.sin(tg)*21);c.lineTo(tx,ty);c.closePath();c.fill()}
- c.fillStyle=hot?'#fb923c':'#3f6212';for(let i=0;i<9;i++){c.globalAlpha=hot?.9:.8;c.beginPath();c.arc(len*(.2+.7*sr(7,i)),(sr(3,i)-.5)*10,1.6+sr(1,i)*2.2,0,7);c.fill()}c.globalAlpha=1;
+ c.fillStyle=hot?'#38bdf8':'#3f6212';for(let i=0;i<9;i++){c.globalAlpha=hot?.9:.8;c.beginPath();c.arc(len*(.2+.7*sr(7,i)),(sr(3,i)-.5)*10,1.6+sr(1,i)*2.2,0,7);c.fill()}c.globalAlpha=1;
  c.strokeStyle='#78350f';c.lineWidth=6;c.setLineDash([5,4]);c.beginPath();c.moveTo(-len*.14,0);c.lineTo(len*.05,0);c.stroke();c.setLineDash([]);
- if(hot){c.globalCompositeOperation='lighter';c.strokeStyle='rgba(251,146,60,.8)';c.lineWidth=3;c.shadowColor='#f97316';c.shadowBlur=18;c.beginPath();c.arc(len-ar,0,ar,-2.05,2.05);c.stroke();c.beginPath();c.moveTo(0,0);c.lineTo(len-ar*.1,0);c.stroke()}
+ if(hot){c.globalCompositeOperation='lighter';c.strokeStyle='rgba(125,211,252,.85)';c.lineWidth=3;c.shadowColor='#0ea5e9';c.shadowBlur=10;c.beginPath();c.arc(len-ar,0,ar,-2.05,2.05);c.stroke();c.beginPath();c.moveTo(0,0);c.lineTo(len-ar*.1,0);c.stroke()}
  c.restore()}
 function bossVessel(c,x,y,tilt,barrel,r){c.save();c.translate(x,y);c.rotate(tilt);
  if(barrel){c.fillStyle='#451a03';c.beginPath();c.ellipse(0,0,r*.34,r*.42,0,0,7);c.fill();c.fillStyle='#92400e';c.beginPath();c.ellipse(-2,-2,r*.3,r*.38,0,0,7);c.fill();c.strokeStyle='#d6a360';c.lineWidth=4;for(const o of[-.22,.02,.26]){c.beginPath();c.ellipse(0,r*o,r*.32,r*.08,0,0,7);c.stroke()}c.fillStyle='#fde68a';c.beginPath();c.arc(0,-r*.42,4,0,7);c.fill()}
@@ -7034,22 +7207,23 @@ function drawBoss(){
   else{const g=c.createRadialGradient(s.x,s.y,s.rad*.1,s.x,s.y,s.rad);g.addColorStop(0,'rgba(2,6,15,.85)');g.addColorStop(.7,'rgba(8,20,40,.5)');g.addColorStop(1,'rgba(8,20,40,0)');c.fillStyle=g;c.beginPath();c.arc(s.x,s.y,s.rad,0,7);c.fill()}
   c.restore()}c.restore();
  drawBossFx(0);
+ if(b.kind==='sentinel'){snDraw();drawBossFx(1);return}
  const fa=b.ang,ca=Math.cos(fa),sa=Math.sin(fa),bob=b.walking?Math.sin(t*7)*3:0,hot=b.brave,lf=b.lf||0,cr=b.cr||0,ln=b.lean||0,coil=b.coil||0,dr=b.drink;
  c.save();c.translate(b.x,b.y);
  c.fillStyle=`rgba(0,0,0,${Math.max(.1,.4-z/500)})`;c.beginPath();c.ellipse(0,r*.55,r*(1.1-z/420),r*.5,0,0,7);c.fill();
  c.translate(0,-z+bob);c.translate(0,r*.5);c.scale(1+cr*.1,1-cr*.14);c.translate(0,-r*.5);
- if(hot){c.save();c.globalCompositeOperation='lighter';const g=c.createRadialGradient(0,-r*.3,r*.3,0,-r*.3,r*2.1);g.addColorStop(0,'rgba(251,146,60,.55)');g.addColorStop(1,'rgba(251,146,60,0)');c.fillStyle=g;c.beginPath();c.arc(0,-r*.3,r*2.1,0,7);c.fill();c.restore()}
- if(hot){c.save();c.globalCompositeOperation='lighter';for(let i=0;i<14;i++){const a=i/14*6.2832+t*.9,rr=r*(1.15+.25*Math.sin(t*5+i)),px=Math.cos(a)*rr,py=-r*.3+Math.sin(a)*rr*.55,hh=r*(.5+.4*sr(i,6))*(.7+.3*Math.sin(t*9+i*2)),g=c.createLinearGradient(px,py,px,py-hh),sw=Math.sin(t*8+i)*5;g.addColorStop(0,'rgba(251,146,60,.7)');g.addColorStop(1,'rgba(253,224,71,0)');c.fillStyle=g;c.beginPath();c.moveTo(px-9,py);c.quadraticCurveTo(px+sw,py-hh*.6,px,py-hh);c.quadraticCurveTo(px+sw,py-hh*.5,px+9,py);c.fill()}c.strokeStyle='rgba(253,186,116,.6)';c.lineWidth=3;c.setLineDash([10,12]);c.lineDashOffset=-t*40;c.beginPath();c.ellipse(0,r*.5,r*1.7,r*.7,0,0,7);c.stroke();c.setLineDash([]);c.restore()}
+ if(hot){c.save();c.globalCompositeOperation='lighter';const g=c.createRadialGradient(0,-r*.3,r*.3,0,-r*.3,r*2.1);g.addColorStop(0,'rgba(186,230,253,.75)');g.addColorStop(.5,'rgba(56,189,248,.4)');g.addColorStop(1,'rgba(14,165,233,0)');c.fillStyle=g;c.beginPath();c.arc(0,-r*.3,r*2.1,0,7);c.fill();c.restore()}
+ if(hot){c.save();c.globalCompositeOperation='lighter';for(let i=0;i<14;i++){const a=i/14*6.2832+t*.9,rr=r*(1.15+.25*Math.sin(t*5+i)),px=Math.cos(a)*rr,py=-r*.3+Math.sin(a)*rr*.55,hh=r*(.5+.4*sr(i,6))*(.7+.3*Math.sin(t*9+i*2)),g=c.createLinearGradient(px,py,px,py-hh),sw=Math.sin(t*8+i)*5;g.addColorStop(0,'rgba(125,211,252,.8)');g.addColorStop(1,'rgba(224,242,254,0)');c.fillStyle=g;c.beginPath();c.moveTo(px-9,py);c.quadraticCurveTo(px+sw,py-hh*.6,px,py-hh);c.quadraticCurveTo(px+sw,py-hh*.5,px+9,py);c.fill()}c.strokeStyle='rgba(253,186,116,.6)';c.lineWidth=3;c.setLineDash([10,12]);c.lineDashOffset=-t*40;c.beginPath();c.ellipse(0,r*.5,r*1.7,r*.7,0,0,7);c.stroke();c.setLineDash([]);c.restore()}
  
  c.lineCap='round';const ta=fa+Math.PI+Math.sin(t*2)*.3*(1-coil)-coil*1.5+(b.tailSpin||0);
  for(let i=0;i<8;i++){const w=ta+Math.sin(t*3+i)*.07*i*(1-coil),d=r*(.55+i*.28),px=Math.cos(w)*d,py=Math.sin(w)*d*.75-r*.15,rr=r*(.31-i*.032);c.fillStyle=i%2?'#0e7490':'#155e75';c.beginPath();c.arc(px,py,rr,0,7);c.fill();c.fillStyle='rgba(165,243,252,.3)';c.beginPath();c.arc(px-rr*.3,py-rr*.35,rr*.4,0,7);c.fill()}
  for(const sg of[-1,1]){c.fillStyle='#164e63';c.beginPath();c.ellipse(-sa*sg*r*.5+ca*r*.1,ca*sg*r*.5+sa*r*.1+r*.4,r*.27,r*.2,0,0,7);c.fill()}
- for(let k=0;k<=10;k++){c.fillStyle=b.flash&&k===10?'#fff':`hsl(${hot?18:198},55%,${15+k*1.6}%)`;c.beginPath();c.ellipse(0,-k*2.4,r*.92,r*.78,0,0,7);c.fill()}
+ for(let k=0;k<=10;k++){c.fillStyle=b.flash&&k===10?'#fff':`hsl(${hot?196:198},${hot?85:55}%,${(hot?24:15)+k*1.6}%)`;c.beginPath();c.ellipse(0,-k*2.4,r*.92,r*.78,0,0,7);c.fill()}
  const gr=c.createRadialGradient(-r*.3,-26-r*.3,r*.1,0,-24,r*.95);gr.addColorStop(0,'rgba(186,230,253,.55)');gr.addColorStop(1,'rgba(8,47,73,0)');c.fillStyle=gr;c.beginPath();c.ellipse(0,-24,r*.92,r*.78,0,0,7);c.fill();
  c.fillStyle='rgba(165,243,252,.35)';for(let i=0;i<7;i++){c.beginPath();c.arc((sr(5,i)-.5)*r*1.3,-24+(sr(9,i)-.5)*r*1.0,2+sr(2,i)*3,0,7);c.fill()}
  const sh=[-1,1].map(sg=>[-sa*sg*r*.85,ca*sg*r*.6-22]);for(const q of sh){c.fillStyle='#0c4a6e';c.beginPath();c.arc(q[0],q[1],r*.3,0,7);c.fill();c.strokeStyle='#7dd3fc88';c.lineWidth=2;c.stroke()}
- const hx=ca*r*.5+ca*ln*r*.1,hy=sa*r*.4-34+ln*r*.1-(ln<0?-ln*4:0);c.fillStyle=hot?'#9a3412':'#0e7490';c.beginPath();c.arc(hx,hy,r*.4,0,7);c.fill();c.fillStyle=hot?'#fdba74':'#67e8f9';c.beginPath();c.arc(hx-r*.08,hy-r*.1,r*.3,0,7);c.fill();
- for(const sg of[-1,1]){c.fillStyle=hot?'#ef4444':'#082f49';c.beginPath();c.arc(hx+ca*r*.12-sa*sg*r*.15,hy+sa*r*.1+ca*sg*r*.06,r*.07,0,7);c.fill()}
+ const hx=ca*r*.5+ca*ln*r*.1,hy=sa*r*.4-34+ln*r*.1-(ln<0?-ln*4:0);c.fillStyle=hot?'#0284c7':'#0e7490';c.beginPath();c.arc(hx,hy,r*.4,0,7);c.fill();c.fillStyle=hot?'#e0f2fe':'#67e8f9';c.beginPath();c.arc(hx-r*.08,hy-r*.1,r*.3,0,7);c.fill();
+ for(const sg of[-1,1]){c.fillStyle=hot?'#ffffff':'#082f49';c.beginPath();c.arc(hx+ca*r*.12-sa*sg*r*.15,hy+sa*r*.1+ca*sg*r*.06,r*.07,0,7);c.fill()}
  const mx=hx+ca*r*.3,my=hy+sa*r*.25;if(b.mouth>0||(b.chg&&b.chg.at==='mouth')){c.fillStyle='#fff';c.beginPath();c.arc(mx,my,r*.14*(1+(b.mouth>0?.5:0)),0,7);c.fill()}
  /* mỏ neo + tay */
  const len=r*(hot?2.05:1.7);let tipX=0,tipY=0;
@@ -7100,8 +7274,8 @@ function bossStatsHtml(){
   h+=`<div class="bs-teamline"><span>🏅 ĐIỂM ĐỘI</span>${ts.sort((a,b)=>sc[b]-sc[a]).map(t=>`<b>${TEAMS[t].n}: ${sc[t]}/3</b>`).join('')}</div>`}
  return h+'</div>'}
 function bossWaveClear(timeout=false){if(bossRunData._summary)return;bossRunData._summary=true;running=false;bossRunData.completed=timeout?0:1;
- const dead=!balls.some(p=>p.alive),ttl=timeout?(dead?'💀 Toàn đội gục':'⏳ Hết thời gian'):'🏆 Đã hạ Kẻ Neo Sóng!';
- const card=$('#bossNoticeCard');card.innerHTML=`<h2>${ttl}</h2><p style="margin:0 0 4px;color:#cbd0ff">${timeout?'Boss vẫn còn đứng vững.':'Khát khao song lớn đã tan theo sóng.'}</p>${bossStatsHtml()}<div class="bn-actions"><button class="btn" id="bossAgain">⚔️ Đấu lại</button><button class="btn alt" id="bossExit">Về chọn chế độ</button></div>`;
+ const dead=!balls.some(p=>p.alive),ttl=timeout?(dead?'💀 Toàn đội gục':'⏳ Hết thời gian'):'🏆 Đã hạ '+((boss&&boss.name)||'Kẻ Neo Sóng')+'!';
+ const card=$('#bossNoticeCard');card.innerHTML=`<h2>${ttl}</h2><p style="margin:0 0 4px;color:#cbd0ff">${timeout?'Boss vẫn còn đứng vững.':(boss&&boss.kind==='sentinel'?'Ánh mắt giám sát đã tắt.':'Khát khao song lớn đã tan theo sóng.')}</p>${bossStatsHtml()}<div class="bn-actions"><button class="btn" id="bossAgain">⚔️ Đấu lại</button><button class="btn alt" id="bossExit">Về chọn chế độ</button></div>`;
  $('#bossNotice').hidden=false;$('#bossAgain').onclick=()=>{bossRunData._summary=false;bossRunData.failed=false;startNextBossWave()};$('#bossExit').onclick=()=>exitBossMode()}
 function showBossIntro(){}
 
@@ -7189,9 +7363,11 @@ MODES.zone={n:'Chiếm Điểm',e:'📍',ac:'#22d3ee',tag:'Một mình trong vù
  how:['Đứng một mình trong vùng sáng để ghi {{1 điểm mỗi giây}}.','Từ 2 người trở lên cùng đứng trong vùng thì {{không ai ghi điểm}}: hãy đẩy, choáng hoặc hất văng đối thủ ra ngoài.','Cứ {{14 giây}} vùng sáng dịch chuyển sang chỗ khác, có vòng nét đứt báo trước {{1,6 giây}}.','Người gục {{hồi sinh sau 5 giây}} ở một vị trí ngẫu nhiên.'],
  win:'Người đầu tiên đạt <i><b>60 điểm</b></i> thắng. Hết 4 phút thì người nhiều điểm nhất thắng.',tips:['Chiêu khống chế và hất văng là vũ khí chính để dọn vùng.','Đoán trước vòng nét đứt để có mặt trước đối thủ.','Đôi khi đứng ngoài chờ người khác đánh nhau rồi mới vào là khôn nhất.']};
 function modeCard(id,o){o=o||{};const m=MODES[id];
- return `<div class="nc mc${o.sel?' sel':''}" role="button" tabindex="0" style="--ac:${m.ac};--nbg:url('PNG_Mode/${id}.png')" data-a="${o.a||'mode'}" data-m="${id}"><span class="xni">${m.e}</span><span class="xnt"><b class="xnn">${m.n}</b><span class="xng">${m.tag}</span></span><span class="xnr">${o.right||''}</span></div>`}
+ return `<div class="nc mc${o.sel?' sel':''}" role="button" tabindex="0" style="--ac:${m.ac};--nbg:url('${modeImg(id)}')" data-a="${o.a||'mode'}" data-m="${id}"><span class="xni">${m.e}</span><span class="xnt"><b class="xnn">${m.n}</b><span class="xng">${m.tag}</span></span><span class="xnr">${o.right||''}</span></div>`}
+/* Ảnh namecard: boss (id bắt đầu bằng boss_) lấy từ PNG_Boss, chế độ khác lấy từ PNG_Mode */
+function modeImg(id){return (/^boss_/.test(id)?'PNG_Boss/':'PNG_Mode/')+id+'.png'}
 function modeRow(id,o){o=o||{};const m=MODES[id];
- return `<div class="mr2${o.sel?' sel':''}" role="button" tabindex="0" style="--ac:${m.ac};--nbg:url('PNG_Mode/${id}.png')" data-a="${o.a||'mode'}" data-m="${id}"><span class="mr2t"><b>${m.n}</b><small>${m.tag}</small><span class="mr2c"><span class="chp">👥 ${m.pl}</span>${o.right||''}</span></span><span class="mimg2" data-img="PNG_Mode/${id}.png"><i>${m.e}</i></span></div>`}
+ return `<div class="mr2${o.sel?' sel':''}" role="button" tabindex="0" style="--ac:${m.ac};--nbg:url('${modeImg(id)}')" data-a="${o.a||'mode'}" data-m="${id}"><span class="mr2t"><b>${m.n}</b><small>${m.tag}</small><span class="mr2c"><span class="chp">👥 ${m.pl}</span>${o.right||''}</span></span><span class="mimg2" data-img="${modeImg(id)}"><i>${m.e}</i></span></div>`}
 function probeImgs(root){root.querySelectorAll('.mimg2[data-img]').forEach(el=>{const im=new Image();im.onload=()=>el.classList.add('has');im.src=el.dataset.img})}
 function renderModeCur(){const h=$('#modeCur');if(h){h.innerHTML=modeRow(bossMode,{a:'cur',right:'<span class="chp chg2">⟳ Đổi chế độ</span>'});probeImgs(h)}}
 const DIFF_TXT={easy:['Boss ít máu, di chuyển chậm hơn','Quái yếu, lõi trâu'],normal:['Cân bằng','Cân bằng'],hard:['Boss trâu hơn, sát thương tăng nhẹ','Quái trâu và đau hơn'],extreme:['Thử thách tối đa','Thử thách tối đa']};
@@ -7226,7 +7402,7 @@ function mpSwap(fn,from,toSel){
 function showModeInfo(id,from){const m=MODES[id];MP.sel=id;const el=$('#mpi');
  const btns='<button class="btn alt" data-a="mback">← Quay lại</button><button class="btn" data-a="mok">✓ Xác nhận</button>';
  mpSwap(()=>{el.style.setProperty('--ac',m.ac);
- el.innerHTML=`<div class="pkh"><h3>${m.e} ${m.n}</h3><button class="ib" data-a="mx" title="Đóng">✕</button></div><div class="mpb mdb"><div class="mdl"><div class="mimg2 mdimg" data-img="PNG_Mode/${id}.png" style="--ac:${m.ac};--nbg:url('PNG_Mode/${id}.png')"><i>${m.e}</i></div>${m.chips.length?'<div class="mchips">':''}${m.chips.map(c=>`<span class="chp">${c}</span>`).join('')}${m.chips.length?'</div>':''}<div class="mdtip"><h4>💡 Mẹo</h4><ul>${m.tips.map(x=>`<li>${hl(x)}</li>`).join('')}</ul></div><div class="mdact">${btns}</div></div><div class="mdr"><p class="mtag">${m.tag}</p><p class="msum">${hl(m.sum)}</p><h4>📖 Cách chơi</h4><ul>${m.how.map(x=>`<li>${hl(x)}</li>`).join('')}</ul><h4>🏆 Thắng / thua</h4><p class="msum win">${hl(m.win)}</p></div></div><div class="mpf">${btns}</div>`;
+ el.innerHTML=`<div class="pkh"><h3>${m.e} ${m.n}</h3><button class="ib" data-a="mx" title="Đóng">✕</button></div><div class="mpb mdb"><div class="mdl"><div class="mimg2 mdimg" data-img="${modeImg(id)}" style="--ac:${m.ac};--nbg:url('${modeImg(id)}')"><i>${m.e}</i></div>${m.chips.length?'<div class="mchips">':''}${m.chips.map(c=>`<span class="chp">${c}</span>`).join('')}${m.chips.length?'</div>':''}<div class="mdtip"><h4>💡 Mẹo</h4><ul>${m.tips.map(x=>`<li>${hl(x)}</li>`).join('')}</ul></div><div class="mdact">${btns}</div></div><div class="mdr"><p class="mtag">${m.tag}</p><p class="msum">${hl(m.sum)}</p><h4>📖 Cách chơi</h4><ul>${m.how.map(x=>`<li>${hl(x)}</li>`).join('')}</ul><h4>🏆 Thắng / thua</h4><p class="msum win">${hl(m.win)}</p></div></div><div class="mpf">${btns}</div>`;
  probeImgs(el);$('#mpt').classList.add('in')},from&&from.querySelector('.mimg2'),'.mdimg')}
 function modeBack(){const d=$('#mpi .mdimg'),sel=MP&&MP.sel;mpSwap(()=>$('#mpt').classList.remove('in'),d,'#mpg .mr2[data-m="'+sel+'"] .mimg2')}
 function closeModePicker(){MP=null;$('#modePicker').hidden=true;$('#mpt').classList.remove('in','vt')}
@@ -7245,20 +7421,26 @@ function topPick(id){
 $('#bossPick').onclick=()=>openModePicker(TOP_IDS,SPM(bossMode)?bossMode:'boss',topPick,'🎯 Chọn Chế Độ');
 $('#modeCur').onclick=()=>{if(SPM(bossMode))openModePicker(TOP_IDS,bossMode,topPick,'🎯 Chọn Chế Độ');else openModePicker(BOSS_IDS,bossMode,setMode,'🎯 Chọn Chế Độ Boss')};
 
-const BOSS_LIST=['boss_anchor'];let bossPickId='boss_anchor';
+const BOSS_LIST=['boss_anchor','boss_sentinel'];let bossPickId='boss_anchor';
 MODES.boss_anchor={n:'Kẻ Neo Sóng',e:'⚓',ac:'#38bdf8',tag:'Khát Khao Song Lớn · Máu cơ bản 5000',pl:'1–4',title:'Kẻ Neo Sóng',sub:'',
  chips:[],
- sum:'Gã khổng lồ vác mỏ neo, đi lại tự do trên sàn đấu và thi triển chiêu theo xác suất. Khi uống đủ rượu, hắn vào trạng thái <i><b>Dũng Mãnh</b></i>.',
+ sum:'Gã khổng lồ vác mỏ neo, ra chiêu theo xác suất. Uống đủ rượu sẽ vào trạng thái <i><b>Dũng Mãnh</b></i>.',
  how:[
- '<b>📊 Chỉ số</b><br>– Máu cơ bản {{5000}}, mỗi người chơi thêm tăng {{50%}}<br>– Kháng sát thương {{25%}}<br>– Sát thương ghi theo độ khó Thường; độ khó càng cao sát thương chỉ tăng rất nhẹ (tối đa {{+10%}})',
- '<b>⚔️ Đánh Thường</b> (tầm đánh rất rộng)<br>– Một nhát chém cung gây {{150 sát thương}}<br>– Hoặc loạt {{4 nhát chém}}, mỗi nhát {{45 sát thương}}, rồi đập đất gây {{60 sát thương}}<br>– Vết chém hằn trên sàn rồi mờ dần',
- '<b>🌊 Vung Biển Khơi</b><br>– Nhảy đến chỗ bạn trong {{3 giây}}<br>– Đập xuống gây {{90 sát thương}}, kèm thác nước và gợn sóng',
- '<b>💧 Khạc Biển Khơi</b><br>– Tia nước quét ra xa gây {{150 sát thương}}, để lại vết cháy<br>– Sau đó {{8 tháp nước}} nổ chậm, to dần từ đầu tới cuối tia<br>– Mỗi tháp nước gây từ {{24 đến 66 sát thương}}',
- '<b>🌀 Vung Đuôi</b><br>– Quét vòng 360° gây {{120 sát thương}}',
- '<b>🍶 Uống rượu</b><br>– Cứ trung bình {{10 giây}} (ngẫu nhiên 7–13 giây) boss lại tu rượu (tính từ lúc uống xong); sau khi hết Dũng Mãnh thì trung bình {{20 giây}} (15–25 giây), nếu đang dở chiêu thì tung nốt chiêu rồi uống ngay<br>– Găm neo xuống đất, móc bình trong túi ra tu rồi bóp nát<br>– Mỗi lần tích thêm {{40%}} (bình rượu) hoặc {{60%}} (thùng rượu) Dũng Mãnh trong {{8 giây}}<br>– Chịu quá {{10% máu tối đa}} khi đang uống thì vỡ bình, boss {{choáng 5 giây}}',
- '<b>🔥 Dũng Mãnh</b> (khi tích đủ 100%)<br>– Kháng sát thương {{75%}}, mọi chiêu được cường hóa<br>– Thanh Dũng Mãnh giảm {{0,25% mỗi giây}}<br>– Giảm thêm {{1%}} mỗi đòn trúng (tối đa {{1 lần mỗi 0,1 giây}}) và {{2%}} mỗi lần boss ra chiêu',
- '<b>😵 Hết Dũng Mãnh</b><br>– Nhận sát thương chuẩn bằng {{120%}} sát thương đã gây, tối đa {{25% máu tối đa}}<br>– Sau đó {{choáng 8 giây}} và kháng sát thương {{-50%}}'],
+ 'Boss đi lại tự do trên sàn đấu, ra chiêu theo xác suất và luôn kháng {{25%}} sát thương. Chiêu khạc nước sẽ để lại những tháp nước nổ chậm dọc theo đường quét, hãy đọc vòng cảnh báo và đi ngang tia.',
+ 'Cứ trung bình mỗi {{10 giây}} (ngẫu nhiên 7–13 giây), boss găm neo xuống đất và đứng yên để uống rượu. Mỗi lần uống tích thêm {{40%}} (bình rượu) hoặc {{60%}} (thùng rượu) thanh <i><b>Dũng Mãnh</b></i> trong {{8 giây}}. Nếu trong lúc uống boss chịu quá {{10% máu tối đa}}, bình rượu sẽ vỡ và boss bị choáng {{5 giây}}.',
+ 'Khi thanh đạt {{100%}}, boss bước vào trạng thái <i><b>Dũng Mãnh</b></i>: kháng sát thương tăng lên {{75%}} và mọi chiêu thức đều được cường hóa. Thanh này tự giảm {{0,25%}} mỗi giây, giảm thêm {{1%}} mỗi đòn của người chơi trúng boss (tối đa {{1 lần mỗi 0,1 giây}}) và {{2%}} mỗi lần boss ra chiêu.',
+ 'Toàn bộ sát thương người chơi gây ra trong lúc Dũng Mãnh sẽ dội ngược lại boss: khi trạng thái kết thúc, boss nhận sát thương chuẩn bằng {{120%}} lượng sát thương đó, tối đa {{25% máu tối đa}}. Sau đó boss choáng {{15 giây}} và kháng sát thương giảm còn {{-50%}}. Đây là thời điểm lý tưởng để dồn sát thương.',
+ 'Sau Dũng Mãnh, chu kỳ uống rượu kéo dài hơn: trung bình {{20 giây}} (15–25 giây) mới uống lần kế tiếp. Nếu boss đang dở chiêu thì sẽ tung nốt chiêu rồi mới uống.'],
  win:'Hạ boss trước khi hết giờ. Sau trận có <i><b>3 biểu đồ tròn</b></i>: sát thương gây ra, lượng hồi phục, sát thương nhận.',tips:['Đánh vỡ bình rượu đúng lúc để boss choáng.','Trong Dũng Mãnh đừng đánh quá mạnh: sát thương gây ra sẽ quay lại boss dạng sát thương chuẩn.','Boss đứng yên khi găm neo uống rượu, đây là lúc dồn sát thương.','Tia nước nổ chậm, hãy đọc vòng cảnh báo và đi ngang tia.']};
+MODES.boss_sentinel={n:'Thiết Bị Giám Sát',e:'👁️',ac:'#22d3ee',tag:'Cỗ Máy Càn Quét · Máu cơ bản 10000',pl:'1–4',title:'Thiết Bị Giám Sát',sub:'',
+ chips:[],
+ sum:'Cỗ máy giám sát xoay tia nước quét sàn đấu, càng tích nhiều <i><b>Động Năng Lỏng</b></i> càng nguy hiểm.',
+ how:[
+ 'Khi trận bắt đầu, boss ở trạng thái thường: dùng ngẫu nhiên các chiêu bên dưới (đứng xa thì ưu tiên chiêu lao tới) với kháng sát thương {{25%}}. Sau {{15 giây}}, boss lao nhanh về giữa sân, mất khoảng {{3.6 giây}} chuyển hình và dang {{2 cánh tay}} phát tia, rồi mới vào <i><b>Chế Độ Càn Quét</b></i>: ở yên, bắn {{2 tia nước}} xoay tròn quét khắp sàn và gây sát thương khi chạm phải, đồng thời nhận {{32 điểm}} <i><b>Động Năng Lỏng</b></i> (tối đa {{112 điểm}}). Mỗi giây boss tự nhận thêm {{3 điểm}}, nhưng mỗi khi bị đánh trúng (kể cả va chạm) sẽ mất {{8 điểm}} (tối đa {{1 lần mỗi 0.5 giây}}). Chế độ này kéo dài {{90 giây}}, boss kháng sát thương {{50%}}, đứng yên như tượng và không bị đẩy lùi bởi bất kỳ đòn nào. Nếu trong {{3 giây}} boss chỉ bị va chạm mà không dính kỹ năng nào, boss nạp Động Năng nhanh gấp {{2}} lần trong {{3 giây}}.',
+ 'Động Năng Lỏng càng cao, tia nước càng nguy hiểm. Từ {{10–30 điểm}} tia nước quay chậm; từ {{30–60 điểm}} sát thương và tốc độ quay tăng; từ {{60–100 điểm}} sát thương đạt mức cao nhất và quay nhanh hơn; từ {{100 điểm}} boss bắn thêm {{2 tia nước}} (tổng {{4 tia}}) và quay nhanh nhất.',
+ 'Khi Động Năng Lỏng xuống dưới {{10 điểm}}, tia nước ngừng bắn (giống bị choáng), hiệu quả tăng kháng bị vô hiệu và kháng sát thương giảm mạnh còn {{-40%}}. Sau {{12 giây}} boss nạp lại Động Năng; vượt {{10 điểm}} thì tiếp tục bắn như thường. Boss chỉ rời Chế Độ Càn Quét khi hết {{90 giây}}.',
+ 'Hết Chế Độ Càn Quét, boss dùng ngẫu nhiên {{4 chiêu}} với kháng sát thương {{25%}}, rồi quay về trung tâm sân đấu và vào lại Chế Độ Càn Quét với {{32 điểm}}:<br>– <b>Thủy Kiếm</b>: tối đa {{3 đòn}}, gồm 2 nhát chém từ hai bên và một nhát chém đôi<br>– <b>Xoáy Nước</b>: kéo người chơi vào và liên tục gây sát thương, sau một lúc thì phát nổ gây sát thương phạm vi<br>– <b>Xung Kích</b>: dang cánh lao về phía người chơi tối đa {{3 lần}}, hay dùng khi người chơi đứng xa<br>– <b>Giam Lỏng</b>: đánh dấu khu vực quanh người chơi, sau một lúc dựng lồng giam rồi bắn cầu nước vào trong'],
+ win:'Hạ boss trước khi hết giờ. Sau trận có <i><b>3 biểu đồ tròn</b></i>: sát thương gây ra, lượng hồi phục, sát thương nhận.',tips:['Dồn kỹ năng cùng lúc để Động Năng Lỏng tụt dưới 10 điểm: tia nước tắt và boss yếu đi, nhưng nếu không giữ áp lực boss sẽ nạp lại và bắn tiếp.','Mọi đòn trúng boss, kể cả va chạm, đều làm Động Năng tụt (mỗi 0.5 giây tối đa 1 lần), hãy dồn đòn đánh vào lúc Càn Quét.','Rời khỏi vòng đánh dấu của Giam Lỏng trước khi lồng đóng, và thoát khỏi Xoáy Nước trước khi nó nổ.']};
 function renderBossCur(){const h=$('#bossCur');if(h){h.innerHTML=modeRow(bossPickId,{a:'cur',right:'<span class="chp chg2">⟳ Đổi Boss</span>'});probeImgs(h)}}
 $('#bossCur').onclick=()=>openModePicker(BOSS_LIST,bossPickId,id=>{bossPickId=id;renderBossCur()},'👹 Chọn Boss');
 let hpLevel='normal';
