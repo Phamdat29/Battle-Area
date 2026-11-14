@@ -6783,17 +6783,17 @@ $('#pf').onchange=async e=>{
 };
 
 /* ---------- Boss Mode v2: 1 boss tự chọn · Kẻ Neo Sóng ---------- */
-const BOSS_TYPES=[{name:'Kẻ Neo Sóng',sub:'Khát Khao Song Lớn',icon:'⚓',color:'#38bdf8',hp:5000,spd:50,dmg:1,desc:'Gã khổng lồ vác mỏ neo, say rượu thơm để tích Dũng Mãnh.'}];
+const BOSS_TYPES=[{name:'Kẻ Neo Sóng',sub:'Khát Khao Song Lớn',icon:'⚓',color:'#38bdf8',hp:8500,spd:50,dmg:1,desc:'Gã khổng lồ vác mỏ neo, say rượu thơm để tích Dũng Mãnh.'}];
 const BOSS_MOVESETS={'Kẻ Neo Sóng':[{name:'Đánh Thường',kind:'normal'},{name:'Vung Biển Khơi',kind:'leap'},{name:'Khạc Biển Khơi',kind:'laser'},{name:'Vung Đuôi',kind:'tail'}]};
 const BOSS_SIGNATURES={'Kẻ Neo Sóng':['normal','leap','laser','tail']};
 const BOSS_PASSIVE_LOADOUTS={'Kẻ Neo Sóng':[{name:'Men Say Dũng Mãnh',desc:'Kháng 25%. Uống rượu tích Dũng Mãnh.'}]};
 let boss=null,bossWave=1,bossTime=0,bossDefeated=false,bossWarning=null,bossAttackCd=2,bossAttackIndex=0,bossRespawnTimers={},bossStats={},bossRunData=null,bossFx=[],bossScorch=[],bossScars=[];
 const DIFF={easy:{hp:.72,dmg:.95,spd:.85,time:105},normal:{hp:1,dmg:1,spd:1,time:100},hard:{hp:1.65,dmg:1.05,spd:1.12,time:105},extreme:{hp:2.5,dmg:1.1,spd:1.25,time:115}};
 const BR=(a,b)=>a+Math.random()*(b-a),angd=(a,b)=>Math.atan2(Math.sin(a-b),Math.cos(a-b)),PCOL=['#38bdf8','#fb7185','#facc15','#4ade80'];
-const bossRes=b=>b.weak?-.1:b.broken?0:b.brave?.75:b.resT>0?.5:.25;
+const bossRes=b=>b.weak?-.5:b.broken?0:b.brave?.75:b.resT>0?.5:.25;
 function createBoss(){
  const t=BOSS_TYPES[0],df=DIFF[bossRunData.difficulty]||DIFF.easy,pl=Math.max(1,balls.length);
- boss={...t,typeName:t.name,moves:BOSS_MOVESETS[t.name],x:C,y:C-40,vx:0,vy:0,r:66,max:Math.round(t.hp*df.hp*(1+.5*(pl-1))),hp:0,lag:0,lagT:0,kx:0,ky:0,stun:0,slow:0,zs:0,gs:0,es:0,enk:0,alive:true,team:0,role:'sword',k:9000,spd:t.spd*df.spd,dmg:df.dmg,flash:0,ang:Math.PI/2,passives:[],shield:0,shieldMax:0,bars:1,gauge:0,brave:false,braveDmg:0,braveBy:{},gaugeCut:0,resT:0,drink:null,drinkN:0,drinkCd:20,act:null,calm:BR(1.5,2.5),goal:null,idleT:1,lastMv:-1,sw:0,swT:0,z:0,tailSpin:0,passive:'none',passive2:'none'};
+ boss={...t,typeName:t.name,moves:BOSS_MOVESETS[t.name],x:C,y:C-40,vx:0,vy:0,r:66,max:Math.round(t.hp*df.hp*(1+.5*(pl-1))),hp:0,lag:0,lagT:0,kx:0,ky:0,stun:0,slow:0,zs:0,gs:0,es:0,enk:0,alive:true,team:0,role:'sword',k:9000,spd:t.spd*df.spd,dmg:df.dmg,flash:0,ang:Math.PI/2,passives:[],shield:0,shieldMax:0,bars:1,gauge:0,brave:false,braveDmg:0,braveBy:{},gaugeCut:0,resT:0,drink:null,drinkN:0,drinkCd:BR(7,13),act:null,calm:BR(1.5,2.5),goal:null,idleT:1,lastMv:-1,sw:0,swT:0,z:0,tailSpin:0,passive:'none',passive2:'none'};
  boss.baseDmg=boss.dmg;boss.baseSpd=boss.spd;boss.hp=boss.max;boss.lag=boss.max;bossFx=[];bossScorch=[];bossScars=[];
  bossRunData.currentBoss=t.name;bossRunData.wave=1;bossRunData.waveTime=300;bossTime=0;bossDefeated=false;bossWarning=null;
  $('#bossHud').classList.add('anchorhud');$('#bossHud').style.setProperty('--bc',t.color);$('#bhname').textContent=`${t.icon} ${t.name} · ${t.sub}`;$('#bhfill').style.width='100%';$('#bhdelay').style.width='100%';$('#bhpas').textContent='';$('#bhring').hidden=false;$('#bhsh').hidden=true;$('#bhx').hidden=true;
@@ -6816,7 +6816,7 @@ function bossSeaArc(a,rad,sp,big){const b=boss,full=sp>=6.2,x=b.x,y=b.y,sg=b.arc
  arBubbles(x,y,big?8:4,rad*.4)}
 function bossArc(a,rad,sp,dmg,big){const b=boss;bossSeaArc(a,rad,sp,big);bossScars.push({k:'arc',x:b.x,y:b.y,a,rad,sp,l:4.5,m:4.5,s:Math.random()*6});if(bossScars.length>36)bossScars.shift();shake=Math.min(1,shake+(big?.22:.14));hs=big?.05:.03;
  for(const p of balls)if(p.alive){const dx=p.x-b.x,dy=p.y-b.y,d=Math.hypot(dx,dy);if(d<rad+p.r&&(sp>=6.2||Math.abs(angd(Math.atan2(dy,dx),a))<sp/2+Math.atan2(p.r,d||1))){bossDamagePlayer(p,dmg*b.dmg);arSplash(p.x,p.y,8,160,240);arSparks(p.x,p.y,14,480)}}}
-function bossFall(x,y,rad,dmg){const L=1.5+rad/100;bossFx.push({k:'wf',x,y,rad,l:L,m:L,s:Math.random()*9},{k:'rip',x,y,rad:rad*1.7,l:2.2,m:2.2,n:4,s:Math.random()*9});shake=Math.min(1,shake+.1+rad/900);ring(x,y,rad*1.2,'#e0f2fe',.5);ring(x,y,rad*.7,'#38bdf8',.6);arSplash(x,y,Math.round(10+rad*.3),300,420);arSparks(x,y,14,460,-1.57,1.2);arBubbles(x,y,5,rad*.5);for(const p of balls)if(p.alive&&Math.hypot(p.x-x,p.y-y)<rad+p.r)bossDamagePlayer(p,dmg*boss.dmg)}
+function bossFall(x,y,rad,dmg,lite){const L=1.5+rad/100;bossFx.push({k:'wf',x,y,rad,l:L,m:L,s:Math.random()*9},{k:'rip',x,y,rad:rad*1.7,l:2.2,m:2.2,n:lite?2:4,s:Math.random()*9});shake=Math.min(1,shake+(lite?.05:.1)+rad/900);ring(x,y,rad*1.2,'#e0f2fe',.5);if(!lite)ring(x,y,rad*.7,'#38bdf8',.6);arSplash(x,y,Math.round((10+rad*.3)*(lite?.5:1)),300,420);arSparks(x,y,lite?6:14,460,-1.57,1.2);arBubbles(x,y,lite?2:5,rad*.5);for(const p of balls)if(p.alive&&Math.hypot(p.x-x,p.y-y)<rad+p.r)bossDamagePlayer(p,dmg*boss.dmg)}
 function bossImpact(x,y,rad,lv){const n=lv>=3?1.6:1;
  bossFx.push({k:'cas',x,y,rad,lv,l:2.4,m:2.4,s:Math.random()*9},{k:'rip',x,y,rad:rad*1.25,l:3.6,m:3.6,n:lv>=3?9:6,s:Math.random()*9},{k:'crk',x,y,rad:rad*1.05,l:6,m:6,s:Math.random()*9},{k:'wav',x,y,rad,l:2.8,m:2.8},{k:'wav',x,y,rad:rad*.7,l:2.2,m:2.2});
  bossScars.push({k:'pit',x,y,rad:rad*.55,l:5,m:5,s:Math.random()*9});if(bossScars.length>36)bossScars.shift();
@@ -6829,8 +6829,8 @@ function bossBoom(x,y,rad,dmg,big){shake=Math.min(1.2,shake+(big?.5:.1));if(big)
  else{ring(x,y,rad*1.1,'#7dd3fc',.3);arSplash(x,y,14,260,330);arSparks(x,y,12,420);arBubbles(x,y,4,rad*.4);arCrescent(x,y,rnd(0,6.28),rad*.2,rad,1.2,18,.3,0)}
  for(const p of balls)if(p.alive&&Math.hypot(p.x-x,p.y-y)<rad+p.r)bossDamagePlayer(p,dmg*boss.dmg)}
 function bossCancel(){const b=boss;if(!b)return;b.act=null;b.leap=null;b.z=0;b.swT=0;b.lfT=0;b.crT=0;b.leanT=0;b.coilT=0;b.chg=null;b.spin=0;b.spinA=0;b.spinE=0;b.drink=null;bossFx=bossFx.filter(f=>f.k!=='tele')}
-function bossBreakDrink(){const b=boss,it=b.drink.item;b.drink=null;b.drinkCd=20;b.broken=true;b.stun=5;b.stunStart=bossTime;b.stunImm=0;bossFx.push({k:'spl',x:b.x,y:b.y-30,rad:130,big:true,l:.8,m:.8,s:1});shake=Math.min(1,shake+.4);bossCinematicCue('💥 Vỡ '+(it==='jug'?'bình rượu':'thùng rượu')+'! Choáng 5 giây','#fde047')}
-function bossBraveEnd(){const b=boss;b.brave=false;b.gauge=0;b.drinkCd=20;const td=Math.min(b.braveDmg*1.2,b.max*.25);if(td>0){b.hp=Math.max(0,b.hp-td);const tot=b.braveDmg||1;for(const k in b.braveBy)if(bossStats[k])bossStats[k].damage+=td*b.braveBy[k]/tot;num(b.x,b.y,Math.round(td),'c',50,b);shake=Math.min(1,shake+.5)}b.braveDmg=0;b.braveBy={};b.resT=0;bossCinematicCue('Hết Dũng Mãnh · sát thương CHUẨN '+Math.round(td),'#fde047');if(b.hp<=0){b.alive=false;bossDefeated=true}else{b.weak=true;b.stun=8;b.stunStart=bossTime;b.stunImm=0;b.drink=null;bossCinematicCue('😵 Kiệt sức! Choáng 8 giây · Kháng -10%','#fde047');bossFx.push({k:'spl',x:b.x,y:b.y-30,rad:150,big:true,l:.8,m:.8,s:2})}}
+function bossBreakDrink(){const b=boss,it=b.drink.item;b.drink=null;b.drinkCd=BR(7,13);b.broken=true;b.stun=5;b.stunStart=bossTime;b.stunImm=0;bossFx.push({k:'spl',x:b.x,y:b.y-30,rad:130,big:true,l:.8,m:.8,s:1});shake=Math.min(1,shake+.4);bossCinematicCue('💥 Vỡ '+(it==='jug'?'bình rượu':'thùng rượu')+'! Choáng 5 giây','#fde047')}
+function bossBraveEnd(){const b=boss;b.brave=false;b.gauge=0;b.drinkCd=BR(15,25);const td=Math.min(b.braveDmg*1.2,b.max*.25);if(td>0){b.hp=Math.max(0,b.hp-td);const tot=b.braveDmg||1;for(const k in b.braveBy)if(bossStats[k])bossStats[k].damage+=td*b.braveBy[k]/tot;num(b.x,b.y,Math.round(td),'c',50,b);shake=Math.min(1,shake+.5)}b.braveDmg=0;b.braveBy={};b.resT=0;bossCinematicCue('Hết Dũng Mãnh · sát thương CHUẨN '+Math.round(td),'#fde047');if(b.hp<=0){b.alive=false;bossDefeated=true}else{b.weak=true;b.stun=8;b.stunStart=bossTime;b.stunImm=0;b.drink=null;bossCinematicCue('😵 Kiệt sức! Choáng 8 giây · Kháng -50%','#fde047');bossFx.push({k:'spl',x:b.x,y:b.y-30,rad:150,big:true,l:.8,m:.8,s:2})}}
 function bossHurt(s,d,o,rz){
  const b=boss;if(!b||!b.alive||!s||s===b||b.hp<=0)return 0;
  d*=rz(1-bossRes(b));if(s.role==='archon')d*=AR.bossM;
@@ -6843,8 +6843,9 @@ function bossHurt(s,d,o,rz){
  if(b.lag<b.hp)b.lag=b.hp;b.lagT=.48;const ow=(s.isZ&&s.zOwner)?s.zOwner:s,q=bossStats[ow.k];if(q)q.damage+=tot;
  b.flash=cr?.22:.12;num(b.x,b.y,Math.round(tot),cr?'c':'d',cr?54:38,b,cr?undefined:tot);
  if(cr){ring(b.x,b.y,b.r+48,'#ff3b30',.45);burst(b.x,b.y,'#ff3b30',16);shake=Math.min(.8,shake+.45);hs=.06}
- if(b.drink){b.drink.dmg+=tot;if(b.drink.dmg>=b.max*.2)bossBreakDrink()}
- if(b.brave){b.braveDmg+=tot;b.braveBy[ow.k]=(b.braveBy[ow.k]||0)+tot;b.gauge=Math.max(0,b.gauge-.01);}
+ if(b.drink){b.drink.dmg+=tot;if(b.drink.dmg>=b.max*.1)bossBreakDrink()}
+ if(b.brave){b.braveDmg+=tot;b.braveBy[ow.k]=(b.braveBy[ow.k]||0)+tot;if(bossTime-(b.gHitT||-9)>=.1){b.gHitT=bossTime;b.gauge=Math.max(0,b.gauge-.01)}}
+
  if(b.hp<=0){b.alive=false;bossDefeated=true;burst(b.x,b.y,'#38bdf8',55);ring(b.x,b.y,150,'#38bdf8',.8)}
  return tot}
 /* Trạng thái khống chế của boss (choáng / đẩy lùi / làm chậm). Boss không nằm trong balls nên tự xử lý ở đây, cùng quy tắc với người chơi */
@@ -6866,18 +6867,18 @@ function bossTick(dt){
  if(b.leap){const L=b.leap;L.t+=dt;const p=Math.min(1,L.t/L.d),e=p<.5?2*p*p:1-Math.pow(-2*p+2,2)/2;b.x=L.x0+(L.x1-L.x0)*e;b.y=L.y0+(L.y1-L.y0)*e;b.z=Math.sin(p*Math.PI)*150;if(p<.7){b.lfT=1;b.swT=-1.3;b.fastT=0;b.crT=-.4}else{b.lfT=.1;b.swT=1.6;b.fastT=.2}b.ang=Math.atan2(L.y1-L.y0,L.x1-L.x0)}
  if(b.act&&!stunned){const A=b.act;A.t+=dt;for(const e of A.ev)if(!e[2]&&A.t>=e[0]){e[2]=1;e[1]()}if(A.t>=A.end){b.act=null;b.swT=0;b.calm=BR(1.3,2.4)}}
  /* Uống rượu / Dũng Mãnh */
- if(b.brave){b.gauge-=.0025*dt;if(b.gauge<=0)bossBraveEnd();if(!bossDefeated&&Math.random()<dt*80)fx.push({x:b.x+rnd(-b.r*1.4,b.r*1.4),y:b.y-b.z-b.r*.4,vx:rnd(-30,30),vy:rnd(-160,-50),l:.8,m:.8,c:Math.random()<.5?'#fb923c':'#fde047',r:rnd(2,6),nb:1})}
+ if(b.brave){b.gauge-=.0025*dt;if(b.gauge<=0)bossBraveEnd();if(!bossDefeated&&Math.random()<dt*35)fx.push({x:b.x+rnd(-b.r*1.4,b.r*1.4),y:b.y-b.z-b.r*.4,vx:rnd(-30,30),vy:rnd(-160,-50),l:.8,m:.8,c:Math.random()<.5?'#fb923c':'#fde047',r:rnd(2,6),nb:1})}
  else if(b.drink&&!stunned){const D=b.drink;D.t+=dt;
   if(!D.pl&&D.t>=D.dur*.15){D.pl=1;const wx=b.x-Math.sin(b.ang)*b.r*1.25,wy=b.y+b.r*.95;ring(wx,wy,100,'#e0f2fe',.4);ring(wx,wy,60,'#94a3b8',.5);bossSpray(wx,wy,18,320,'#94a3b8',true);arSparks(wx,wy,10,380);bossScars.push({k:'pit',x:wx,y:wy,rad:40,l:4,m:4,s:1});shake=Math.min(1,shake+.2)}
   if(!D.cr&&D.t>=D.dur*.92){D.cr=1;const mxw=b.x+Math.cos(b.ang)*b.r*.8,myw=b.y-30+Math.sin(b.ang)*b.r*.65;bossSpray(mxw,myw,26,360,D.item==='jug'?'#fbbf24':'#b45309',true);bossSpray(mxw,myw,14,300,'#fde68a',true);ring(mxw,myw,70,'#fde68a',.4);shake=Math.min(1,shake+.25)}
-  b.gauge=Math.min(1,b.gauge+D.amt/D.dur*dt);b.swT=0;if(D.t>=D.dur){b.drink=null;b.drinkN++;b.drinkCd=20;b.swT=0}}
+  b.gauge=Math.min(1,b.gauge+D.amt/D.dur*dt);b.swT=0;if(D.t>=D.dur){b.drink=null;b.drinkN++;b.drinkCd=BR(7,13);b.swT=0}}
  if(!b.brave&&b.gauge>=1){b.gauge=1;b.brave=true;b.braveDmg=0;b.braveBy={};b.drink=null;b.act=null;b.leap=null;b.z=0;b.calm=1.2;bossFx=bossFx.filter(f=>f.k!=='tele');bossCinematicCue('🔥 DŨNG MÃNH! Kháng 75% · chiêu cường hóa','#fb923c');shake=Math.min(1,shake+.6);ring(b.x,b.y,200,'#fb923c',.8)}
  if(!b.brave&&!b.drink)b.drinkCd-=dt;
 if(!stunned&&!b.act&&!b.drink){
-  if(!b.brave&&b.drinkCd<=0){const jug=b.drinkN%2===0;b.drink={t:0,dur:4,amt:jug?.4:.6,item:jug?'jug':'barrel',dmg:0};b.goal=null;bossCinematicCue(jug?'🍶 Uống rượu thơm (+40%)':'🛢️ Uống thùng rượu (+60%)','#fbbf24')}
+  if(!b.brave&&b.drinkCd<=0){const jug=b.drinkN%2===0;b.drink={t:0,dur:8,amt:jug?.4:.6,item:jug?'jug':'barrel',dmg:0};b.goal=null;bossCinematicCue(jug?'🍶 Uống rượu thơm (+40%)':'🛢️ Uống thùng rượu (+60%)','#fbbf24')}
   else{
    b.calm-=dt;
-   if(b.calm<=0){if(Math.random()<.9&&tg){const d=Math.hypot(tg.x-b.x,tg.y-b.y);let ws=[3,d>220?4:1.5,2.5,d<300?3:.8];if(b.lastMv>=0)ws[b.lastMv]*=.3;let r=Math.random()*ws.reduce((x,y)=>x+y,0),id=0;while(id<3&&(r-=ws[id])>0)id++;const nm=(br=>['Đánh Thường','Vung Biển Khơi','Khạc Biển Khơi','Vung Đuôi'][id]+(br?' (Cường Hóa)':''))(b.brave);bossCinematicCue('⚓ '+nm,b.color);bossStart(id)}else b.calm=BR(.4,.9)}
+   if(b.calm<=0){if(Math.random()<.9&&tg){const d=Math.hypot(tg.x-b.x,tg.y-b.y);let nr=b.brave?500:380,ws=[d<=nr?3:0,d>220?4:1.5,d>300?3.5:1.5,d<=260?3:0];if(b.lastMv>=0)ws[b.lastMv]*=.3;let r=Math.random()*ws.reduce((x,y)=>x+y,0),id=0;while(id<3&&(r-=ws[id])>0)id++;const nm=(br=>['Đánh Thường','Vung Biển Khơi','Khạc Biển Khơi','Vung Đuôi'][id]+(br?' (Cường Hóa)':''))(b.brave);bossCinematicCue('⚓ '+nm,b.color);bossStart(id)}else b.calm=BR(.4,.9)}
    else{/* đi lang thang tự do */
     if(b.idleT>0){b.idleT-=dt;b.vx*=.9;b.vy*=.9;if(tg)b.ang+=angd(Math.atan2(tg.y-b.y,tg.x-b.x),b.ang)*Math.min(1,dt*2.2)}
     else{if(!b.goal){if(tg&&Math.random()<.8){b.chase=true;b.goal={x:tg.x,y:tg.y}}else{b.chase=false;const a=Math.random()*6.283,d=BR(80,R0-b.r-90);b.goal={x:C+Math.cos(a)*d,y:C+Math.sin(a)*d}}}if(b.chase&&tg)b.goal={x:tg.x,y:tg.y};
@@ -6888,8 +6889,8 @@ if(!stunned&&!b.act&&!b.drink){
  /* hiệu ứng */
  if(!isFinite(b.x)||!isFinite(b.y)){b.x=C;b.y=C-40;b.vx=b.vy=0;b.goal=null}
  if(!stunned&&!b.act&&!b.drink&&!b.leap){b.stillT=Math.hypot(b.vx,b.vy)<8?(b.stillT||0)+dt:0;if(b.stillT>2){b.stillT=0;b.idleT=0;b.goal=null;b.calm=Math.min(b.calm,.1)}}else b.stillT=0;
- for(const f of bossFx){f.l-=dt;if(f.k==='las'&&f.dl>0){f.dl-=dt;f.l+=dt;continue}if(f.k==='las'){const A=f.len;f.len=Math.min(f.max,f.len+f.max/.2*dt);if(!f.fl){f.fl=1;shake=Math.min(1.2,shake+.5);hs=.05}if(Math.random()<.9){const hx=f.x+Math.cos(f.a)*f.len*.97,hy=f.y+Math.sin(f.a)*f.len*.97;arSparks(hx,hy,3,520,f.a,.9);arSplash(hx,hy,2,200,260)}const ca=Math.cos(f.a),sa=Math.sin(f.a);
-   for(let d=Math.floor(A/26)+1;d*26<=f.len;d++){const x1=f.x+ca*(d-1)*26,y1=f.y+sa*(d-1)*26;bossScorch.push({x1,y1,x2:f.x+ca*d*26,y2:f.y+sa*d*26,w:40,l:9})}
+ for(const f of bossFx){f.l-=dt;if(f.k==='las'&&f.dl>0){f.dl-=dt;f.l+=dt;continue}if(f.k==='las'){const A=f.len;f.len=Math.min(f.max,f.len+f.max/.2*dt);if(!f.fl){f.fl=1;shake=Math.min(1.2,shake+.5);hs=.05}if(Math.random()<(f.lt?.4:.9)){const hx=f.x+Math.cos(f.a)*f.len*.97,hy=f.y+Math.sin(f.a)*f.len*.97;arSparks(hx,hy,f.lt?2:3,520,f.a,.9);arSplash(hx,hy,f.lt?1:2,200,260)}const ca=Math.cos(f.a),sa=Math.sin(f.a);
+   for(let d=Math.floor(A/26)+1;d*26<=f.len;d++){if(f.lt){if(d%3)continue;bossScorch.push({x1:f.x+ca*(d-3)*26,y1:f.y+sa*(d-3)*26,x2:f.x+ca*d*26,y2:f.y+sa*d*26,w:40,l:5});continue}const x1=f.x+ca*(d-1)*26,y1=f.y+sa*(d-1)*26;bossScorch.push({x1,y1,x2:f.x+ca*d*26,y2:f.y+sa*d*26,w:40,l:9})}
    for(const p of balls)if(p.alive&&!f.hit.includes(p)){const dx=p.x-f.x,dy=p.y-f.y,al=dx*ca+dy*sa,pp=Math.abs(-dx*sa+dy*ca);if(al>0&&al<=f.len&&pp<p.r+24){f.hit.push(p);bossDamagePlayer(p,100*b.dmg)}}}}
  bossFx=bossFx.filter(f=>f.l>0||(f.k==='las'&&f.len<f.max));for(const s of bossScorch)s.l-=dt;bossScorch=bossScorch.filter(s=>s.l>0);for(const s of bossScars)s.l-=dt;bossScars=bossScars.filter(s=>s.l>0);
  /* thanh máu */
@@ -6965,7 +6966,7 @@ function drawBossFx(layer){
     else if(f.k==='las'){if(f.dl>0){c.save();c.globalCompositeOperation='lighter';const q=1-f.dl/.2,g=c.createRadialGradient(f.x,f.y,0,f.x,f.y,70+40*q);g.addColorStop(0,'#fff');g.addColorStop(.4,'rgba(56,189,248,.8)');g.addColorStop(1,'rgba(56,189,248,0)');c.fillStyle=g;c.beginPath();c.arc(f.x+Math.cos(f.a)*40,f.y+Math.sin(f.a)*40*.8,70+40*q,0,7);c.fill();c.restore()}
     else{c.save();c.beginPath();c.arc(C,C,R0+8,0,7);c.clip();c.translate(f.x,f.y);c.rotate(f.a);c.globalCompositeOperation='lighter';const al=Math.min(1,f.l/.5),pu=1+.12*Math.sin(t*60),w=54*pu*(.5+.5*al);
      c.globalAlpha=.45*al;c.fillStyle='#0369a1';c.fillRect(0,-w*.9,f.len,w*1.8);c.globalAlpha=.8*al;c.fillStyle='#0ea5e9';c.fillRect(0,-w*.55,f.len,w*1.1);c.globalAlpha=.95*al;c.fillStyle='#bae6fd';c.fillRect(0,-w*.32,f.len,w*.64);c.fillStyle='#fff';c.fillRect(0,-w*.14,f.len,w*.28);
-     c.strokeStyle='#e0f2fe';c.lineWidth=2.5;c.globalAlpha=.8*al;for(let k=0;k<8;k++){c.beginPath();for(let x=0;x<=f.len;x+=12){const y=Math.sin(x*.05-t*38+k*2.1)*w*.5;x?c.lineTo(x,y):c.moveTo(x,y)}c.stroke()}c.fillStyle='#fff';for(let i=0;i<70;i++){const xx=(i*37+t*900)%f.len,yy=(sr(i,8)-.5)*w*1.9;c.globalAlpha=.7*al;c.beginPath();c.arc(xx,yy,1.5+sr(i,2)*2.5,0,7);c.fill()}
+     c.strokeStyle='#e0f2fe';c.lineWidth=2.5;c.globalAlpha=.8*al;for(let k=0;k<(f.lt?3:8);k++){c.beginPath();for(let x=0;x<=f.len;x+=(f.lt?26:12)){const y=Math.sin(x*.05-t*38+k*2.1)*w*.5;x?c.lineTo(x,y):c.moveTo(x,y)}c.stroke()}c.fillStyle='#fff';for(let i=0;i<(f.lt?22:70);i++){const xx=(i*37+t*900)%f.len,yy=(sr(i,8)-.5)*w*1.9;c.globalAlpha=.7*al;c.beginPath();c.arc(xx,yy,1.5+sr(i,2)*2.5,0,7);c.fill()}
      const g=c.createRadialGradient(f.len,0,2,f.len,0,90);g.addColorStop(0,'#fff');g.addColorStop(.35,'rgba(125,211,252,.8)');g.addColorStop(1,'rgba(56,189,248,0)');c.globalAlpha=al;c.fillStyle=g;c.beginPath();c.arc(f.len,0,90,0,7);c.fill();
      const g2=c.createRadialGradient(0,0,0,0,0,80);g2.addColorStop(0,'#fff');g2.addColorStop(1,'rgba(56,189,248,0)');c.fillStyle=g2;c.beginPath();c.arc(0,0,80,0,7);c.fill();c.restore()}}
   }}
@@ -6991,8 +6992,8 @@ function bossStart(id){
   L(1.2+dur,()=>{b.crT=0});end=.9+dur+1.1
  }else if(id===2){
   const n=br?3:1;L(.1,()=>{aim();b.leanT=-1;b.crT=-.3;wind(.1,.9,1,'mouth')});
-  L(1.1,()=>{const a0=aim();b.leanT=1.2;b.crT=.4;b.mouth=1;for(let j=0;j<n;j++){const a=a0+(n>1?(j-1)*.5:0);bossFx.push({k:'las',x:b.x,y:b.y,a,len:0,max:R0*1.9,hit:[],dl:.2,l:1,m:1,last:0,j});arSplash(b.x,b.y,24,300,380);arSparks(b.x,b.y,20,520);ring(b.x,b.y,120,'#e0f2fe',.4);
-    {let pd=90;for(let i=0;i<8;i++){const rd=40+i*13,nx=b.x+Math.cos(a)*pd,ny=b.y+Math.sin(a)*pd,tt=2.3+i*.3;if(Math.hypot(nx-C,ny-C)<R0){L(tt-.55,()=>bossFx.push({k:'tele',s:'cir',x:nx,y:ny,rad:rd,l:.55,m:.55}));L(tt,()=>bossFall(nx,ny,rd,16+i*4))}pd+=(rd*2+13)*.62}}}});
+  L(1.1,()=>{const a0=aim();b.leanT=1.2;b.crT=.4;b.mouth=1;for(let j=0;j<n;j++){const a=a0+(n>1?(j-1)*.5:0);bossFx.push({k:'las',x:b.x,y:b.y,a,len:0,max:R0*1.9,hit:[],dl:.2,l:1,m:1,last:0,j,lt:n>1});arSplash(b.x,b.y,n>1?10:24,300,380);arSparks(b.x,b.y,n>1?8:20,520);if(j===(n>1?1:0))ring(b.x,b.y,120,'#e0f2fe',.4);
+    {let pd=90;for(let i=0;i<8;i++){const rd=40+i*13,nx=b.x+Math.cos(a)*pd,ny=b.y+Math.sin(a)*pd,tt=2.3+i*.3;if(Math.hypot(nx-C,ny-C)<R0&&(n<2||j===1||i%4===3)){L(tt-.55,()=>bossFx.push({k:'tele',s:'cir',x:nx,y:ny,rad:rd,l:.55,m:.55}));L(tt,()=>bossFall(nx,ny,rd,16+i*4,n>1))}pd+=(rd*2+13)*.62}}}});
   L(1.8,()=>{b.leanT=0;b.crT=0});end=5.2
  }else{
   const hits=br?2:1;for(let i=0;i<hits;i++){L(.1+i*1.2,()=>{wind(.5,-1.2,.8,'body');b.coilT=1;b.crT=.8});L(.95+i*1.2,()=>{b.coilT=0;b.crT=-.4;hit(.1,1);b.tailT=.55;bossArc(b.ang,270,6.3,br?100:80,br)});L(1.3+i*1.2,()=>{b.crT=0})}
@@ -7038,7 +7039,7 @@ function drawBoss(){
  c.fillStyle=`rgba(0,0,0,${Math.max(.1,.4-z/500)})`;c.beginPath();c.ellipse(0,r*.55,r*(1.1-z/420),r*.5,0,0,7);c.fill();
  c.translate(0,-z+bob);c.translate(0,r*.5);c.scale(1+cr*.1,1-cr*.14);c.translate(0,-r*.5);
  if(hot){c.save();c.globalCompositeOperation='lighter';const g=c.createRadialGradient(0,-r*.3,r*.3,0,-r*.3,r*2.1);g.addColorStop(0,'rgba(251,146,60,.55)');g.addColorStop(1,'rgba(251,146,60,0)');c.fillStyle=g;c.beginPath();c.arc(0,-r*.3,r*2.1,0,7);c.fill();c.restore()}
- if(hot){c.save();c.globalCompositeOperation='lighter';for(let i=0;i<26;i++){const a=i/26*6.2832+t*.9,rr=r*(1.15+.25*Math.sin(t*5+i)),px=Math.cos(a)*rr,py=-r*.3+Math.sin(a)*rr*.55,hh=r*(.5+.4*sr(i,6))*(.7+.3*Math.sin(t*9+i*2)),g=c.createLinearGradient(px,py,px,py-hh),sw=Math.sin(t*8+i)*5;g.addColorStop(0,'rgba(251,146,60,.7)');g.addColorStop(1,'rgba(253,224,71,0)');c.fillStyle=g;c.beginPath();c.moveTo(px-6,py);c.quadraticCurveTo(px+sw,py-hh*.6,px,py-hh);c.quadraticCurveTo(px+sw,py-hh*.5,px+6,py);c.fill()}c.strokeStyle='rgba(253,186,116,.6)';c.lineWidth=3;c.setLineDash([10,12]);c.lineDashOffset=-t*40;c.beginPath();c.ellipse(0,r*.5,r*1.7,r*.7,0,0,7);c.stroke();c.setLineDash([]);c.restore()}
+ if(hot){c.save();c.globalCompositeOperation='lighter';for(let i=0;i<14;i++){const a=i/14*6.2832+t*.9,rr=r*(1.15+.25*Math.sin(t*5+i)),px=Math.cos(a)*rr,py=-r*.3+Math.sin(a)*rr*.55,hh=r*(.5+.4*sr(i,6))*(.7+.3*Math.sin(t*9+i*2)),g=c.createLinearGradient(px,py,px,py-hh),sw=Math.sin(t*8+i)*5;g.addColorStop(0,'rgba(251,146,60,.7)');g.addColorStop(1,'rgba(253,224,71,0)');c.fillStyle=g;c.beginPath();c.moveTo(px-9,py);c.quadraticCurveTo(px+sw,py-hh*.6,px,py-hh);c.quadraticCurveTo(px+sw,py-hh*.5,px+9,py);c.fill()}c.strokeStyle='rgba(253,186,116,.6)';c.lineWidth=3;c.setLineDash([10,12]);c.lineDashOffset=-t*40;c.beginPath();c.ellipse(0,r*.5,r*1.7,r*.7,0,0,7);c.stroke();c.setLineDash([]);c.restore()}
  
  c.lineCap='round';const ta=fa+Math.PI+Math.sin(t*2)*.3*(1-coil)-coil*1.5+(b.tailSpin||0);
  for(let i=0;i<8;i++){const w=ta+Math.sin(t*3+i)*.07*i*(1-coil),d=r*(.55+i*.28),px=Math.cos(w)*d,py=Math.sin(w)*d*.75-r*.15,rr=r*(.31-i*.032);c.fillStyle=i%2?'#0e7490':'#155e75';c.beginPath();c.arc(px,py,rr,0,7);c.fill();c.fillStyle='rgba(165,243,252,.3)';c.beginPath();c.arc(px-rr*.3,py-rr*.35,rr*.4,0,7);c.fill()}
@@ -7254,9 +7255,9 @@ MODES.boss_anchor={n:'Kẻ Neo Sóng',e:'⚓',ac:'#38bdf8',tag:'Khát Khao Song 
  '<b>🌊 Vung Biển Khơi</b><br>– Nhảy đến chỗ bạn trong {{3 giây}}<br>– Đập xuống gây {{90 sát thương}}, kèm thác nước và gợn sóng',
  '<b>💧 Khạc Biển Khơi</b><br>– Tia nước quét ra xa gây {{150 sát thương}}, để lại vết cháy<br>– Sau đó {{8 tháp nước}} nổ chậm, to dần từ đầu tới cuối tia<br>– Mỗi tháp nước gây từ {{24 đến 66 sát thương}}',
  '<b>🌀 Vung Đuôi</b><br>– Quét vòng 360° gây {{120 sát thương}}',
- '<b>🍶 Uống rượu</b><br>– Cứ {{20 giây}} boss lại tu rượu (tính từ lúc uống xong), nếu đang dở chiêu thì tung nốt chiêu rồi uống ngay<br>– Găm neo xuống đất, móc bình trong túi ra tu rồi bóp nát<br>– Mỗi lần tích thêm {{40%}} (bình rượu) hoặc {{60%}} (thùng rượu) Dũng Mãnh trong {{4 giây}}<br>– Chịu quá {{20% máu tối đa}} khi đang uống thì vỡ bình, boss {{choáng 5 giây}}',
- '<b>🔥 Dũng Mãnh</b> (khi tích đủ 100%)<br>– Kháng sát thương {{75%}}, mọi chiêu được cường hóa<br>– Thanh Dũng Mãnh giảm {{0,25% mỗi giây}}<br>– Giảm thêm {{1%}} mỗi đòn trúng và {{2%}} mỗi lần boss ra chiêu',
- '<b>😵 Hết Dũng Mãnh</b><br>– Nhận sát thương chuẩn bằng {{120%}} sát thương đã gây, tối đa {{25% máu tối đa}}<br>– Sau đó {{choáng 8 giây}} và kháng sát thương {{-10%}}'],
+ '<b>🍶 Uống rượu</b><br>– Cứ trung bình {{10 giây}} (ngẫu nhiên 7–13 giây) boss lại tu rượu (tính từ lúc uống xong); sau khi hết Dũng Mãnh thì trung bình {{20 giây}} (15–25 giây), nếu đang dở chiêu thì tung nốt chiêu rồi uống ngay<br>– Găm neo xuống đất, móc bình trong túi ra tu rồi bóp nát<br>– Mỗi lần tích thêm {{40%}} (bình rượu) hoặc {{60%}} (thùng rượu) Dũng Mãnh trong {{8 giây}}<br>– Chịu quá {{10% máu tối đa}} khi đang uống thì vỡ bình, boss {{choáng 5 giây}}',
+ '<b>🔥 Dũng Mãnh</b> (khi tích đủ 100%)<br>– Kháng sát thương {{75%}}, mọi chiêu được cường hóa<br>– Thanh Dũng Mãnh giảm {{0,25% mỗi giây}}<br>– Giảm thêm {{1%}} mỗi đòn trúng (tối đa {{1 lần mỗi 0,1 giây}}) và {{2%}} mỗi lần boss ra chiêu',
+ '<b>😵 Hết Dũng Mãnh</b><br>– Nhận sát thương chuẩn bằng {{120%}} sát thương đã gây, tối đa {{25% máu tối đa}}<br>– Sau đó {{choáng 8 giây}} và kháng sát thương {{-50%}}'],
  win:'Hạ boss trước khi hết giờ. Sau trận có <i><b>3 biểu đồ tròn</b></i>: sát thương gây ra, lượng hồi phục, sát thương nhận.',tips:['Đánh vỡ bình rượu đúng lúc để boss choáng.','Trong Dũng Mãnh đừng đánh quá mạnh: sát thương gây ra sẽ quay lại boss dạng sát thương chuẩn.','Boss đứng yên khi găm neo uống rượu, đây là lúc dồn sát thương.','Tia nước nổ chậm, hãy đọc vòng cảnh báo và đi ngang tia.']};
 function renderBossCur(){const h=$('#bossCur');if(h){h.innerHTML=modeRow(bossPickId,{a:'cur',right:'<span class="chp chg2">⟳ Đổi Boss</span>'});probeImgs(h)}}
 $('#bossCur').onclick=()=>openModePicker(BOSS_LIST,bossPickId,id=>{bossPickId=id;renderBossCur()},'👹 Chọn Boss');
