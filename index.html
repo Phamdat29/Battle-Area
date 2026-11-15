@@ -6822,10 +6822,10 @@ $('#pf').onchange=async e=>{
 };
 
 /* ---------- Boss Mode v2: 1 boss tự chọn · Kẻ Neo Sóng ---------- */
-const BOSS_TYPES=[{id:'boss_anchor',name:'Kẻ Neo Sóng',sub:'Khát Khao Song Lớn',icon:'⚓',color:'#38bdf8',hp:5000,spd:50,dmg:1,desc:'Gã khổng lồ vác mỏ neo, say rượu thơm để tích Dũng Mãnh.'},{id:'boss_sentinel',name:'Thiết Bị Giám Sát',sub:'Cỗ Máy Càn Quét',icon:'👁️',color:'#22d3ee',hp:10000,spd:80,dmg:1,kind:'sentinel',desc:'Cỗ máy giám sát xoay tia nước quét sàn, tích Động Năng Lỏng để mạnh dần.'},{id:'boss_sun',name:'Cỗ Máy Bí Ẩn - Khảo Sát Mặt Trời',sub:'Quá Tải Dung Nham',icon:'☀️',color:'#f97316',hp:10000,spd:80,dmg:1,kind:'sentinel',sun:true,desc:'Cỗ máy khảo sát dung nham: dựng khiên khổng lồ, đốt máu cả đội bằng plasma và nổ tung khi Quá Tải.'},{id:'boss_mahoraga',name:'Mahoraga • Bát Ác Kiếm',sub:'Dị Giới Thần Tướng',icon:'☸️',color:'#cbd5e1',hp:5000,spd:70,dmg:1,kind:'mahoraga',desc:'Thần tướng thích nghi với mọi đòn đánh, càng bị dồn sát thương càng kháng cao.'}];
-const BOSS_MOVESETS={'Kẻ Neo Sóng':[{name:'Đánh Thường',kind:'normal'},{name:'Vung Biển Khơi',kind:'leap'},{name:'Khạc Biển Khơi',kind:'laser'},{name:'Vung Đuôi',kind:'tail'}],'Thiết Bị Giám Sát':[{name:'Thủy Kiếm',kind:'sword'},{name:'Xoáy Nước',kind:'vortex'},{name:'Xung Kích',kind:'dash'},{name:'Giam Lỏng',kind:'cage'}],'Cỗ Máy Bí Ẩn - Khảo Sát Mặt Trời':[{name:'Tia Mặt Trời',kind:'sunlaser'},{name:'Song Kiếm Dung Nham',kind:'sunswords'},{name:'Lõi Dung Nham',kind:'suncore'},{name:'Thác Lửa Thiên Giáng',kind:'sunfalls'}],'Mahoraga • Bát Ác Kiếm':[{name:'Arc Slash',kind:'mharc'},{name:'Ném Tảng Đá',kind:'mhrock'},{name:'Bổ Nhào',kind:'mhdive'},{name:'Cú Đá',kind:'mhkick'},{name:'Nhát Chém Thế Gian',kind:'mhworld'}]};
-const BOSS_SIGNATURES={'Kẻ Neo Sóng':['normal','leap','laser','tail'],'Thiết Bị Giám Sát':['sword','vortex','dash','cage'],'Cỗ Máy Bí Ẩn - Khảo Sát Mặt Trời':['sunlaser','sunswords','suncore','sunfalls'],'Mahoraga • Bát Ác Kiếm':['mharc','mhrock','mhdive','mhkick','mhworld']};
-const BOSS_PASSIVE_LOADOUTS={'Kẻ Neo Sóng':[{name:'Men Say Dũng Mãnh',desc:'Kháng 25%. Uống rượu tích Dũng Mãnh.'}],'Thiết Bị Giám Sát':[{name:'Động Năng Lỏng',desc:'Chế Độ Càn Quét: tia nước mạnh dần theo Động Năng Lỏng.'}],'Cỗ Máy Bí Ẩn - Khảo Sát Mặt Trời':[{name:'Quá Tải',desc:'Trạng Thái Tấn Công: khiên 20% máu, tia plasma đốt cả đội mạnh dần theo Quá Tải; hết giờ còn trên 10 điểm sẽ nổ toàn sân.'}],'Mahoraga • Bát Ác Kiếm':[{name:'Thích Nghi',desc:'Kháng 25%; dồn sát thương tăng Thanh Thích Nghi, đạt 25/50/75/100% kháng 30/50/70/90%. Đầy thanh vào Siêu Thích Ứng.'}]};
+const BOSS_TYPES=[{id:'boss_anchor',name:'Kẻ Neo Sóng',sub:'Tham Lam Mưu Cầu Giữa Sóng Gió',icon:'⚓',color:'#38bdf8',hp:5000,spd:50,dmg:1,desc:'Gã khổng lồ vác mỏ neo, say rượu thơm để tích Dũng Mãnh.'},{id:'boss_sentinel',name:'Cỗ Máy Bí Ẩn - Thiết Bị Giám Sát',sub:'Thiết Bị Quản Lý Di Tích Cổ',icon:'👁️',color:'#22d3ee',hp:10000,spd:80,dmg:1,kind:'sentinel',desc:'Cỗ máy giám sát xoay tia nước quét sàn, tích Động Năng Lỏng để mạnh dần.'},{id:'boss_sun',name:'Cỗ Máy Bí Ẩn - Khảo Sát Mặt Trời',sub:'Thiết Bị Khám Phá Bề Mặt',icon:'☀️',color:'#f97316',hp:10000,spd:80,dmg:1,kind:'sentinel',sun:true,desc:'Cỗ máy khảo sát dung nham: dựng khiên khổng lồ, đốt máu cả đội bằng plasma và nổ tung khi Quá Tải.'},{id:'boss_mahoraga',name:'Mahoraga',sub:'Bát Ác Kiếm · Dị Giới Thần Tướng',icon:'☸️',color:'#cbd5e1',hp:5000,spd:70,dmg:1,kind:'mahoraga',desc:'Thần tướng thích nghi với mọi đòn đánh, càng bị dồn sát thương càng kháng cao.'}];
+const BOSS_MOVESETS={'Kẻ Neo Sóng':[{name:'Đánh Thường',kind:'normal'},{name:'Vung Biển Khơi',kind:'leap'},{name:'Khạc Biển Khơi',kind:'laser'},{name:'Vung Đuôi',kind:'tail'}],'Cỗ Máy Bí Ẩn - Thiết Bị Giám Sát':[{name:'Thủy Kiếm',kind:'sword'},{name:'Xoáy Nước',kind:'vortex'},{name:'Xung Kích',kind:'dash'},{name:'Giam Lỏng',kind:'cage'}],'Cỗ Máy Bí Ẩn - Khảo Sát Mặt Trời':[{name:'Tia Mặt Trời',kind:'sunlaser'},{name:'Song Kiếm Dung Nham',kind:'sunswords'},{name:'Lõi Dung Nham',kind:'suncore'},{name:'Thác Lửa Thiên Giáng',kind:'sunfalls'}],'Mahoraga':[{name:'Arc Slash',kind:'mharc'},{name:'Ném Tảng Đá',kind:'mhrock'},{name:'Bổ Nhào',kind:'mhdive'},{name:'Cú Đá',kind:'mhkick'},{name:'Nhát Chém Thế Gian',kind:'mhworld'}]};
+const BOSS_SIGNATURES={'Kẻ Neo Sóng':['normal','leap','laser','tail'],'Cỗ Máy Bí Ẩn - Thiết Bị Giám Sát':['sword','vortex','dash','cage'],'Cỗ Máy Bí Ẩn - Khảo Sát Mặt Trời':['sunlaser','sunswords','suncore','sunfalls'],'Mahoraga':['mharc','mhrock','mhdive','mhkick','mhworld']};
+const BOSS_PASSIVE_LOADOUTS={'Kẻ Neo Sóng':[{name:'Men Say Dũng Mãnh',desc:'Kháng 25%. Uống rượu tích Dũng Mãnh.'}],'Cỗ Máy Bí Ẩn - Thiết Bị Giám Sát':[{name:'Động Năng Lỏng',desc:'Chế Độ Càn Quét: tia nước mạnh dần theo Động Năng Lỏng.'}],'Cỗ Máy Bí Ẩn - Khảo Sát Mặt Trời':[{name:'Quá Tải',desc:'Trạng Thái Tấn Công: khiên 20% máu, tia plasma đốt cả đội mạnh dần theo Quá Tải; hết giờ còn trên 10 điểm sẽ nổ toàn sân.'}],'Mahoraga':[{name:'Thích Nghi',desc:'Kháng 25%; dồn sát thương tăng Thanh Thích Nghi, đạt 25/50/75/100% kháng 30/50/70/90%. Đầy thanh vào Siêu Thích Ứng.'}]};
 let boss=null,bossWave=1,bossTime=0,bossDefeated=false,bossWarning=null,bossAttackCd=2,bossAttackIndex=0,bossRespawnTimers={},bossStats={},bossRunData=null,bossFx=[],bossScorch=[],bossScars=[];
 const DIFF={easy:{hp:.72,dmg:.95,spd:.85,time:105},normal:{hp:1,dmg:1,spd:1,time:100},hard:{hp:1.65,dmg:1.05,spd:1.12,time:105},extreme:{hp:2.5,dmg:1.1,spd:1.25,time:115}};
 const BR=(a,b)=>a+Math.random()*(b-a),angd=(a,b)=>Math.atan2(Math.sin(a-b),Math.cos(a-b)),PCOL=['#38bdf8','#fb7185','#facc15','#4ade80'];
@@ -7070,7 +7070,7 @@ function bossStart(id){
  }
  b.act={t:0,ev,end,id};b.lastMv=id;
 }
-/* ---------- Boss 4: Mahoraga • Bát Ác Kiếm - Dị Giới Thần Tướng ---------- */
+/* ---------- Boss 4: Mahoraga - Bát Ác Kiếm · Dị Giới Thần Tướng ---------- */
 const MH={res0:.25,tier:[.30,.50,.70,.90],rate:5,hot:.5,dm:.7,sh:.5,heal:.02,cap:.4,coef:.25,maxSh:3,weakT:20,weakRes:-.75,boost:1.5,slR:430,wsW:480,wsV:5600,pinT:.35};
 const mhRes=b=>b.weakT>0?MH.weakRes:b.ad>=100?MH.tier[3]:b.ad>=75?MH.tier[2]:b.ad>=50?MH.tier[1]:b.ad>=25?MH.tier[0]:MH.res0;
 function mhInit(){const b=boss;b.r=84;b.ad=0;b.adHot=0;b.sup=false;b.shN=0;b.weakT=0;b.glT=0;b.wheel=0;b.wheelT=0;b.up=0;b.upT=0;b.mf=[];b.tm=[];b.pt=[];b.flashA=0;b.fly=[];b.rk=null;b.dv=null;b.calm=2;b.x=C;b.y=C-40}
@@ -7097,7 +7097,7 @@ function mhThrow(){const b=boss,k=b.rk;if(!k)return;const oth=balls.filter(p=>p.
  else{const dx=C-b.x,dy=C-b.y,d=Math.hypot(dx,dy)||1;x1=C+dx/d*(R0-70);y1=C+dy/d*(R0-70)}
  k.ph='fly';k.x0=k.x;k.y0=k.y;k.z0=k.z;k.x1=x1;k.y1=y1;k.t=0;k.d=.9/(b.sup?MH.boost:1);b.upT=0;b.swT=1.8;b.crT=-.6;b.fastT=.3;shake=Math.min(1,shake+.4);mhPuff(k.x,k.y,5,200)}
 function mhDiveLand(){const b=boss,d=b.dv,rg=b.sup?MH.boost:1,ts=b.sup?MH.boost:1;b.dv=null;b.z=0;b.x=d.x1;b.y=d.y1;bossClamp(b);b.crT=.9;b.upT=0;
- mhBoom(b.x,b.y,210*rg,80,true);const x=b.x,y=b.y;mhCrack(x,y,300*rg,6);b.mf.push({k:'tcirc',x,y,rad:260*rg,l:2.2/ts,m:2.2/ts});
+ mhBoom(b.x,b.y,210*rg,80,true);const x=b.x,y=b.y;mhCrack(x,y,300*rg,6);
  b.tm.push({t:2.2/ts,f:()=>{mhBoom(x,y,260*rg,45,true);mhShock(x,y,360,480*rg,25);mhBeams(x,y,300*rg)}})}
 function mhStart(id){const b=boss,ev=[],ts=b.sup?MH.boost:1,rg=ts,L=(t,f)=>ev.push([t/ts,f]);let end=2;
  const aim=()=>{const p=bossTgt();if(p)b.ang=Math.atan2(p.y-b.y,p.x-b.x);return b.ang};
@@ -7111,9 +7111,9 @@ function mhStart(id){const b=boss,ev=[],ts=b.sup?MH.boost:1,rg=ts,L=(t,f)=>ev.pu
   L(1.9,()=>{b.crT=.7;ring(b.x,b.y-b.r*2,120,'#fde68a',.5);b.upT=1.15});L(2.7,()=>mhThrow());end=4.2}
  else if(id===2){const d=1/ts;let x1=b.x,y1=b.y;L(.1,()=>{aim();b.crT=1;b.upT=.5});
   L(.7,()=>{let f=null,m=-1;for(const q of balls)if(q.alive){const dd=Math.hypot(q.x-b.x,q.y-b.y);if(dd>m){m=dd;f=q}}if(!f)return;x1=f.x;y1=f.y;
-   b.dv={x0:b.x,y0:b.y,x1,y1,t:0,d};b.mf.push({k:'tcirc',x:x1,y:y1,rad:210*rg,l:d,m:d});b.crT=-.8;bossSpray(b.x,b.y,16,300,'#a8a29e',true)});end=.7+d+1}
+   b.dv={x0:b.x,y0:b.y,x1,y1,t:0,d};b.crT=-.8;bossSpray(b.x,b.y,16,300,'#a8a29e',true)});end=.7+d+1}
  else if(id===3){L(.1,()=>{aim();b.crT=.5;b.swT=-1});
-  L(.55,()=>{const p=bossTgt();if(p){const a=Math.atan2(p.y-b.y,p.x-b.x);b.ang=a;b.x+=Math.cos(a)*90;b.y+=Math.sin(a)*90;bossClamp(b);b.mf.push({k:'twedge',x:b.x,y:b.y,a,rad:200*rg,sp:1,l:.35/ts,m:.35/ts})}});
+  L(.55,()=>{const p=bossTgt();if(p){const a=Math.atan2(p.y-b.y,p.x-b.x);b.ang=a;b.x+=Math.cos(a)*90;b.y+=Math.sin(a)*90;bossClamp(b)}});
   L(.9,()=>{b.fastT=.3;b.swT=2;b.crT=-.4;b.mf.push({k:'kick',x:b.x,y:b.y,a:b.ang,l:.4,m:.4});let t=null,m=1e9;for(const q of balls)if(q.alive){const d=Math.hypot(q.x-b.x,q.y-b.y);if(d<m){m=d;t=q}}
    if(t&&m<200*rg+t.r){const a=Math.atan2(t.y-b.y,t.x-b.x);mhDmg(t,55);b.fly.push({p:t,dx:Math.cos(a),dy:Math.sin(a),t:0,d:.55,hit:[]});shake=Math.min(1.2,shake+.7);hs=.08;mhHitFx(t.x,t.y,a)}});end=1.9}
  else{L(.1,()=>{aim();b.swT=-2;b.crT=.5;b.mf.push({k:'glint',x:b.x,y:b.y-b.r*1.2,l:.9,m:.9})});L(.8,()=>aim());
@@ -7430,7 +7430,7 @@ function mhDraw(){const b=boss,c=ctx,t=time,S=mhSpr(),dt=Math.min(.05,Math.max(0
  mhFxDraw(1,dt);mhPtDraw(c,dt);
  if(b.flashA>0){c.save();{const g=c.createRadialGradient(C,C,0,C,C,R0*1.3);g.addColorStop(0,`rgba(255,255,255,${b.flashA})`);g.addColorStop(.75,`rgba(255,255,255,${b.flashA*.9})`);g.addColorStop(1,'rgba(255,255,255,0)');c.fillStyle=g;c.beginPath();c.arc(C,C,R0*1.3,0,7);c.fill()}c.restore();b.flashA=Math.max(0,b.flashA-dt*2.4)}}
 
-/* ---------- Boss 2: Thiết Bị Giám Sát · Chế Độ Càn Quét ---------- */
+/* ---------- Boss 2: Cỗ Máy Bí Ẩn - Thiết Bị Giám Sát · Chế Độ Càn Quét ---------- */
 const SN={e0:32,max:112,regen:3,loss:8,icd:.5,sweepT:90,downT:12,coWin:3,coDur:3,coBoost:2,openT:15,xfT:3.6,fly:62,gap:2.4,weakT:8,skills:4,res:{base:.25,sweep:.5,weak:-.4},rot:[0,.5,.8,1.1,1.4],dmg:[0,10,15,20,20],bw:[0,24,30,36,36]};
 const snTier=e=>e<10?0:e<30?1:e<60?2:e<100?3:4;
 const snRes=b=>b.ph==='weak'||(b.ph==='sweep'&&(b.down||b.brk))?SN.res.weak:b.ph==='sweep'?SN.res.sweep:SN.res.base;
@@ -7576,8 +7576,8 @@ function snDraw(){const b=boss,c=ctx,r=b.r,t=time,fa=b.ang,ca=Math.cos(fa),sa=Ma
  if(wk){c.font='30px serif';c.textAlign='center';c.fillStyle='#fde047';c.fillText('⚡',0,-r*1.4)}
  if(b.stun>0){c.font='34px serif';c.textAlign='center';c.fillStyle='#fff';c.fillText('💫',0,-r*1.5)}
  c.restore()}
-/* ---------- Boss 3: Cỗ Máy Bí Ẩn - Khảo Sát Mặt Trời · Quá Tải Dung Nham ---------- */
-const SUN={per:[0,1.7,1.3,1,.72],dmg:[0,9,14,20,28],ovT:1.3,ovDmg:520,sh:.2,stunT:8,cap:.2,
+/* ---------- Boss 3: Cỗ Máy Bí Ẩn - Khảo Sát Mặt Trời · Thiết Bị Khám Phá Bề Mặt ---------- */
+const SUN={per:[0,1.7,1.3,1,.72],dmg:[0,9,14,20,28],ovT:1.3,ovDmg:1000,ovHits:2,ovGap:.3,sh:.2,stunT:8,cap:.2,
  las:{chg:1.7,trk:1.1,dmg:150,tick:12,w:46},
  sw:{LB:410,th:46,th0:1.45,w0:.62,tick:15,wall:120},
  core:{rad:165,tele:.95,cage:1.45,fly:1.2,dmg:110,exp:240},
@@ -7617,7 +7617,7 @@ const SUNFX={
   if(f.ex&&f.cg&&f.t>=f.bt+.7){f.cg=0;f.cgEnd=f.t;f.tr=null}},
  Sfall(f,dt,b){const F=SUN.fall,t=f.t-f.dl;if(t<0)return;
   if(!f.sk){f.sk=1;ring(f.bx,f.by,70,'#fde047',.4);sunFire(f.bx,f.by,10,260)}
-  if(t>=f.dr&&!f.dp){f.dp=1;sunFire(f.x,f.y-F.H*1.05,18,300);ring(f.x,f.y,F.rad*1.5,'#fb923c',.5)}
+  if(t>=f.dr&&!f.dp){f.dp=1;sunFire(f.x,f.y,18,300);ring(f.x,f.y,F.rad*1.5,'#fb923c',.5)}
   if(!f.lf&&t>=f.dr+.8){f.lf=1;
    for(const q of balls)if(q.alive&&Math.hypot(q.x-f.x,q.y-f.y)<F.rad+q.r){bossDamagePlayer(q,F.dmg*b.dmg);arSparks(q.x,q.y,12,480)}
    ring(f.x,f.y,F.rad*2.1,'#fde047',.55);ring(f.x,f.y,F.rad*1.3,'#fff',.35);ring(f.x,f.y,F.rad*3,'#f97316',.8);sunFire(f.x,f.y,36,520);arSparks(f.x,f.y,16,600);shake=Math.min(1.2,shake+.45);hs=Math.max(hs,.04);
@@ -7626,6 +7626,7 @@ const SUNFX={
    if(Math.random()<dt*30)sunEmber(f.x+rnd(-F.rad,F.rad)*.7,f.y-rnd(0,F.H*.8),1)}}
 };
 function sunTick(dt){const b=boss;
+ if(b.nuke){b.nuke.t-=dt;while(b.nuke&&b.nuke.t<=0){sunNukeHit();if(--b.nuke.n<=0)b.nuke=null;else b.nuke.t+=SUN.ovGap}}
  for(const q of balls)if(q.sunT>0)q.sunT-=dt;
  if(b.shFl>0)b.shFl-=dt;if(b.bFl>0)b.bFl-=dt;
  for(const f of bossFx){if(!f.sun)continue;f.t=(f.t||0)+dt;if(f.hold)f.l+=dt;const fn=SUNFX[f.k];if(fn)fn(f,dt,b)}}
@@ -7673,10 +7674,13 @@ function sunEndSweep(){const b=boss;b.down=false;b.brk=false;bossFx=bossFx.filte
 function sunOver(dt){const b=boss;b.x=C;b.y=C;b.vx=b.vy=0;b.kx=b.ky=0;b.ot+=dt;
  if(Math.random()<dt*40)sunFire(b.x+rnd(-b.r,b.r),b.y-16+rnd(-b.r,b.r*.4),1,160);
  if(b.ot>=SUN.ovT){sunDetonate();b.ph='skill';b.skN=0;b.skT=null;b.calm=2;b.ek=SN.e0;b.down=false;b.wgT=0}}
+/* Quá Tải cực hạn: SUN.ovHits lần sát thương, mỗi lần SUN.ovDmg, cách nhau SUN.ovGap giây (bossDamagePlayer nhân 1.5 nên chia lại để đúng số) */
+function sunNukeHit(){const b=boss;for(const q of balls)if(q.alive){bossDamagePlayer(q,SUN.ovDmg*b.dmg/1.5);sunFire(q.x,q.y,12,380);arSparks(q.x,q.y,14,520)}
+ shake=Math.min(1.5,shake+.6);hs=Math.max(hs,.05);ring(b.x,b.y,R0*1.1,'#f97316',.5)}
 function sunDetonate(){const b=boss;bossFx=bossFx.filter(f=>f.k!=='Sorb');
  bossFx.push({sun:1,k:'Sbig',x:b.x,y:b.y-10,l:3.8,m:3.8,s:Math.random()*9});
  bossScars.push({k:'molp',x:b.x,y:b.y,rad:R0*.62,l:8,m:8,s:Math.random()*9});if(bossScars.length>36)bossScars.shift();
- for(const q of balls)if(q.alive){bossDamagePlayer(q,SUN.ovDmg*b.dmg);sunFire(q.x,q.y,12,380);arSparks(q.x,q.y,14,520)}
+ sunNukeHit();b.nuke={n:SUN.ovHits-1,t:SUN.ovGap};
  shake=1.5;hs=.14;flashA=Math.max(flashA,.85);
  ring(b.x,b.y,R0*.7,'#fde047',.8);ring(b.x,b.y,R0*1.1,'#f97316',1);ring(b.x,b.y,R0*1.4,'#fff',1.1);sunFire(b.x,b.y,90,700);arSparks(b.x,b.y,60,800);
  bossCinematicCue('☀️ QUÁ TẢI CỰC HẠN!','#fde047')}
@@ -7701,8 +7705,8 @@ function sunStart(id){const b=boss,ev=[],L=(t,f)=>ev.push([t,f]);let end=2;
   L(1.6,()=>{b.swT=0;b.lfT=0});end=3.4
  }else{/* Thác Lửa Thiên Giáng: 4 tia lên trời, rồi 4 thác dội xuống theo đường thẳng */
   L(.1,()=>{aim();b.wgT=1;b.swT=-1.2;b.lfT=1});
-  L(.45,()=>{let a=aim();if(sunEdge(b,a)<430)a=Math.atan2(C-b.y,C-b.x)+rnd(-.25,.25);b.ang=a;
-   const ca=Math.cos(a),sa=Math.sin(a),E=sunEdge(b,a),d0=130,dEnd=Math.max(d0+270,Math.min(E,d0+570)),sp=(dEnd-d0)/3,F=SUN.fall,dr=1.45,Tt=dr+.8+F.life+.9+.15;
+  L(.45,()=>{const a=aim();b.ang=a;
+   const ca=Math.cos(a),sa=Math.sin(a),E=sunEdge(b,a),d0=Math.min(130,E*.3),dEnd=Math.max(d0+60,Math.min(E,d0+570)),sp=(dEnd-d0)/3,F=SUN.fall,dr=.7,Tt=dr+.8+F.life+.9+.15;
    for(let i=0;i<4;i++){const d=d0+i*sp,dl=i*.4;bossFx.push({sun:1,k:'Sfall',x:b.x+ca*d,y:b.y+sa*d,bx:b.x,by:b.y-24,dl,dr,l:dl+Tt,m:dl+Tt,s:Math.random()*9})}
    bossCinematicCue('🌋 Thác Lửa Thiên Giáng','#f97316');shake=Math.min(1,shake+.3)});
   L(1.6,()=>{b.wgT=0;b.swT=0;b.lfT=0});end=3.7
@@ -7828,21 +7832,21 @@ function sunExpDraw(f,layer){const c=ctx,t=time,p=Math.min(1,1-f.l/f.m),rad=f.ra
   c.fillStyle='#fde68a';for(let i=0;i<50;i++){const a=sr(f.s,i+40)*6.2832,v=rad*(.5+1*sr(f.s,i+7)),tau=Math.min(1,p*1.7),bx=f.x+Math.cos(a)*(rad*.2+v*tau),by=f.y+Math.sin(a)*(rad*.2+v*tau)*.85-(rad*1.1*sr(f.s,i+11)*tau-rad*1.1*sr(f.s,i+11)*tau*tau*.9);c.globalAlpha=(1-p)*.9;c.beginPath();c.arc(bx,by,1.6+sr(f.s,i)*3.4,0,7);c.fill()}
   c.restore()}}
 /* Thác Lửa Thiên Giáng */
-function sunFallDraw(f,layer){const c=ctx,t=time,F=SUN.fall,tl=f.t-f.dl;if(tl<0)return;const land=f.dr+.8,tEnd=land+F.life,ox=f.x,oy=f.y-F.H-40;
+function sunFallDraw(f,layer){const c=ctx,t=time,F=SUN.fall,tl=f.t-f.dl;if(tl<0)return;const land=f.dr+.8,tEnd=land+F.life,ox=f.x,oy=f.y-14;
  if(layer===0){c.save();
   if(tl>=.2&&tl<land){const p=Math.min(1,(tl-.2)/(land-.2)),bl=.5+.5*Math.sin(t*22);let g=c.createRadialGradient(f.x,f.y,F.rad*.1,f.x,f.y,F.rad*1.15);g.addColorStop(0,'rgba(127,29,29,.05)');g.addColorStop(.7,'rgba(249,115,22,'+(.16+.1*bl)+')');g.addColorStop(1,'rgba(254,240,138,'+(.45+.3*bl)+')');c.fillStyle=g;c.beginPath();c.arc(f.x,f.y,F.rad*1.15,0,7);c.fill();
    c.strokeStyle='#fde68a';c.lineWidth=3;c.setLineDash([12,8]);c.lineDashOffset=-t*70;c.stroke();c.setLineDash([]);c.globalCompositeOperation='lighter';c.fillStyle='rgba(251,146,60,.4)';c.beginPath();c.arc(f.x,f.y,F.rad*1.15*p,0,7);c.fill()}
   else if(tl>=land&&tl<tEnd+.9){const k=tl<tEnd?1:Math.max(0,1-(tl-tEnd)/.9);c.globalCompositeOperation='lighter';sunGlow(c,f.x,f.y,F.rad*1.6,.55*k*(.85+.15*Math.sin(t*10)))}
   c.restore()}
  else{c.save();
-  if(tl<.5){const ps=Math.min(1,tl/.5),Q=(u)=>{const mx=(f.bx+ox)/2,my=Math.min(f.by,oy)-140,a=(1-u)*(1-u),b2=2*(1-u)*u,c2=u*u;return[a*f.bx+b2*mx+c2*ox,a*f.by+b2*my+c2*oy]};
+  if(tl<f.dr-.15){const ps=Math.min(1,tl/(f.dr-.15)),Q=(u)=>{const mx=(f.bx+ox)/2,my=(f.by+oy)/2,a=(1-u)*(1-u),b2=2*(1-u)*u,c2=u*u;return[a*f.bx+b2*mx+c2*ox,a*f.by+b2*my+c2*oy]};
    c.globalCompositeOperation='lighter';c.lineCap='round';const u0=Math.max(0,ps-.4);
    for(const [lw,col,al] of [[14,'#ea580c',.4],[7,'#fde047',.8],[3,'#fff',1]]){c.globalAlpha=al;c.strokeStyle=col;c.lineWidth=lw;c.beginPath();for(let i=0;i<=12;i++){const q=Q(u0+(ps-u0)*i/12);i?c.lineTo(q[0],q[1]):c.moveTo(q[0],q[1])}c.stroke()}
    const h=Q(ps);c.globalAlpha=1;sunGlow(c,h[0],h[1],36,.95)}
   else if(tl<f.dr){c.globalCompositeOperation='lighter';const R=20+7*Math.sin(t*20)+10*Math.max(0,(tl-f.dr+.5)*2);c.globalAlpha=1;sunGlow(c,ox,oy,R*2.8,.9);sunGlow(c,ox,oy,R,1);
    c.strokeStyle='#fde68a';c.lineWidth=2;c.globalAlpha=.8;for(let j=0;j<2;j++){c.beginPath();c.arc(ox,oy,R*(1.3+.3*j),t*(5+j),t*(5+j)+2);c.stroke()}}
   else if(tl<tEnd+.9){let yb=f.y,Hh=F.H,al=1;
-   if(tl<land){const e=Math.pow((tl-f.dr)/.8,1.8);yb=f.y-F.H*1.1*(1-e);Hh=F.H*(.35+.65*e)}
+   if(tl<land){const e=Math.pow((tl-f.dr)/.8,1.8);yb=f.y;Hh=F.H*(.12+.88*e)}
    else if(tl>=tEnd){const q=(tl-tEnd)/.9;Hh=F.H*(1-q);al=1-q}
    sunColumn(c,f.x,yb,F.rad*1.9,Hh,al,t,f.s)}
   c.restore()}}
@@ -7874,8 +7878,8 @@ function sunBigDraw(f,layer){const c=ctx,t=time,p=Math.min(1,1-f.l/f.m);
   const q=Math.min(1,p*2.2),hh=Math.max(0,1-p*1.4);if(hh>0){c.globalAlpha=1;sunGlow(c,f.x,f.y-60*q,230*(.3+.7*q),.95*hh)}
   c.fillStyle='#fde68a';for(let i=0;i<90;i++){const a=sr(f.s,i+40)*6.2832,v=R0*(.3+.9*sr(f.s,i+7)),tau=Math.min(1,p*1.5),bx=f.x+Math.cos(a)*(40+v*tau),by=f.y+Math.sin(a)*(40+v*tau)*.9-(R0*.7*sr(f.s,i+11)*tau-R0*.7*sr(f.s,i+11)*tau*tau*.9);c.globalAlpha=(1-p)*.9;c.beginPath();c.arc(bx,by,1.8+sr(f.s,i)*4,0,7);c.fill()}
   c.restore();
-  const fa=Math.max(0,1-p*7);if(fa>0){c.save();c.globalAlpha=fa;c.fillStyle='#fff';c.fillRect(0,0,W,W);c.restore()}
-  const wa=Math.max(0,.3*(1-p*2.2));if(wa>0){c.save();c.globalAlpha=wa;c.globalCompositeOperation='lighter';c.fillStyle='#f97316';c.fillRect(0,0,W,W);c.restore()}}}
+  const fa=Math.max(0,1-p*7);if(fa>0){c.save();const g=c.createRadialGradient(C,C,0,C,C,R0*1.35);g.addColorStop(0,'rgba(255,255,255,'+fa+')');g.addColorStop(.7,'rgba(255,255,255,'+fa*.9+')');g.addColorStop(1,'rgba(255,255,255,0)');c.fillStyle=g;c.beginPath();c.arc(C,C,R0*1.35,0,7);c.fill();c.restore()}
+  const wa=Math.max(0,.3*(1-p*2.2));if(wa>0){c.save();c.globalCompositeOperation='lighter';const g=c.createRadialGradient(C,C,0,C,C,R0*1.35);g.addColorStop(0,'rgba(249,115,22,'+wa+')');g.addColorStop(.7,'rgba(249,115,22,'+wa*.9+')');g.addColorStop(1,'rgba(249,115,22,0)');c.fillStyle=g;c.beginPath();c.arc(C,C,R0*1.35,0,7);c.fill();c.restore()}}}
 /* Vỡ khiên */
 function sunBrkDraw(f){const c=ctx,p=Math.min(1,1-f.l/f.m),e=1-Math.pow(1-p,2.2),al=1-p;c.save();c.globalCompositeOperation='lighter';c.lineCap='round';c.strokeStyle='#fde68a';
  for(let i=0;i<14;i++){let x=f.x,y=f.y,aa=i/14*6.2832+sr(f.s,i)*.4;c.globalAlpha=al*.9;c.lineWidth=2.4*(1-p*.6);c.beginPath();c.moveTo(x,y);for(let j=1;j<=5;j++){aa+=(sr(f.s,i*7+j)-.5)*.7;const d=f.R*e/5*(.9+sr(f.s,i+j)*.5);x+=Math.cos(aa)*d;y+=Math.sin(aa)*d;c.lineTo(x,y)}c.stroke()}
@@ -8149,7 +8153,7 @@ $('#bossPick').onclick=()=>openModePicker(TOP_IDS,SPM(bossMode)?bossMode:'boss',
 $('#modeCur').onclick=()=>{if(SPM(bossMode))openModePicker(TOP_IDS,bossMode,topPick,'🎯 Chọn Chế Độ');else openModePicker(BOSS_IDS,bossMode,setMode,'🎯 Chọn Chế Độ Boss')};
 
 const BOSS_LIST=['boss_anchor','boss_sentinel','boss_sun','boss_mahoraga'];let bossPickId='boss_anchor';
-MODES.boss_anchor={n:'Kẻ Neo Sóng',e:'⚓',ac:'#38bdf8',tag:'Khát Khao Song Lớn · Máu cơ bản 5000',pl:'1–4',title:'Kẻ Neo Sóng',sub:'',
+MODES.boss_anchor={n:'Kẻ Neo Sóng',e:'⚓',ac:'#38bdf8',tag:'Tham Lam Mưu Cầu Giữa Sóng Gió · Máu cơ bản 5000',pl:'1–4',title:'Kẻ Neo Sóng',sub:'',
  chips:[],
  sum:'Gã khổng lồ vác mỏ neo, ra chiêu theo xác suất. Uống đủ rượu sẽ vào trạng thái <i><b>Dũng Mãnh</b></i>.',
  how:[
@@ -8159,7 +8163,7 @@ MODES.boss_anchor={n:'Kẻ Neo Sóng',e:'⚓',ac:'#38bdf8',tag:'Khát Khao Song 
  'Toàn bộ sát thương người chơi gây ra trong lúc Dũng Mãnh sẽ dội ngược lại boss: khi trạng thái kết thúc, boss nhận sát thương chuẩn bằng {{120%}} lượng sát thương đó, tối đa {{25% máu tối đa}}. Sau đó boss choáng {{15 giây}} và kháng sát thương giảm còn {{-50%}}. Đây là thời điểm lý tưởng để dồn sát thương.',
  'Sau Dũng Mãnh, chu kỳ uống rượu kéo dài hơn: trung bình {{20 giây}} (15–25 giây) mới uống lần kế tiếp. Nếu boss đang dở chiêu thì sẽ tung nốt chiêu rồi mới uống.'],
  win:'Hạ boss trước khi hết giờ. Sau trận có <i><b>3 biểu đồ tròn</b></i>: sát thương gây ra, lượng hồi phục, sát thương nhận.',tips:['Đánh vỡ bình rượu đúng lúc để boss choáng.','Trong Dũng Mãnh đừng đánh quá mạnh: sát thương gây ra sẽ quay lại boss dạng sát thương chuẩn.','Boss đứng yên khi găm neo uống rượu, đây là lúc dồn sát thương.','Tia nước nổ chậm, hãy đọc vòng cảnh báo và đi ngang tia.']};
-MODES.boss_sentinel={n:'Thiết Bị Giám Sát',e:'👁️',ac:'#22d3ee',tag:'Cỗ Máy Càn Quét · Máu cơ bản 10000',pl:'1–4',title:'Thiết Bị Giám Sát',sub:'',
+MODES.boss_sentinel={n:'Cỗ Máy Bí Ẩn - Thiết Bị Giám Sát',e:'👁️',ac:'#22d3ee',tag:'Thiết Bị Quản Lý Di Tích Cổ · Máu cơ bản 10000',pl:'1–4',title:'Cỗ Máy Bí Ẩn - Thiết Bị Giám Sát',sub:'',
  chips:[],
  sum:'Cỗ máy giám sát xoay tia nước quét sàn đấu, càng tích nhiều <i><b>Động Năng Lỏng</b></i> càng nguy hiểm.',
  how:[
@@ -8168,7 +8172,7 @@ MODES.boss_sentinel={n:'Thiết Bị Giám Sát',e:'👁️',ac:'#22d3ee',tag:'C
  'Khi Động Năng Lỏng xuống dưới {{10 điểm}}, tia nước ngừng bắn (giống bị choáng), hiệu quả tăng kháng bị vô hiệu và kháng sát thương giảm mạnh còn {{-40%}}. Sau {{12 giây}} boss nạp lại Động Năng; vượt {{10 điểm}} thì tiếp tục bắn như thường. Boss chỉ rời Chế Độ Càn Quét khi hết {{90 giây}}.',
  'Hết Chế Độ Càn Quét, boss dùng ngẫu nhiên {{4 chiêu}} với kháng sát thương {{25%}}, rồi quay về trung tâm sân đấu và vào lại Chế Độ Càn Quét với {{32 điểm}}:<br>– <b>Thủy Kiếm</b>: tối đa {{3 đòn}}, gồm 2 nhát chém từ hai bên và một nhát chém đôi<br>– <b>Xoáy Nước</b>: kéo người chơi vào và liên tục gây sát thương, sau một lúc thì phát nổ gây sát thương phạm vi<br>– <b>Xung Kích</b>: dang cánh lao về phía người chơi tối đa {{3 lần}}, hay dùng khi người chơi đứng xa<br>– <b>Giam Lỏng</b>: đánh dấu khu vực quanh người chơi, sau một lúc dựng lồng giam rồi bắn cầu nước vào trong'],
  win:'Hạ boss trước khi hết giờ. Sau trận có <i><b>3 biểu đồ tròn</b></i>: sát thương gây ra, lượng hồi phục, sát thương nhận.',tips:['Dồn kỹ năng cùng lúc để Động Năng Lỏng tụt dưới 10 điểm: tia nước tắt và boss yếu đi, nhưng nếu không giữ áp lực boss sẽ nạp lại và bắn tiếp.','Mọi đòn trúng boss, kể cả va chạm, đều làm Động Năng tụt (mỗi 0.5 giây tối đa 1 lần), hãy dồn đòn đánh vào lúc Càn Quét.','Rời khỏi vòng đánh dấu của Giam Lỏng trước khi lồng đóng, và thoát khỏi Xoáy Nước trước khi nó nổ.']};
-MODES.boss_sun={n:'Cỗ Máy Bí Ẩn - Khảo Sát Mặt Trời',e:'☀️',ac:'#f97316',tag:'Quá Tải Dung Nham · Máu cơ bản 10000',pl:'1–4',title:'Khảo Sát Mặt Trời',sub:'',
+MODES.boss_sun={n:'Cỗ Máy Bí Ẩn - Khảo Sát Mặt Trời',e:'☀️',ac:'#f97316',tag:'Thiết Bị Khám Phá Bề Mặt · Máu cơ bản 10000',pl:'1–4',title:'Khảo Sát Mặt Trời',sub:'',
  chips:[],
  sum:'Biến thể dung nham của Cỗ Máy Bí Ẩn: dựng khiên khổng lồ, đốt máu cả đội bằng tia plasma vàng và tích <i><b>Quá Tải</b></i> để nổ tung toàn sân.',
  how:[
@@ -8176,9 +8180,9 @@ MODES.boss_sun={n:'Cỗ Máy Bí Ẩn - Khảo Sát Mặt Trời',e:'☀️',ac:
  'Trong Trạng Thái Tấn Công, boss có sẵn {{32 điểm}} <i><b>Quá Tải</b></i> (tối đa {{112 điểm}}), cơ chế y hệt Động Năng Lỏng: tự nạp {{3 điểm}} mỗi giây, mất {{8 điểm}} mỗi khi bị đánh trúng (tối đa {{1 lần mỗi 0.5 giây}}), nạp nhanh gấp {{2}} lần trong {{3 giây}} nếu chỉ bị va chạm, và xuống dưới {{10 điểm}} thì ngừng đốt {{12 giây}}, kháng sát thương còn {{-40%}}.',
  'Boss liên tục dùng <b>tia plasma vàng</b> đốt máu mục tiêu theo chu kỳ, mỗi người chịu {{1 lần đốt}} mỗi chu kỳ. Quá Tải càng cao, đốt càng đau và càng nhanh: {{10–30 điểm}} chậm và nhẹ, {{30–60 điểm}} mạnh hơn, {{60–100 điểm}} mạnh và nhanh, từ {{100 điểm}} đốt nhanh nhất và đau nhất.',
  'Nếu phá vỡ khiên, boss <b>choáng {{8 giây}}</b>, kháng sát thương giảm còn {{-40%}}, ngừng đốt và ngừng tích Quá Tải, đồng thời nhận <b>sát thương chuẩn</b> bằng lượng sát thương đã gây lên khiên (tối đa {{20% tổng máu}}). Hết choáng, khiên không dựng lại và boss tiếp tục đốt, tích Quá Tải như cũ.',
- 'Hết {{90 giây}} mà Quá Tải còn trên {{10 điểm}}, boss triệu hồi một quả cầu ở trung tâm và <b>phát nổ cực hạn</b> gây lượng sát thương rất lớn toàn sân, sau đó quay lại trạng thái thường. Ở trạng thái thường, boss dùng ngẫu nhiên {{4 chiêu}} rồi quay về giữa sân vào lại Trạng Thái Tấn Công:<br>– <b>Tia Mặt Trời</b>: tụ lực rồi phóng tia nóng chảy về phía trước gây sát thương lớn<br>– <b>Song Kiếm Dung Nham</b>: hai thanh kiếm lava gắn vào boss, xòe ra rồi gập lại như cuốn sách, quét và kéo theo mục tiêu; khi khép lại sẽ nổ thành tường thác dung nham rồi tan biến<br>– <b>Lõi Dung Nham</b>: đánh dấu và giam mục tiêu trong lồng, rồi nhả lõi dung nham bay tới nổ tung<br>– <b>Thác Lửa Thiên Giáng</b>: phóng 4 tia lên trời, sau đó 4 thác lửa dội xuống thành một hàng thẳng và cháy liên tục một lúc mới tan'],
+ 'Hết {{90 giây}} mà Quá Tải còn trên {{10 điểm}}, boss triệu hồi một quả cầu ở trung tâm và <b>phát nổ cực hạn</b> gây {{2 lần}} sát thương toàn sân, mỗi lần {{1000}} và cách nhau {{0.3 giây}}, sau đó quay lại trạng thái thường. Ở trạng thái thường, boss dùng ngẫu nhiên {{4 chiêu}} rồi quay về giữa sân vào lại Trạng Thái Tấn Công:<br>– <b>Tia Mặt Trời</b>: tụ lực rồi phóng tia nóng chảy về phía trước gây sát thương lớn<br>– <b>Song Kiếm Dung Nham</b>: hai thanh kiếm lava gắn vào boss, xòe ra rồi gập lại như cuốn sách, quét và kéo theo mục tiêu; khi khép lại sẽ nổ thành tường thác dung nham rồi tan biến<br>– <b>Lõi Dung Nham</b>: đánh dấu và giam mục tiêu trong lồng, rồi nhả lõi dung nham bay tới nổ tung<br>– <b>Thác Lửa Thiên Giáng</b>: phóng 4 tia lửa thẳng về hướng người chơi, mỗi tia chạm đất bùng thành một thác lửa; 4 thác xếp thành một hàng thẳng và cháy liên tục một lúc mới tan'],
  win:'Hạ boss trước khi hết giờ. Sau trận có <i><b>3 biểu đồ tròn</b></i>: sát thương gây ra, lượng hồi phục, sát thương nhận.',tips:['Phá khiên nhanh để boss choáng {{8 giây}} và nhận sát thương chuẩn, đây là lúc dồn sát thương.','Giữ áp lực để Quá Tải không lên cao: tia plasma sẽ chậm và nhẹ, và vụ nổ cuối trận sẽ không xảy ra nếu còn dưới {{10 điểm}}.','Tia Mặt Trời khóa hướng sau một lúc tụ lực: hãy đi ngang tia. Hai thanh kiếm xòe quanh boss rồi khép lại: hãy chạy ra xa khỏi vùng quạt trước khi chúng gập.']};
-MODES.boss_mahoraga={n:'Mahoraga • Bát Ác Kiếm',e:'☸️',ac:'#cbd5e1',tag:'Dị Giới Thần Tướng · Máu cơ bản 5000',pl:'1–4',title:'Mahoraga',sub:'',
+MODES.boss_mahoraga={n:'Mahoraga',e:'☸️',ac:'#cbd5e1',tag:'Bát Ác Kiếm · Dị Giới Thần Tướng · Máu cơ bản 5000',pl:'1–4',title:'Mahoraga',sub:'',
  chips:[],
  sum:'Thần tướng thích nghi với mọi đòn đánh: bị dồn sát thương càng lâu, <i><b>Thanh Thích Nghi</b></i> càng đầy và kháng càng cao, cho tới khi vào <i><b>Siêu Thích Ứng</b></i>.',
  how:[
