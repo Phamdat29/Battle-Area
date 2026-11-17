@@ -6874,20 +6874,20 @@ $('#pf').onchange=async e=>{
 };
 
 /* ---------- Boss Mode v2: 1 boss tự chọn · Kẻ Neo Sóng ---------- */
-const BOSS_TYPES=[{id:'boss_anchor',name:'Kẻ Neo Sóng',sub:'Tham Lam Mưu Cầu Giữa Sóng Gió',icon:'⚓',color:'#38bdf8',hp:5000,spd:50,dmg:1,desc:'Gã khổng lồ vác mỏ neo, say rượu thơm để tích Dũng Mãnh.'},{id:'boss_sentinel',name:'Cỗ Máy Bí Ẩn - Thiết Bị Giám Sát',sub:'Thiết Bị Quản Lý Di Tích Cổ',icon:'👁️',color:'#22d3ee',hp:10000,spd:80,dmg:1,kind:'sentinel',desc:'Cỗ máy giám sát xoay tia nước quét sàn, tích Động Năng Lỏng để mạnh dần.'},{id:'boss_sun',name:'Cỗ Máy Bí Ẩn - Khảo Sát Mặt Trời',sub:'Thiết Bị Khám Phá Bề Mặt',icon:'☀️',color:'#f97316',hp:10000,spd:80,dmg:1,kind:'sentinel',sun:true,desc:'Cỗ máy khảo sát dung nham: dựng khiên khổng lồ, đốt máu cả đội bằng plasma và nổ tung khi Quá Tải.'},{id:'boss_mahoraga',name:'Mahoraga',sub:'Bát Ác Kiếm · Dị Giới Thần Tướng',icon:'☸️',color:'#cbd5e1',hp:5000,spd:70,dmg:1,kind:'mahoraga',desc:'Thần tướng thích nghi với mọi đòn đánh, càng bị dồn sát thương càng kháng cao.'},{id:'boss_beast',name:'Vua Thú Hoàng Kim',sub:'Loài Thú Đến Từ Thế Giới Bên Kia',icon:'🐺',color:'#f4c542',hp:2000,spd:75,dmg:1,kind:'beast',desc:'Vua thú hai thanh máu: sau khi mất thanh đầu sẽ Cuồng Nộ, đánh dấu Khô Héo lên người chơi.'},{id:'boss_queen',name:'Nữ Hoàng Săn Bắt',sub:'Thần Tiễn Của Vương Quốc Ánh Sáng',icon:'🏹',color:'#fde68a',hp:7500,spd:42,dmg:1,kind:'queen',desc:'Nữ hoàng cung thủ di chuyển chậm rãi, bắn mũi tên chính xác và vào Thông Suốt Nữ Đế để bắn siêu thanh.'}];
-const BOSS_MOVESETS={'Kẻ Neo Sóng':[{name:'Đánh Thường',kind:'normal'},{name:'Vung Biển Khơi',kind:'leap'},{name:'Khạc Biển Khơi',kind:'laser'},{name:'Vung Đuôi',kind:'tail'}],'Cỗ Máy Bí Ẩn - Thiết Bị Giám Sát':[{name:'Thủy Kiếm',kind:'sword'},{name:'Xoáy Nước',kind:'vortex'},{name:'Xung Kích',kind:'dash'},{name:'Giam Lỏng',kind:'cage'}],'Cỗ Máy Bí Ẩn - Khảo Sát Mặt Trời':[{name:'Tia Mặt Trời',kind:'sunlaser'},{name:'Song Kiếm Dung Nham',kind:'sunswords'},{name:'Lõi Dung Nham',kind:'suncore'},{name:'Thác Lửa Thiên Giáng',kind:'sunfalls'}],'Mahoraga':[{name:'Arc Slash',kind:'mharc'},{name:'Ném Tảng Đá',kind:'mhrock'},{name:'Bổ Nhào',kind:'mhdive'},{name:'Cú Đá',kind:'mhkick'},{name:'Nhát Chém Thế Gian',kind:'mhworld'}],'Vua Thú Hoàng Kim':[{name:'Cào Xé Liên Hoàn',kind:'bsclaw'},{name:'Tia Phóng Xạ',kind:'bsbeam'},{name:'Triệu Hồi Thú Con',kind:'bssummon'},{name:'Quật Đuôi',kind:'bstail'},{name:'Tụ Lực Phóng Tia',kind:'bsmouth'},{name:'Bát Thú Cảm Tử',kind:'bseight'}],'Nữ Hoàng Săn Bắt':[{name:'Xuyên Tâm Tiễn',kind:'qn0'},{name:'Ngũ Liên Châu',kind:'qn1'},{name:'Cước Hất',kind:'qn2'},{name:'Ngũ Tiễn Hình Quạt',kind:'qn3'},{name:'Thiên Lộ Tiễn',kind:'qn4'},{name:'Thiên Hỏa Tiễn Vũ',kind:'qn5'}]};
-const BOSS_SIGNATURES={'Kẻ Neo Sóng':['normal','leap','laser','tail'],'Cỗ Máy Bí Ẩn - Thiết Bị Giám Sát':['sword','vortex','dash','cage'],'Cỗ Máy Bí Ẩn - Khảo Sát Mặt Trời':['sunlaser','sunswords','suncore','sunfalls'],'Mahoraga':['mharc','mhrock','mhdive','mhkick','mhworld'],'Vua Thú Hoàng Kim':['bsclaw','bsbeam','bssummon','bstail','bsmouth','bseight'],'Nữ Hoàng Săn Bắt':['qn0','qn1','qn2','qn3','qn4','qn5']};
-const BOSS_PASSIVE_LOADOUTS={'Kẻ Neo Sóng':[{name:'Men Say Dũng Mãnh',desc:'Kháng 25%. Uống rượu tích Dũng Mãnh.'}],'Cỗ Máy Bí Ẩn - Thiết Bị Giám Sát':[{name:'Động Năng Lỏng',desc:'Chế Độ Càn Quét: tia nước mạnh dần theo Động Năng Lỏng.'}],'Cỗ Máy Bí Ẩn - Khảo Sát Mặt Trời':[{name:'Quá Tải',desc:'Trạng Thái Tấn Công: khiên 20% máu, tia plasma đốt cả đội mạnh dần theo Quá Tải; hết giờ còn trên 10 điểm sẽ nổ toàn sân.'}],'Mahoraga':[{name:'Thích Nghi',desc:'Kháng 25%; dồn sát thương tăng Thanh Thích Nghi, đạt 25/50/75/100% kháng 30/50/70/90%. Đầy thanh vào Siêu Thích Ứng.'}],'Vua Thú Hoàng Kim':[{name:'Cuồng Nộ',desc:'Kháng 15%. Mất thanh máu đầu (2000) vào Cuồng Nộ: thanh 2 (5000), sát thương +15%, kháng -30%, nhận 2 chiêu mới.'},{name:'Khô Héo',desc:'Ở Cuồng Nộ, chiêu trúng người chơi gây mất 10 HP/giây trong 5s, sau đó 5s mới bị dính lại.'}],'Nữ Hoàng Săn Bắt':[{name:'Thông Suốt Nữ Đế',desc:'Kháng 30%. Sau 15–25s vào Thông Suốt Nữ Đế 40s: mũi tên tốc độ ánh sáng kèm sóng xung kích, kháng -15%, nhận thêm Thiên Hỏa Tiễn Vũ.'}]};
+const BOSS_TYPES=[{id:'boss_anchor',name:'Kẻ Neo Sóng',sub:'Tham Lam Mưu Cầu Giữa Sóng Gió',icon:'⚓',color:'#38bdf8',hp:5000,spd:50,dmg:1,desc:'Gã khổng lồ vác mỏ neo, say rượu thơm để tích Dũng Mãnh.'},{id:'boss_sentinel',name:'Cỗ Máy Bí Ẩn - Thiết Bị Giám Sát',sub:'Thiết Bị Quản Lý Di Tích Cổ',icon:'👁️',color:'#22d3ee',hp:10000,spd:80,dmg:1,kind:'sentinel',desc:'Cỗ máy giám sát xoay tia nước quét sàn, tích Động Năng Lỏng để mạnh dần.'},{id:'boss_sun',name:'Cỗ Máy Bí Ẩn - Khảo Sát Mặt Trời',sub:'Thiết Bị Khám Phá Bề Mặt',icon:'☀️',color:'#f97316',hp:10000,spd:80,dmg:1,kind:'sentinel',sun:true,desc:'Cỗ máy khảo sát dung nham: dựng khiên khổng lồ, đốt máu cả đội bằng plasma và nổ tung khi Quá Tải.'},{id:'boss_mahoraga',name:'Mahoraga',sub:'Bát Ác Kiếm · Dị Giới Thần Tướng',icon:'☸️',color:'#cbd5e1',hp:5000,spd:70,dmg:1,kind:'mahoraga',desc:'Thần tướng thích nghi với mọi đòn đánh, càng bị dồn sát thương càng kháng cao.'},{id:'boss_beast',name:'Vua Thú Hoàng Kim',sub:'Loài Thú Đến Từ Thế Giới Bên Kia',icon:'🐺',color:'#f4c542',hp:2000,spd:75,dmg:1,kind:'beast',desc:'Vua thú hai thanh máu: sau khi mất thanh đầu sẽ Cuồng Nộ, đánh dấu Khô Héo lên người chơi.'},{id:'boss_queen',name:'Nữ Hoàng Săn Bắt',sub:'Thần Tiễn Của Vương Quốc Ánh Sáng',icon:'🏹',color:'#fde68a',hp:7500,spd:42,dmg:1,kind:'queen',desc:'Nữ hoàng cung thủ di chuyển chậm rãi, bắn mũi tên chính xác và vào Thông Suốt Nữ Đế để bắn siêu thanh.'},{id:'boss_law',name:'Trafalgar D. Water Law',sub:'Giả Phẫu Học Sư',icon:'🗡️',color:'#7dd3fc',hp:21000,spd:72,dmg:1,kind:'law',desc:'Bác sĩ phẫu thuật với Kikoku: sét xanh ngoài Room, mở Room cắt xẻ cả sân; cạn thanh máu đầu thì Room liên tục.'}];
+const BOSS_MOVESETS={'Kẻ Neo Sóng':[{name:'Đánh Thường',kind:'normal'},{name:'Vung Biển Khơi',kind:'leap'},{name:'Khạc Biển Khơi',kind:'laser'},{name:'Vung Đuôi',kind:'tail'}],'Cỗ Máy Bí Ẩn - Thiết Bị Giám Sát':[{name:'Thủy Kiếm',kind:'sword'},{name:'Xoáy Nước',kind:'vortex'},{name:'Xung Kích',kind:'dash'},{name:'Giam Lỏng',kind:'cage'}],'Cỗ Máy Bí Ẩn - Khảo Sát Mặt Trời':[{name:'Tia Mặt Trời',kind:'sunlaser'},{name:'Song Kiếm Dung Nham',kind:'sunswords'},{name:'Lõi Dung Nham',kind:'suncore'},{name:'Thác Lửa Thiên Giáng',kind:'sunfalls'}],'Mahoraga':[{name:'Arc Slash',kind:'mharc'},{name:'Ném Tảng Đá',kind:'mhrock'},{name:'Bổ Nhào',kind:'mhdive'},{name:'Cú Đá',kind:'mhkick'},{name:'Nhát Chém Thế Gian',kind:'mhworld'}],'Vua Thú Hoàng Kim':[{name:'Cào Xé Liên Hoàn',kind:'bsclaw'},{name:'Tia Phóng Xạ',kind:'bsbeam'},{name:'Triệu Hồi Thú Con',kind:'bssummon'},{name:'Quật Đuôi',kind:'bstail'},{name:'Tụ Lực Phóng Tia',kind:'bsmouth'},{name:'Bát Thú Cảm Tử',kind:'bseight'}],'Trafalgar D. Water Law':[{name:'Kikoku · Lôi Xạ',kind:'lw0'},{name:'Lôi Xung Xuyên',kind:'lw1'},{name:'Room',kind:'lw9'},{name:'Room · Tách Chém',kind:'lw10'},{name:'Room · Thạch Cắt',kind:'lw11'},{name:'Room · Dịch Chuyển',kind:'lw12'},{name:'Room · Dán Trời',kind:'lw13'},{name:'Gamma Knife',kind:'lw14'}],'Nữ Hoàng Săn Bắt':[{name:'Xuyên Tâm Tiễn',kind:'qn0'},{name:'Ngũ Liên Châu',kind:'qn1'},{name:'Cước Hất',kind:'qn2'},{name:'Ngũ Tiễn Hình Quạt',kind:'qn3'},{name:'Thiên Lộ Tiễn',kind:'qn4'},{name:'Thiên Hỏa Tiễn Vũ',kind:'qn5'}]};
+const BOSS_SIGNATURES={'Kẻ Neo Sóng':['normal','leap','laser','tail'],'Cỗ Máy Bí Ẩn - Thiết Bị Giám Sát':['sword','vortex','dash','cage'],'Cỗ Máy Bí Ẩn - Khảo Sát Mặt Trời':['sunlaser','sunswords','suncore','sunfalls'],'Mahoraga':['mharc','mhrock','mhdive','mhkick','mhworld'],'Vua Thú Hoàng Kim':['bsclaw','bsbeam','bssummon','bstail','bsmouth','bseight'],'Nữ Hoàng Săn Bắt':['qn0','qn1','qn2','qn3','qn4','qn5'],'Trafalgar D. Water Law':['lw0','lw1','lw9','lw10','lw11','lw12','lw13','lw14']};
+const BOSS_PASSIVE_LOADOUTS={'Kẻ Neo Sóng':[{name:'Men Say Dũng Mãnh',desc:'Kháng 25%. Uống rượu tích Dũng Mãnh.'}],'Cỗ Máy Bí Ẩn - Thiết Bị Giám Sát':[{name:'Động Năng Lỏng',desc:'Chế Độ Càn Quét: tia nước mạnh dần theo Động Năng Lỏng.'}],'Cỗ Máy Bí Ẩn - Khảo Sát Mặt Trời':[{name:'Quá Tải',desc:'Trạng Thái Tấn Công: khiên 20% máu, tia plasma đốt cả đội mạnh dần theo Quá Tải; hết giờ còn trên 10 điểm sẽ nổ toàn sân.'}],'Mahoraga':[{name:'Thích Nghi',desc:'Kháng 25%; dồn sát thương tăng Thanh Thích Nghi, đạt 25/50/75/100% kháng 30/50/70/90%. Đầy thanh vào Siêu Thích Ứng.'}],'Vua Thú Hoàng Kim':[{name:'Cuồng Nộ',desc:'Kháng 15%. Mất thanh máu đầu (2000) vào Cuồng Nộ: thanh 2 (5000), sát thương +15%, kháng -30%, nhận 2 chiêu mới.'},{name:'Khô Héo',desc:'Ở Cuồng Nộ, chiêu trúng người chơi gây mất 10 HP/giây trong 5s, sau đó 5s mới bị dính lại.'}],'Trafalgar D. Water Law':[{name:'Room',desc:'Kháng 20%. Mở Room phủ cả sân 30s (hồi 7s): boss +20% tốc, người chơi -50% tốc, dùng bộ chiêu Room. Cạn thanh máu 1 (3 thanh) thì Room liên tục đến khi chết.'}],'Nữ Hoàng Săn Bắt':[{name:'Thông Suốt Nữ Đế',desc:'Kháng 30%. Sau 15–25s vào Thông Suốt Nữ Đế 40s: mũi tên tốc độ ánh sáng kèm sóng xung kích, kháng -15%, nhận thêm Thiên Hỏa Tiễn Vũ.'}]};
 let boss=null,bossWave=1,bossTime=0,bossDefeated=false,bossWarning=null,bossAttackCd=2,bossAttackIndex=0,bossRespawnTimers={},bossStats={},bossRunData=null,bossFx=[],bossScorch=[],bossScars=[];
 const DIFF={easy:{hp:.72,dmg:.95,spd:.85,time:105},normal:{hp:1,dmg:1,spd:1,time:100},hard:{hp:1.65,dmg:1.05,spd:1.12,time:105},extreme:{hp:2.5,dmg:1.1,spd:1.25,time:115}};
 const BR=(a,b)=>a+Math.random()*(b-a),angd=(a,b)=>Math.atan2(Math.sin(a-b),Math.cos(a-b)),PCOL=['#38bdf8','#fb7185','#facc15','#4ade80'];
-const bossRes=b=>b.kind==='queen'?qnRes(b):b.kind==='beast'?bsRes(b):b.kind==='mahoraga'?mhRes(b):b.kind==='sentinel'?snRes(b):b.weak?-.5:b.broken?0:b.brave?.75:b.resT>0?.5:.25;
+const bossRes=b=>b.kind==='law'?lwRes(b):b.kind==='queen'?qnRes(b):b.kind==='beast'?bsRes(b):b.kind==='mahoraga'?mhRes(b):b.kind==='sentinel'?snRes(b):b.weak?-.5:b.broken?0:b.brave?.75:b.resT>0?.5:.25;
 function createBoss(){
  const t=BOSS_TYPES.find(x=>x.id===(bossRunData&&bossRunData.boss))||BOSS_TYPES[0],df=DIFF[bossRunData.difficulty]||DIFF.easy,pl=Math.max(1,balls.length);
  wfSprites();boss={...t,typeName:t.name,moves:BOSS_MOVESETS[t.name],x:C,y:C-40,vx:0,vy:0,r:66,max:Math.round(t.hp*df.hp*(1+.5*(pl-1))),hp:0,lag:0,lagT:0,kx:0,ky:0,stun:0,slow:0,zs:0,gs:0,es:0,enk:0,alive:true,team:0,role:'sword',k:9000,spd:t.spd*df.spd,dmg:df.dmg,flash:0,ang:Math.PI/2,passives:[],shield:0,shieldMax:0,bars:1,gauge:0,brave:false,braveDmg:0,braveBy:{},gaugeCut:0,resT:0,drink:null,drinkN:0,drinkCd:BR(7,13),act:null,calm:BR(1.5,2.5),goal:null,idleT:1,lastMv:-1,sw:0,swT:0,z:0,tailSpin:0,passive:'none',passive2:'none'};
- boss.baseDmg=boss.dmg;boss.baseSpd=boss.spd;boss.hp=boss.max;boss.lag=boss.max;bossFx=[];bossScorch=[];bossScars=[];if(t.kind==='sentinel')snInit();if(t.kind==='mahoraga')mhInit();if(t.kind==='beast')bsInit();if(t.kind==='queen')qnInit();
+ boss.baseDmg=boss.dmg;boss.baseSpd=boss.spd;boss.hp=boss.max;boss.lag=boss.max;bossFx=[];bossScorch=[];bossScars=[];if(t.kind==='sentinel')snInit();if(t.kind==='mahoraga')mhInit();if(t.kind==='beast')bsInit();if(t.kind==='queen')qnInit();if(t.kind==='law')lwInit();
  bossRunData.currentBoss=t.name;bossRunData.wave=1;bossRunData.waveTime=300;bossTime=0;bossDefeated=false;bossWarning=null;
- $('#bossHud').classList.add('anchorhud');$('#bossHud').classList.toggle('sunhud',!!t.sun);$('#bossHud').classList.toggle('beasthud',t.kind==='beast');$('#bossHud').classList.remove('bsb2','bsrg');$('#bossHud').style.setProperty('--bc',t.color);$('#bhname').textContent=`${t.icon} ${t.name} · ${t.sub}`;$('#bhfill').style.width='100%';$('#bhdelay').style.width='100%';$('#bhpas').textContent='';$('#bhring').hidden=false;$('#bhsh').hidden=true;$('#bhx').hidden=true;
+ $('#bossHud').classList.add('anchorhud');$('#bossHud').classList.toggle('sunhud',!!t.sun);$('#bossHud').classList.toggle('beasthud',t.kind==='beast');$('#bossHud').classList.remove('bsb2','bsrg');$('#bhfill').style.background='';$('#bhfill').parentElement.style.background='';$('#bossHud').style.setProperty('--bc',t.color);$('#bhname').textContent=`${t.icon} ${t.name} · ${t.sub}`;$('#bhfill').style.width='100%';$('#bhdelay').style.width='100%';$('#bhpas').textContent='';$('#bhring').hidden=false;$('#bhsh').hidden=true;$('#bhx').hidden=true;
 }
 function bossDamagePlayer(p,d){if(!p||!p.alive||!boss)return;hurt(p,Math.max(1,Math.round(d*1.5)),boss,{refl:1,sc:1})}
 function bossCinematicCue(label,color){const el=$('#bossAttackBanner');if(!el)return;el.textContent=label;el.style.borderColor=color||'#fff';el.style.opacity='1';clearTimeout(window.__bossCueTimer);window.__bossCueTimer=setTimeout(()=>{el.style.opacity='0'},1100)}
@@ -6959,7 +6959,7 @@ function bossTick(dt){
  const stunned=b.stun>0,tg=bossTgt();b.walking=false;
  if(b.leap){const L=b.leap;L.t+=dt;const p=Math.min(1,L.t/L.d),e=p<.5?2*p*p:1-Math.pow(-2*p+2,2)/2;b.x=L.x0+(L.x1-L.x0)*e;b.y=L.y0+(L.y1-L.y0)*e;b.z=Math.sin(p*Math.PI)*150;if(p<.7){b.lfT=1;b.swT=-1.3;b.fastT=0;b.crT=-.4}else{b.lfT=.1;b.swT=1.6;b.fastT=.2}b.ang=Math.atan2(L.y1-L.y0,L.x1-L.x0)}
  if(b.act&&!stunned){const A=b.act;A.t+=dt;for(const e of A.ev)if(!e[2]&&A.t>=e[0]){e[2]=1;e[1]()}if(A.t>=A.end){b.act=null;b.swT=0;b.calm=BR(1.3,2.4)}}
- if(b.kind==='queen')qnTick(dt,stunned,tg);else if(b.kind==='beast')bsTick(dt,stunned,tg);else if(b.kind==='mahoraga')mhTick(dt,stunned,tg);else if(b.kind==='sentinel')snTick(dt,stunned,tg);else{
+ if(b.kind==='law')lwTick(dt,stunned,tg);else if(b.kind==='queen')qnTick(dt,stunned,tg);else if(b.kind==='beast')bsTick(dt,stunned,tg);else if(b.kind==='mahoraga')mhTick(dt,stunned,tg);else if(b.kind==='sentinel')snTick(dt,stunned,tg);else{
  /* Uống rượu / Dũng Mãnh */
  if(b.brave){b.gauge-=.0025*dt;if(b.gauge<=0)bossBraveEnd();if(!bossDefeated&&Math.random()<dt*35)fx.push({x:b.x+rnd(-b.r*1.4,b.r*1.4),y:b.y-b.z-b.r*.4,vx:rnd(-30,30),vy:rnd(-160,-50),l:.8,m:.8,c:Math.random()<.5?'#38bdf8':'#e0f2fe',r:rnd(2,6),nb:1})}
  else if(b.drink&&!stunned){const D=b.drink;D.t+=dt;
@@ -6994,7 +6994,7 @@ if(!stunned&&!b.act&&!b.drink){
  {const hpT=`${Math.ceil(b.hp).toLocaleString()} / ${b.max.toLocaleString()}`,tmT='⏱ '+mmss(Math.max(0,Math.ceil(bossRunData.waveTime-bossTime))),e1=$('#bhhp'),e2=$('#bhtime');if(e1.textContent!==hpT)e1.textContent=hpT;if(e2.textContent!==tmT)e2.textContent=tmT}
  $('#bhx').hidden=b.bars<=1;if(b.bars>1)$('#bhx').textContent='×'+cb;
  $('#bhsh').hidden=!(b.shieldMax>0);if(b.shieldMax>0)$('#bhshf').style.width=(100*b.shield/b.shieldMax)+'%';
- if(b.kind==='queen')qnHud(b);else if(b.kind==='beast')bsHud(b);else if(b.kind==='mahoraga')mhHud(b);else if(b.kind==='sentinel')snHud(b);else{const g=Math.max(0,Math.min(1,b.gauge));$('#bhrfg').style.strokeDashoffset=119.4*(1-g);$('#bhrico').textContent=b.brave?'🌊':b.drink?(b.drink.item==='jug'?'🍶':'🛢️'):b.broken?'💥':'⚓';$('#bhrtxt').textContent=Math.round(g*100)+'% · Kháng '+Math.round(bossRes(b)*100)+'%';$('#bossHud').classList.toggle('brave',b.brave)}
+ if(b.kind==='law')lwHud(b);else if(b.kind==='queen')qnHud(b);else if(b.kind==='beast')bsHud(b);else if(b.kind==='mahoraga')mhHud(b);else if(b.kind==='sentinel')snHud(b);else{const g=Math.max(0,Math.min(1,b.gauge));$('#bhrfg').style.strokeDashoffset=119.4*(1-g);$('#bhrico').textContent=b.brave?'🌊':b.drink?(b.drink.item==='jug'?'🍶':'🛢️'):b.broken?'💥':'⚓';$('#bhrtxt').textContent=Math.round(g*100)+'% · Kháng '+Math.round(bossRes(b)*100)+'%';$('#bossHud').classList.toggle('brave',b.brave)}
  if(bossTime>=bossRunData.waveTime){bossRunData.failed=true;bossWaveClear(true)}
 }
 const sr=(s,i)=>{const x=Math.sin(s*12.9898+i*78.233)*43758.5453;return x-Math.floor(x)};
@@ -7201,6 +7201,225 @@ function bsCres(c,x,y,a0,a1,R,W,cl,al,fin){const N=16,sg=Math.sign(a1-a0)||1,K=[
  if(fin){c.fillStyle=cl[0][0];c.globalAlpha=al*.9;for(let j=0;j<6;j++){const t=.45+.09*j,an=a0+(a1-a0)*t,L=W*(.45+.4*Math.sin(j*2.3+1)),r=R-W*.25*t;c.beginPath();c.moveTo(x+Math.cos(an-.05*sg)*r,y+Math.sin(an-.05*sg)*r);P(an-.3*sg,R+L);c.lineTo(x+Math.cos(an+.05*sg)*r,y+Math.sin(an+.05*sg)*r);c.closePath();c.fill()}}c.globalAlpha=1}
 function bsBurst(c,x,y,R,q,s,S){const e=1-Math.pow(1-Math.min(1,q*2),2),al=1-q;c.save();c.translate(x,y);for(let i=0;i<14;i++){const an=i*.4488+s,Ln=R*(.45+.55*((i*7)%5)/4)*e,w=2.5+R*.025;c.globalAlpha=al;c.fillStyle=i%3?'#ffd35a':'#fff';c.beginPath();c.moveTo(Math.cos(an+1.57)*w,Math.sin(an+1.57)*w);c.lineTo(Math.cos(an)*Ln,Math.sin(an)*Ln);c.lineTo(Math.cos(an-1.57)*w,Math.sin(an-1.57)*w);c.closePath();c.fill()}
  c.globalCompositeOperation='lighter';c.globalAlpha=al;const G=R*.7*(1-q*.5);c.drawImage(S.glow,-G,-G,G*2,G*2);c.restore()}
+/* ---------- Boss 7: Trafalgar D. Water Law · Giả Phẫu Học Sư ---------- */
+const LW={res:.2,spd:1.2,slow:.3,rmT:30,rmCd:7,rmG:1.2};
+const lwRes=b=>LW.res;
+const lwF=o=>{const W=boss.W;if(W.fx.length<150)W.fx.push(o);return o};
+const lwP=(x,y,vx,vy,l,r,c)=>{const W=boss.W;if(W.pt.length<240)W.pt.push({x,y,vx,vy,l,m:l,r,c})};
+const lwAl=()=>balls.filter(p=>p.alive);
+const lwSeg=(px,py,x1,y1,x2,y2)=>{const dx=x2-x1,dy=y2-y1,l2=dx*dx+dy*dy;let q=l2?((px-x1)*dx+(py-y1)*dy)/l2:0;q=Math.max(0,Math.min(1,q));return Math.hypot(px-(x1+dx*q),py-(y1+dy*q))};
+const lwClamp=(x,y,m)=>{const dx=x-C,dy=y-C,lim=R0-(m||boss.r)-10,d=Math.hypot(dx,dy);return d>lim?{x:C+dx/d*lim,y:C+dy/d*lim}:{x,y}};
+function lwInit(){const b=boss;b.r=54;b.x=C;b.y=C-60;b.bars=3;b.lastMv=-1;b.ldT=null;b.fdir=1;
+ b.W={fx:[],pt:[],rocks:[],gh:[],zn:[],rm:0,rmP:0,rmCd:4,rmOn:false,rcast:false,rmEnd:0,perm:false,qcd:2,tpCd:3,gait:0,mv:[0,0],fdir:1,sw:0,swV:0,swing:0,hand:0,handV:0,os:1,osT:3,dash:null,lift:null,ghT:0,lockA:0,fl:0,gm:null,pal:'b'}}
+/* ===== Law: palette, sprite pixel tự tạo, hiệu ứng mới ===== */
+const LWC={b:['56,189,248','147,210,255','255,255,255','18,63,158'],g:['34,197,94','134,239,172','240,255,240','11,107,46'],v:['167,139,250','216,200,255','255,255,255','74,46,168'],o:['255,122,31','255,194,74','255,242,176','154,42,10']};
+const LWH={b:['#ffffff','#bfe9ff','#6cc4ff','#2b8cff','#123f9e'],g:['#ffffff','#d9ffd9','#7dff8f','#22c55e','#0b6b2e'],v:['#ffffff','#f1e8ff','#c9b2ff','#8b6cf0','#4a2ea8'],o:['#ffffff','#fff2b0','#ffc24a','#ff7a1f','#9a2a0a']};
+const LWR={b:'#7dd3fc',g:'#4ade80',v:'#c4b5fd',o:'#fb923c'};
+const LWS={},lwHash=(a,b)=>{const x=Math.sin(a*127.1+b*311.7)*43758.5453;return x-Math.floor(x)};
+function lwGen(kind,pal,N){const H=LWH[pal],out=[];for(let f=0;f<N;f++){const q=f/(N-1),k=document.createElement('canvas'),big=kind==='burst';k.width=big?48:64;k.height=big?48:36;const g=k.getContext('2d');
+ if(big){for(let y=0;y<48;y++)for(let x=0;x<48;x++){const dx=x-23.5,dy=y-23.5,d=Math.hypot(dx,dy),an=Math.atan2(dy,dx),rr=(5+q*17)*(1+.3*Math.sin(an*5+3.7)+.22*Math.sin(an*11+7.4)),hole=rr*q*q*.8;if(d<rr&&d>hole&&lwHash(x,y+f)>q*.55){g.fillStyle=H[Math.min(4,Math.floor(d/rr*3.2+q*1.6))];g.fillRect(x,y,1,1)}}
+  for(let i=0;i<12;i++){const an=i*.5236+lwHash(i,3)*.3,d0=(6+q*17)*1.1,d1=d0+4+q*5+lwHash(i,9)*4;for(let d=d0;d<d1;d++){g.fillStyle=H[d<d0+2?0:2];g.fillRect(Math.round(24+Math.cos(an)*d),Math.round(24+Math.sin(an)*d),q<.4?2:1,1)}}}
+ else for(let x=0;x<64;x++){const u=(x-31.5)/32,top=6+(x-31.5)*(x-31.5)*.022,tt=13*(1-u*u);if(x<q*26)continue;for(let y=0;y<36;y++)if(y>=top&&y<=top+tt&&lwHash(x,y+f*3)>q*.45){g.fillStyle=H[Math.max(0,Math.min(4,Math.floor((y-top)/Math.max(tt,1)*4.6)-(x>40?1:0)))];g.fillRect(x,y,1,1)}}
+ out.push(k)}return out}
+function lwSpr(kind,pal,q){const key=kind+pal;if(!LWS[key])LWS[key]=lwGen(kind,pal,8);return LWS[key][Math.max(0,Math.min(7,Math.floor(q*8)))]}
+function lwPx(c,sp,x,y,w,h){c.imageSmoothingEnabled=false;c.drawImage(sp,Math.round(x-w/2),Math.round(y-(h||w)/2),w,h||w)}
+function lwZap(x,y,s,pal){const W=boss.W;pal=pal||W.pal||'b';ring(x,y,(s||1)*46,LWR[pal],.3);lwF({k:'zap',x,y,l:.45,m:.45,s:s||1,pal});const P=LWC[pal];for(let i=0;i<10;i++){const a=Math.random()*6.283,sp=rnd(120,420);lwP(x,y,Math.cos(a)*sp,Math.sin(a)*sp,rnd(.25,.6),rnd(1.4,3),P[1])}}
+function lwBolt(c,x1,y1,x2,y2,w,al,seed,t,pal){const P=LWC[pal||(boss.W&&boss.W.pal)||'b'],n=Math.max(4,Math.round(Math.hypot(x2-x1,y2-y1)/42)),dx=x2-x1,dy=y2-y1,L=Math.hypot(dx,dy)||1,nx=-dy/L,ny=dx/L,pts=[[x1,y1]];for(let i=1;i<n;i++){const q=i/n,o=(sr(seed+Math.floor(t*28),i)-.5)*48*Math.sin(q*3.1416)*(w>2?1:.7);pts.push([x1+dx*q+nx*o,y1+dy*q+ny*o])}pts.push([x2,y2]);
+ c.lineCap='round';c.lineJoin='round';const path=a=>{c.beginPath();a.forEach((p,i)=>i?c.lineTo(p[0],p[1]):c.moveTo(p[0],p[1]))},A=Math.max(0,Math.min(1,al));
+ for(const[k,col]of[[7,`rgba(${P[0]},.35)`],[3.5,`rgba(${P[1]},.75)`],[1.4,`rgba(${P[2]},1)`]]){c.globalAlpha=A;c.strokeStyle=col;c.lineWidth=w*k;path(pts);c.stroke()}
+ if(w>1.5&&n>5)for(let j=0;j<2;j++){const i=1+Math.floor(sr(seed+j*5,3)*(n-3)),p0=pts[i],a=Math.atan2(dy,dx)+(j?1:-1)*(.6+sr(seed,j)*.5),l=30+sr(seed+j,7)*40;c.globalAlpha=A*.8;c.strokeStyle=`rgba(${P[1]},.9)`;c.lineWidth=w*1.6;path([[p0[0],p0[1]],[p0[0]+Math.cos(a)*l*.5+nx*6,p0[1]+Math.sin(a)*l*.5+ny*6],[p0[0]+Math.cos(a)*l,p0[1]+Math.sin(a)*l]]);c.stroke()}c.globalAlpha=1}
+function lwBand(c,f,q,t){const P=LWC[f.pal||'b'],dx=f.x2-f.x,dy=f.y2-f.y,L=Math.hypot(dx,dy)||1,a=Math.atan2(dy,dx),w=f.w,al=f.hot?1-q:Math.min(1,(1-q)*1.8);if(al<=0)return;c.save();c.translate(f.x,f.y);c.rotate(a);
+ const g=c.createLinearGradient(0,-w/2,0,w/2);g.addColorStop(0,`rgba(${P[0]},0)`);g.addColorStop(.22,`rgba(${P[0]},${.30*al})`);g.addColorStop(.5,`rgba(${P[1]},${(f.hot?.8:.55)*al})`);g.addColorStop(.78,`rgba(${P[0]},${.30*al})`);g.addColorStop(1,`rgba(${P[0]},0)`);c.fillStyle=g;c.fillRect(0,-w/2,L,w);
+ c.strokeStyle=`rgba(${P[1]},${.85*al})`;c.lineWidth=2.6;c.beginPath();c.moveTo(0,-w*.4);c.lineTo(L,-w*.4);c.moveTo(0,w*.4);c.lineTo(L,w*.4);c.stroke();
+ c.setLineDash([30,24]);c.lineDashOffset=-t*(f.pal==='v'?1100:260);c.strokeStyle=`rgba(${P[2]},${.55*al})`;c.lineWidth=3;for(const o of[-.22,.22]){c.beginPath();c.moveTo(0,w*o);c.lineTo(L,w*o);c.stroke()}c.setLineDash([]);
+ c.strokeStyle=`rgba(255,255,255,${.95*al})`;c.lineWidth=4+(f.hot?7:0);c.beginPath();c.moveTo(0,0);c.lineTo(L,0);c.stroke();
+ if(f.pal==='v'){c.lineWidth=2;for(let i=0;i<16;i++){const yy=(lwHash(i,f.x)-.5)*w*.95,o=(t*1500+lwHash(i,4)*L)%L,ln=90+lwHash(i,8)*140;c.strokeStyle=`rgba(${P[2]},${al*.7})`;c.beginPath();c.moveTo(o,yy);c.lineTo(Math.min(L,o+ln),yy);c.stroke()}}
+ c.restore();if(f.pal==='g'){const nx=-Math.sin(a),ny=Math.cos(a);for(const o of[-.3,0,.3])lwBolt(c,f.x+nx*w*o,f.y+ny*w*o,f.x2+nx*w*o,f.y2+ny*w*o,1.3,al*.85,(f.x|0)+(o*10)+7,t,'g')}}
+function lwShock(c,f,q,t){if(f.d&&f.m-f.l<f.d)return;const P=LWC[f.pal||'b'],al=1-q,R=f.big?R0*Math.min(1,q*1.4):40+q*230;c.save();c.lineCap='round';
+ for(let i=0;i<3;i++){const r=R*(1-i*.16);if(r<4)continue;c.strokeStyle=`rgba(${i?P[0]:P[2]},${al*(1-i*.25)})`;c.lineWidth=(f.big?12:7)*(1-q)*(1-i*.2)+1.5;c.beginPath();c.arc(f.x,f.y,r,0,7);c.stroke()}
+ c.strokeStyle=`rgba(${P[1]},${al*.8})`;c.lineWidth=2.4;for(let i=0;i<20;i++){const a=i*.314+f.x*.01,r0=R*.72,r1=R*(1.05+.12*((i*7)%3));c.beginPath();c.moveTo(f.x+Math.cos(a)*r0,f.y+Math.sin(a)*r0);c.lineTo(f.x+Math.cos(a)*r1,f.y+Math.sin(a)*r1);c.stroke()}
+ if(q<.7&&!f.big){const S=130+q*70;lwPx(c,lwSpr('burst',f.pal||'b',q/.7),f.x,f.y,S)}c.restore()}
+function lwRingTele(c,f,q,t){const bl=.5+.5*Math.sin(t*30);c.save();c.lineCap='round';for(let i=0;i<36;i++){const a=i/36*6.2832,ok=Math.abs(angd(a,f.gp))<.3;c.strokeStyle=ok?`rgba(120,255,170,${.55+.35*bl})`:`rgba(255,120,110,${.25+.35*bl})`;c.lineWidth=ok?4:2;c.beginPath();c.moveTo(C+Math.cos(a)*40,C+Math.sin(a)*40);c.lineTo(C+Math.cos(a)*R0*(ok?1:.5+q*.5),C+Math.sin(a)*R0*(ok?1:.5+q*.5));c.stroke()}c.strokeStyle='rgba(255,160,150,.6)';c.lineWidth=3;c.beginPath();c.arc(C,C,Math.max(1,R0*q),0,7);c.stroke();c.restore()}
+function lwRing(c,f,q,t){const r=R0*(1-Math.pow(1-q,1.6))+10,al=q<.8?1:1-(q-.8)/.2,N=26;c.save();c.globalCompositeOperation='lighter';
+ c.strokeStyle=`rgba(${LWC.b[0]},${.35*al})`;c.lineWidth=34;c.beginPath();c.arc(C,C,Math.max(1,r-18),0,7);c.stroke();c.strokeStyle=`rgba(255,255,255,${.75*al})`;c.lineWidth=3;c.beginPath();c.arc(C,C,r,0,7);c.stroke();
+ const sp=lwSpr('slash','b',q*.9),L=Math.min(190,6.2832*r/N*1.7),Hh=L*.56;for(let i=0;i<N;i++){const a=i/N*6.2832+.18*Math.sin(q*6+i);if(Math.abs(angd(a,f.gp))<.3)continue;c.save();c.translate(C+Math.cos(a)*r,C+Math.sin(a)*r);c.rotate(a+1.5708+.35);c.globalAlpha=al;c.imageSmoothingEnabled=false;c.drawImage(sp,-L/2,-Hh,L,Hh);c.restore()}c.restore()}
+function lwRoom(c,t){const W=boss.W;if(W.rmP<=0)return;const p=W.rmP,e=1-Math.pow(1-p,3),Rd=R0*(1+(1-e)*.75),al=Math.min(1,e*1.4);c.save();c.globalCompositeOperation='lighter';
+ const g=c.createRadialGradient(C-Rd*.28,C-Rd*.32,Rd*.04,C,C,Rd);g.addColorStop(0,`rgba(210,240,255,${.22*al})`);g.addColorStop(.35,`rgba(90,175,255,${.07*al})`);g.addColorStop(.78,`rgba(70,150,255,${.10*al})`);g.addColorStop(1,`rgba(150,225,255,${.40*al})`);c.fillStyle=g;c.beginPath();c.arc(C,C,Rd,0,7);c.fill();
+ c.strokeStyle=`rgba(170,225,255,${.30*al})`;c.lineWidth=1.3;const NR=7,NM=20;for(let i=1;i<=NR;i++){const r=Rd*Math.sin(i/NR*1.5708);c.beginPath();c.arc(C,C,r,0,7);c.stroke()}
+ for(let j=0;j<NM;j++){const a=j/NM*6.2832+t*.03;c.beginPath();c.moveTo(C+Math.cos(a)*Rd*.06,C+Math.sin(a)*Rd*.06);c.lineTo(C+Math.cos(a)*Rd,C+Math.sin(a)*Rd);c.stroke()}
+ c.strokeStyle=`rgba(190,235,255,${.22*al})`;for(let i=2;i<=NR;i+=2){const r0=Rd*Math.sin((i-1)/NR*1.5708),r1=Rd*Math.sin(i/NR*1.5708);for(let j=0;j<NM;j++){const a0=(j+.5)/NM*6.2832+t*.03,a1=(j+1.5)/NM*6.2832+t*.03;c.beginPath();c.moveTo(C+Math.cos(a0)*r0,C+Math.sin(a0)*r0);c.lineTo(C+Math.cos(a1)*r1,C+Math.sin(a1)*r1);c.stroke()}}
+ c.strokeStyle=`rgba(80,170,255,${.32*al})`;c.lineWidth=24;c.beginPath();c.arc(C,C,Rd,0,7);c.stroke();c.strokeStyle=`rgba(215,245,255,${.95*al})`;c.lineWidth=5;c.stroke();
+ c.strokeStyle=`rgba(255,255,255,${.22*al})`;c.lineWidth=Rd*.35;c.beginPath();c.arc(C,C,Rd*.72,t*.7,t*.7+.55);c.stroke();
+ c.setLineDash([22,16]);c.lineDashOffset=-t*40;c.strokeStyle=`rgba(224,244,255,${.7*al})`;c.lineWidth=2.4;c.beginPath();c.arc(C,C,Rd*.97,0,7);c.stroke();c.setLineDash([]);
+ for(let i=0;i<22;i++){const a=lwHash(i,2)*6.2832,r=Rd*(.2+.78*lwHash(i,5)),yy=((t*40+i*37)%90);c.fillStyle=`rgba(210,240,255,${.6*al*(1-yy/90)})`;c.fillRect(Math.round(C+Math.cos(a)*r),Math.round(C+Math.sin(a)*r-yy),3,3)}c.restore()}
+function lwHud(b){const W=b.W;$('#bhring').hidden=false;const rs='Kháng '+Math.round(LW.res*100)+'%';let g,ico,txt;
+ if(W.perm){g=1;ico='🔵';txt=(W.rmOn?'ROOM liên tục':'Đang mở Room')+' · '+rs}else{g=Math.max(0,Math.min(1,(b.max-b.hp)/(b.max/3)));ico='🗡️';txt='Room mở ở thanh máu 2 · '+rs}
+ $('#bhrfg').style.strokeDashoffset=119.4*(1-g);$('#bhrico').textContent=ico;$('#bhrtxt').textContent=txt;$('#bossHud').classList.toggle('brave',!!W.rmOn);
+ const seg=b.max/b.bars,cb=Math.max(1,Math.ceil(b.hp/seg-1e-6)),lo=(cb-1)*seg,col=['','#34d399','#a78bfa','#38bdf8'],gr=h=>`linear-gradient(180deg,#ffffffcc,${h} 38%,${h}dd)`,f=$('#bhfill');
+ f.style.background=gr(col[Math.min(3,cb)]);f.parentElement.style.background=cb>1?gr(col[Math.min(3,cb-1)]):'';$('#bhhp').textContent=Math.ceil(b.hp-lo).toLocaleString()+' / '+Math.round(seg).toLocaleString()+' · thanh '+(b.bars-cb+1)+'/'+b.bars}
+
+function lwDash(x1,y1,d,mode){const b=boss,W=b.W;W.dash={x0:b.x,y0:b.y,x1,y1,t:0,d,mode,h:[]};b.ang=Math.atan2(y1-b.y,x1-b.x);W.ghT=0}
+function lwGrab(p){const b=boss,W=b.W;W.dash=null;W.lift={p,t:0,n:0,N:Math.round(BR(10,15)),nx:.3,px:p.x,py:p.y,z:0,cuts:[],ph:0,fin:0};p.stun=Math.max(p.stun||0,.6);lwZap(p.x,p.y,1.6);ring(p.x,p.y,90,'#c4b5fd',.5);if(b.act)b.act.end=999;bossCinematicCue('⛓️ Room · Dán lên không trung','#c4b5fd')}
+function lwField(x1,y1,x2,y2){boss.W.zn.push({k:'lt',x1,y1,x2,y2,t:0,i:0,tk:[.12,.5,.88],d:1.1})}
+function lwTP(){const b=boss,W=b.W,al=lwAl();if(!al.length)return;let cx=0,cy=0;for(const p of al){cx+=p.x;cy+=p.y}cx/=al.length;cy/=al.length;let best=null,bd=-1;const E=R0-b.r-40;for(let i=0;i<18;i++){const a=i/18*6.2832+rnd(0,.3),rr=i%2?E:E*.55,x=C+Math.cos(a)*rr,y=C+Math.sin(a)*rr,d=Math.hypot(x-cx,y-cy);if(d>bd){bd=d;best={x,y}}}
+ const ox=b.x,oy=b.y;lwF({k:'gh',x:ox,y:oy,a:b.ang,f:W.fdir,l:.9,m:.9});lwF({k:'tb',x:ox,y:oy,x2:best.x,y2:best.y,w:190,pal:'v',l:.7,m:.7});lwF({k:'sw',x:ox,y:oy,pal:'v',l:.8,m:.8});lwF({k:'sw',x:best.x,y:best.y,pal:'v',l:.9,m:.9});shake=Math.min(1,shake+.35);b.x=best.x;b.y=best.y;lwF({k:'gh',x:b.x,y:b.y,a:b.ang,f:W.fdir,l:.9,m:.9});for(let i=0;i<14;i++){const a=Math.random()*6.283,sp=rnd(60,300);lwP(b.x,b.y-30,Math.cos(a)*sp,Math.sin(a)*sp,rnd(.3,.7),rnd(1.5,3),'200,170,255')}W.tpCd=BR(3.2,5)}
+function lwBoom(x,y){const b=boss;for(const p of balls)if(p.alive&&Math.hypot(p.x-x,p.y-y)<125+p.r)bossDamagePlayer(p,68*b.dmg);lwF({k:'ex',x,y,r:150,l:.9,m:.9});lwF({k:'sm',x,y,l:2.2,m:2.2,s:Math.random()*9});ring(x,y,170,'#fb923c',.5);ring(x,y,100,'#fde68a',.4);shake=Math.min(1.2,shake+.55);hs=Math.max(hs,.05);for(let i=0;i<30;i++){const a=Math.random()*6.283,sp=rnd(100,520);lwP(x,y,Math.cos(a)*sp,Math.sin(a)*sp-120,rnd(.5,1.2),rnd(2,5),i%3?'120,110,100':'255,170,70')}}
+function lwStart(id){const b=boss,W=b.W,ev=[],L=(t,f)=>ev.push([t,f]);let end=2;
+ const aim=()=>{const p=bossTgt();if(p)b.ang=Math.atan2(p.y-b.y,p.x-b.x);return b.ang};
+ if(id===0){L(.05,()=>{W.sw=1;aim()});L(.15,()=>{const p=bossTgt();if(p)lwF({k:'ch',tg:p,x:p.x,y:p.y,l:1,m:1})});
+  L(1.12,()=>{const ch=W.fx.find(f=>f.k==='ch'),a=ch?Math.atan2(ch.y-b.y,ch.x-b.x):b.ang;b.ang=a;const f=W.fdir,sx=b.x+f*7+Math.cos(a)*150,sy=b.y-52+Math.sin(a)*150,ex=sx+Math.cos(a)*1500,ey=sy+Math.sin(a)*1500;
+   lwF({k:'bolt',x:sx,y:sy,x2:ex,y2:ey,w:2.4,l:.5,m:.5,s:Math.random()*99});lwF({k:'ex',x:sx,y:sy,r:70,l:.4,m:.4});shake=Math.min(1.2,shake+.4);hs=.04;W.fl=.5;W.swing=.6;
+   for(const p of lwAl())if(lwSeg(p.x,p.y,sx,sy,ex,ey)<34+p.r){bossDamagePlayer(p,62*b.dmg);lwZap(p.x,p.y,1.4);W.zn.push({k:'bl',x:p.x,y:p.y,t:0,d:.3,tg:p})}});end=1.9}
+ else if(id===1){let pl=null;L(.05,()=>{W.sw=1;const al=lwAl();if(!al.length)return;let p=al[0],m=1e9;for(const q of al){const d=Math.hypot(q.x-b.x,q.y-b.y);if(d<m){m=d;p=q}}const a=Math.atan2(p.y-b.y,p.x-b.x);b.ang=a;W.lockA=1;const dl=Math.min(m+420,1000);pl=lwClamp(b.x+Math.cos(a)*dl,b.y+Math.sin(a)*dl,b.r);lwF({k:'tl',x:b.x,y:b.y,x2:pl.x,y2:pl.y,w:56,l:.6,m:.6,c:'125,200,255'})});
+  L(.65,()=>{if(pl){W.swing=1;lwDash(pl.x,pl.y,.2,'lt')}});end=2.1}
+ else if(id===9){L(.05,()=>{W.hand=1;W.sw=0});L(.45,()=>{W.rcast=true;W.rmP=0;W.rmEnd=0;W.rmOn=false;W.rm=LW.rmT;ring(b.x,b.y-110,80,'#7dd3fc',.5);bossCinematicCue('🔵 ROOM','#7dd3fc')});L(1.9,()=>{W.hand=0});end=2.1}
+ else if(id===10){const n=3,G=[];for(let i=0;i<n;i++){L(.25+i*1.05,()=>{W.sw=1;aim();G[i]=rnd(0,6.283);lwF({k:'rt',gp:G[i],l:.75,m:.75})});L(1+i*1.05,()=>{W.swing=1;shake=Math.min(1.1,shake+.35);hs=.03;W.zn.push({k:'rg',gp:G[i],t:0,d:1,h:[]});lwF({k:'rg',gp:G[i],l:1,m:1});lwF({k:'sw',x:C,y:C,pal:'b',l:.6,m:.6})})}end=1+(n-1)*1.05+1.2}
+  else if(id===11){L(.05,()=>{W.sw=1;aim()});L(.3,()=>{W.swing=1;const a=BR(0,6.283),d=BR(60,R0*.7),x=C+Math.cos(a)*d,y=C+Math.sin(a)*d;for(let i=0;i<3;i++)lwF({k:'cut',x:x-Math.cos(i*1.05)*90,y:y-Math.sin(i*1.05)*90,x2:x+Math.cos(i*1.05)*90,y2:y+Math.sin(i*1.05)*90,l:1.2,m:1.2,w:3});lwZap(x,y,1.2);W.rocks.push({x,y,z:0,t:0,st:0,rot:BR(0,6.28),sd:Math.random()*9})});end=1.4}
+ else if(id===13){let ge=null;L(.05,()=>{W.sw=1;const al=lwAl();if(!al.length)return;let p=al[0],m=-1;for(const q of al){const d=Math.hypot(q.x-b.x,q.y-b.y);if(d>m){m=d;p=q}}const a=Math.atan2(p.y-b.y,p.x-b.x);b.ang=a;W.lockA=1;ge=lwClamp(b.x+Math.cos(a)*1100,b.y+Math.sin(a)*1100,b.r);lwF({k:'tl',x:b.x,y:b.y,x2:ge.x,y2:ge.y,w:50,l:.7,m:.7,c:'205,160,255'})});
+  L(.75,()=>{if(ge){W.swing=1;lwDash(ge.x,ge.y,.3,'gr')}});end=1.9}
+ else{const E=R0-b.r-14,gl=[],N=8,off=Math.random()*6.283,A=[...Array(N).keys()].map(i=>off+i*6.2832/N).sort(()=>Math.random()-.5);
+  L(.05,()=>{W.sw=1;W.lockA=1;W.pal='g';ring(b.x,b.y,120,'#4ade80',.5);lwF({k:'sw',x:b.x,y:b.y,pal:'g',l:.8,m:.8})});
+  for(let i=0;i<N;i++){const T=.55+i*.34;L(T,()=>{const a=A[i],rr=E*(i%2?1:.62),x2=C+Math.cos(a)*rr,y2=C+Math.sin(a)*rr;lwF({k:'tb',x:b.x,y:b.y,x2,y2,w:170,pal:'g',l:4.7-T,m:4.7-T});gl.push([b.x,b.y,x2,y2]);lwF({k:'sw',x:b.x,y:b.y,pal:'g',l:.6,m:.6});lwF({k:'sw',x:x2,y:y2,pal:'g',l:.7,m:.7,d:.18});lwDash(x2,y2,.18,'gm');W.swing=1})}
+  L(3.7,()=>{lwF({k:'gc',x:b.x,y:b.y,l:.9,m:.9});ring(b.x,b.y,160,'#22c55e',.9);bossCinematicCue('🟢 Gamma Knife · sắp nổ!','#4ade80')});
+  L(4.7,()=>{for(const q of gl){lwF({k:'tb',x:q[0],y:q[1],x2:q[2],y2:q[3],w:200,pal:'g',hot:1,l:.8,m:.8});for(let j=0;j<=2;j++){const u=j/2;lwF({k:'ex',x:q[0]+(q[2]-q[0])*u,y:q[1]+(q[3]-q[1])*u,r:90,pal:'g',l:.6,m:.6,d:j*.06})}}
+   lwF({k:'gb',pal:'g',l:.7,m:.7});shake=Math.min(1.4,shake+.9);hs=.08;for(const p of lwAl()){let hit=false;for(const q of gl)if(lwSeg(p.x,p.y,q[0],q[1],q[2],q[3])<74+p.r*.5){hit=true;break}if(hit){bossDamagePlayer(p,95*b.dmg);lwZap(p.x,p.y,1.6,'g')}}});end=5.6}
+ b.act={t:0,ev,end,id};b.lastMv=id}
+function lwTick(dt,stunned,tg){const b=boss,W=b.W,K=Math.min(1,dt*8);
+ for(const f of W.fx){f.l-=dt;if(f.k==='ch'&&f.tg&&f.l>f.m*.25&&f.tg.alive){f.x=f.tg.x;f.y=f.tg.y}}W.fx=W.fx.filter(f=>f.l>0);
+ for(const p of W.pt){p.l-=dt;p.x+=p.vx*dt;p.y+=p.vy*dt;p.vx*=.97;p.vy*=.97}W.pt=W.pt.filter(p=>p.l>0);
+ for(const g of W.gh)g.l-=dt;W.gh=W.gh.filter(g=>g.l>0);
+ W.swV+=((W.sw||0)-W.swV)*K;W.handV+=((W.hand||0)-W.handV)*K;if(W.swing>0)W.swing=Math.max(0,W.swing-dt/.28);if(W.fl>0)W.fl=Math.max(0,W.fl-dt*2);
+ if(!b.act&&!W.dash&&!W.lift){W.sw=0;W.lockA=0;W.pal='b'}
+ /* Room */
+ if(!W.perm&&b.hp<=b.max*2/3){W.perm=true;W.rm=1e9;if(!W.lift){b.act=null;W.dash=null}W.sw=0;bossCinematicCue('🔵 Cạn thanh máu 1 · ROOM LIÊN TỤC','#7dd3fc');shake=Math.min(1.3,shake+.6);ring(b.x,b.y,260,'#7dd3fc',.7)}
+ if(W.rcast){W.rmP=Math.min(1,W.rmP+dt/LW.rmG);if(W.rmP>=1){if(!W.rmOn){W.rmOn=true;if(W.perm)W.rm=1e9;lwF({k:'sw',x:C,y:C,pal:'b',big:1,l:1.1,m:1.1});ring(C,C,R0,'#7dd3fc',.8);shake=Math.min(1.4,shake+.9);hs=Math.max(hs,.06)}if(!W.perm){W.rm-=dt;if(W.rm<=0){W.rcast=false;W.rmOn=false;W.rmEnd=1;bossCinematicCue('Room tan biến','#7dd3fc')}}}}
+ else if(W.rmP>0){W.rmP=Math.max(0,W.rmP-dt/.6);if(W.rmP<=0)W.rmCd=LW.rmCd}
+ else W.rmCd-=dt;
+ if(W.rmEnd){W.rmEnd=0;if(W.lift){W.lift.p.stun=0;W.lift=null}b.act=null;W.dash=null;W.sw=0}
+ if(W.rmOn)for(const p of balls)if(p.alive)p.slow=Math.max(p.slow||0,LW.slow);
+ /* dash */
+ if(W.dash){const D=W.dash;D.t+=dt;const q=Math.min(1,D.t/D.d),e=1-Math.pow(1-q,2);b.x=D.x0+(D.x1-D.x0)*e;b.y=D.y0+(D.y1-D.y0)*e;W.ghT-=dt;if(W.ghT<=0){W.ghT=.025;W.gh.push({x:b.x,y:b.y,a:b.ang,f:W.fdir,l:.3,m:.3,c:D.mode==='gm'?'70,230,130':'170,130,255'})}
+  if(D.mode==='lt'||D.mode==='gr'){for(const p of balls)if(p.alive&&!D.h.includes(p)&&Math.hypot(p.x-b.x,p.y-b.y)<b.r+p.r+16){D.h.push(p);if(D.mode==='lt'){bossDamagePlayer(p,32*b.dmg);lwZap(p.x,p.y,1.2)}else{lwGrab(p);break}}}
+  if(W.dash&&q>=1){const m=D.mode;W.dash=null;if(m==='lt')lwField(D.x0,D.y0,D.x1,D.y1);if(m==='gr'&&b.act)b.act.end=Math.min(b.act.end,b.act.t+.7)}}
+ /* pinned victim combo */
+ if(W.lift){const L=W.lift,p=L.p;if(stunned||!p.alive){if(p.alive)p.stun=0;W.lift=null;b.act=null;W.sw=0}
+  else{L.t+=dt;p.stun=Math.max(p.stun||0,.35);p.vx=p.vy=0;p.x=L.px;p.y=L.py;L.z=Math.min(54,L.z+dt*320);
+   if(L.ph===0){L.nx-=dt;if(L.nx<=0){if(L.n<L.N){L.n++;L.nx=.2;const ax=b.x,ay=b.y,a0=Math.atan2(ay-L.py,ax-L.px)+3.1416+BR(-.6,.6),d=BR(85,115),bx=L.px+Math.cos(a0)*d,by=L.py+Math.sin(a0)*d;
+      lwF({k:'gh',x:ax,y:ay,a:b.ang,f:W.fdir,l:.35,m:.35});lwF({k:'cut',x:ax,y:ay,x2:bx,y2:by,l:.9,m:.9,w:2.6});L.cuts.push([ax,ay,bx,by]);b.x=bx;b.y=by;b.ang=Math.atan2(L.py-by,L.px-bx);W.swing=1;W.sw=1;bossDamagePlayer(p,7*b.dmg);lwZap(L.px+rnd(-14,14),L.py+rnd(-14,14)-L.z,.6);shake=Math.min(.8,shake+.08)}
+      else{L.ph=1;L.fin=.4;const a=Math.atan2(b.y-L.py,b.x-L.px);b.x=L.px+Math.cos(a)*85;b.y=L.py+Math.sin(a)*85;b.ang=a+3.1416;lwF({k:'gh',x:b.x,y:b.y,a:b.ang,f:W.fdir,l:.5,m:.5});ring(L.px,L.py,70,'#c4b5fd',.4)}}}
+   else{L.fin-=dt;if(L.fin<=0){const a=Math.atan2(L.py-b.y,L.px-b.x);W.swing=1;lwF({k:'cut',x:L.px-Math.cos(a+.7)*150,y:L.py-Math.sin(a+.7)*150,x2:L.px+Math.cos(a+.7)*150,y2:L.py+Math.sin(a+.7)*150,l:.7,m:.7,w:6});for(const c of L.cuts)lwF({k:'cut',x:c[0],y:c[1],x2:c[2],y2:c[3],l:.5,m:.5,w:3,echo:1});lwF({k:'ex',x:L.px,y:L.py,r:130,l:.6,m:.6});bossDamagePlayer(p,95*b.dmg);shake=Math.min(1.3,shake+.7);hs=.08;ring(L.px,L.py,150,'#fff',.6);p.stun=.6;p.vx=Math.cos(a)*900;p.vy=Math.sin(a)*900;W.lift=null;b.act=null;W.sw=0;b.calm=BR(1,1.6)}}}}
+ /* rocks */
+ for(const r of W.rocks){r.t+=dt;
+  if(r.st===0){r.z=34+Math.sin(r.t*3)*8;r.rot+=dt*.5;if(r.t>=3){r.st=1;r.t=0}}
+  else if(r.st===1){const q=Math.min(1,r.t/.5);r.z=34+q*170;r.rot+=dt*2;if(q>=1){const al=lwAl(),p=al.length?al[Math.floor(Math.random()*al.length)]:null;r.tx=p?p.x:C;r.ty=p?p.y:C;r.sx=r.x;r.sy=r.y;r.st=2;r.t=0;lwF({k:'tc',x:r.tx,y:r.ty,r:125,l:.95,m:.95})}}
+  else{const q=Math.min(1,r.t/.95);r.x=r.sx+(r.tx-r.sx)*q;r.y=r.sy+(r.ty-r.sy)*q;r.z=204*(1-q)+Math.sin(q*3.1416)*170;r.rot+=dt*5;if(q>=1){r.dead=1;lwBoom(r.tx,r.ty)}}}
+ W.rocks=W.rocks.filter(r=>!r.dead);
+ /* zones */
+ for(const z of W.zn){z.t+=dt;
+  if(z.k==='lt'){while(z.i<z.tk.length&&z.t>=z.tk[z.i]){z.i++;const n=8;for(let j=0;j<=n;j++){const q=j/n,x=z.x1+(z.x2-z.x1)*q+rnd(-22,22),y=z.y1+(z.y2-z.y1)*q+rnd(-22,22);if(j%2===0)lwF({k:'bolt',x:x+rnd(-30,30),y:y-520,x2:x,y2:y,w:2,l:.28,m:.28,s:Math.random()*99})}
+    lwF({k:'bolt',x:z.x1,y:z.y1,x2:z.x2,y2:z.y2,w:2.4,l:.3,m:.3,s:Math.random()*99});shake=Math.min(1.1,shake+.3);hs=.03;W.fl=.35;
+    for(const p of lwAl())if(lwSeg(p.x,p.y,z.x1,z.y1,z.x2,z.y2)<64+p.r){bossDamagePlayer(p,28*b.dmg);lwZap(p.x,p.y,1)}}
+   if(z.t>=z.d)z.dead=1}
+  else if(z.k==='rg'){const r=R0*(1-Math.pow(1-Math.min(1,z.t/z.d),1.6))+10;for(const p of lwAl()){if(z.h.includes(p))continue;const dd=Math.hypot(p.x-C,p.y-C);if(Math.abs(dd-r)<46+p.r&&Math.abs(angd(Math.atan2(p.y-C,p.x-C),z.gp))>.3+p.r/Math.max(dd,60)){z.h.push(p);bossDamagePlayer(p,40*b.dmg);lwZap(p.x,p.y,1.2)}}if(z.t>=z.d)z.dead=1}
+  else if(z.k==='bl'){if(z.t>=z.d){z.dead=1;lwF({k:'ex',x:z.x,y:z.y,r:90,l:.4,m:.4});for(const p of lwAl())if(Math.hypot(p.x-z.x,p.y-z.y)<85+p.r)bossDamagePlayer(p,18*b.dmg)}}}
+ W.zn=W.zn.filter(z=>!z.dead);
+ if(stunned||!tg||W.lift||W.dash)return;
+ /* facing + movement */
+ const dx=tg.x-b.x,dy=tg.y-b.y,d=Math.hypot(dx,dy)||1,ux=dx/d,uy=dy/d;
+ if(!W.lockA)b.ang+=angd(Math.atan2(dy,dx),b.ang)*Math.min(1,dt*(b.act?5:3.5));
+ W.osT-=dt;if(W.osT<=0){W.os=-W.os;W.osT=BR(3,6)}
+ let mx=0,my=0,sp=0;
+ if(!b.act){if(d<250){mx=-ux;my=-uy}else if(d>380){mx=ux;my=uy}else{mx=-uy*W.os;my=ux*W.os}sp=b.spd*(b.ccM||1)*(W.rmOn?LW.spd:1);b.x+=mx*sp*dt;b.y+=my*sp*dt;bossClamp(b)}
+ const q=sp/(b.spd||1);W.mv=[mx*q,my*q];W.gait+=sp*dt*.09;
+ /* chọn chiêu */
+ if(!b.act){const on=W.rmOn;
+  if(W.perm&&!W.rcast&&W.rmP<=0){lwStart(9);W.qcd=.8;return}
+  if(on){W.tpCd-=dt;if(W.tpCd<=0){lwTP();return}}
+  W.qcd-=dt;
+  if(W.qcd<=0){
+   if(!W.rcast&&W.rmP<=0&&W.perm){lwStart(9);W.qcd=.8}
+   else if(on){const ids=[10,11,13,14],ws=[3,W.rocks.length>=2?0:3,2.5,2];if(b.lastMv>=0){const i=ids.indexOf(b.lastMv);if(i>=0)ws[i]*=.3}let r=Math.random()*ws.reduce((x,y)=>x+y,0),i=0;while(i<3&&(r-=ws[i])>0)i++;const id=ids[i];bossCinematicCue(({10:'⚔️ Room · Vòng Chém 360°',11:'🪨 Room · Thạch Cắt',13:'⛓️ Room · Dán Trời',14:'🟢 Gamma Knife'})[id],'#7dd3fc');lwStart(id);W.qcd=BR(1.4,2.4)}
+   else if(W.rmP<=0&&!W.rcast){const id=Math.random()<.5?0:1;if(b.lastMv===id&&Math.random()<.7){W.qcd=.1}else{bossCinematicCue(id?'⚡ Lôi Xung Xuyên':'⚡ Kikoku · Lôi Xạ','#7dd3fc');lwStart(id);W.qcd=BR(2.2,3.4)}}
+   else W.qcd=.3}}}
+function lwWorld(c,t){const b=boss,W=b.W;lwRoom(c,t);c.save();c.beginPath();c.arc(C,C,R0+8,0,7);c.clip();
+ for(const g of W.gh){const q=g.l/g.m;c.save();c.translate(g.x,g.y);c.scale(g.f,1);c.globalAlpha=q*.5;c.fillStyle=`rgb(${g.c||'175,140,255'})`;c.beginPath();c.ellipse(0,-30,16,52,0,0,7);c.fill();c.beginPath();c.arc(4,-88,13,0,7);c.fill();c.restore()}
+ c.globalCompositeOperation='lighter';
+ for(const f of W.fx){const q=1-f.l/f.m;
+  if(f.k==='tl'){const a=Math.atan2(f.y2-f.y,f.x2-f.x);c.strokeStyle=`rgba(${f.c},${.12+.22*q})`;c.lineWidth=f.w;c.lineCap='butt';c.beginPath();c.moveTo(f.x,f.y);c.lineTo(f.x2,f.y2);c.stroke();c.strokeStyle=`rgba(${f.c},${.5+.4*q})`;c.lineWidth=2;c.beginPath();c.moveTo(f.x,f.y);c.lineTo(f.x2,f.y2);c.stroke()}
+  else if(f.k==='tc'){c.strokeStyle=`rgba(255,160,90,.9)`;c.fillStyle=`rgba(255,120,60,${.12+.2*q})`;c.lineWidth=2.5;c.beginPath();c.arc(f.x,f.y,f.r,0,7);c.fill();c.stroke();c.beginPath();c.arc(f.x,f.y,f.r*(1-q),0,7);c.stroke()}
+  else if(f.k==='pl'){c.strokeStyle=`rgba(200,160,255,${1-q})`;c.lineWidth=5*(1-q)+1;c.beginPath();c.moveTo(f.x,f.y);c.lineTo(f.x2,f.y2);c.stroke();c.strokeStyle=`rgba(255,255,255,${(1-q)*.8})`;c.lineWidth=1.5;c.stroke()}
+  else if(f.k==='gl'){const al=f.hot?(1-q):Math.min(1,(1-q)*1.4)*.8;c.strokeStyle=`rgba(80,170,255,${al*.5})`;c.lineWidth=f.hot?16:9;c.beginPath();c.moveTo(f.x,f.y);c.lineTo(f.x2,f.y2);c.stroke();c.strokeStyle=`rgba(210,240,255,${al})`;c.lineWidth=f.hot?4:2.2;c.stroke()}
+  else if(f.k==='gc'){c.strokeStyle=`rgba(${LWC.g[1]},${.4+.5*q})`;c.lineWidth=3;for(let i=0;i<3;i++){c.beginPath();c.arc(f.x,f.y,(1-q)*(220-i*55)+10,0,7);c.stroke()}}
+  else if(f.k==='tb')lwBand(c,f,q,t);else if(f.k==='sw')lwShock(c,f,q,t);else if(f.k==='rt')lwRingTele(c,f,q,t);else if(f.k==='rs'){const sn=Math.sin(f.a),cs=Math.cos(f.a),al=Math.pow(1-q,1.4);const g=c.createLinearGradient(C-sn*60,C+cs*60,C+sn*60,C-cs*60);g.addColorStop(0,'rgba(120,200,255,0)');g.addColorStop(.5,`rgba(235,248,255,${al})`);g.addColorStop(1,'rgba(120,200,255,0)');c.fillStyle=g;c.beginPath();c.moveTo(C-cs*R0-sn*60,C-sn*R0+cs*60);c.lineTo(C+cs*R0-sn*60,C+sn*R0+cs*60);c.lineTo(C+cs*R0+sn*60,C+sn*R0-cs*60);c.lineTo(C-cs*R0+sn*60,C-sn*R0-cs*60);c.closePath();c.fill()}}
+ for(const r of W.rocks){c.fillStyle='rgba(0,0,0,.35)';c.globalCompositeOperation='source-over';c.beginPath();c.ellipse(r.x,r.y+8,34-r.z*.05,12,0,0,7);c.fill();c.globalCompositeOperation='lighter'}
+ c.restore()}
+function lwTop(c,t){const b=boss,W=b.W;c.save();c.beginPath();c.arc(C,C,R0+8,0,7);c.clip();
+ for(const r of W.rocks){c.save();c.translate(r.x,r.y-r.z);c.rotate(r.rot);c.fillStyle='#4b5563';c.strokeStyle='#111827';c.lineWidth=3;c.beginPath();for(let i=0;i<9;i++){const a=i/9*6.283,rr=30+sr(r.sd,i)*14;i?c.lineTo(Math.cos(a)*rr,Math.sin(a)*rr):c.moveTo(Math.cos(a)*rr,Math.sin(a)*rr)}c.closePath();c.fill();c.stroke();c.strokeStyle='rgba(255,255,255,.25)';c.lineWidth=1.6;c.beginPath();c.moveTo(-14,-10);c.lineTo(2,4);c.lineTo(-4,16);c.moveTo(6,-18);c.lineTo(14,-4);c.stroke();c.fillStyle='rgba(125,211,252,.35)';c.beginPath();c.arc(0,0,8+Math.sin(t*6)*2,0,7);c.fill();c.restore()}
+ if(W.lift){const L=W.lift;c.fillStyle='rgba(0,0,0,.3)';c.beginPath();c.ellipse(L.px,L.py+16,22,8,0,0,7);c.fill();c.globalCompositeOperation='lighter';c.strokeStyle='rgba(196,181,253,.8)';c.lineWidth=2.5;c.beginPath();c.ellipse(L.px,L.py-L.z+4,30,12,0,0,7);c.stroke();c.strokeStyle='rgba(196,181,253,.35)';c.beginPath();c.moveTo(L.px,L.py+10);c.lineTo(L.px,L.py-L.z);c.stroke();c.globalCompositeOperation='source-over'}
+ c.globalCompositeOperation='lighter';
+ for(const f of W.fx){const q=1-f.l/f.m,al=1-q;
+  if(f.k==='bolt')lwBolt(c,f.x,f.y,f.x2,f.y2,f.w,al*1.2,f.s,t);
+  else if(f.k==='ch'){const R=62-26*q,lk=f.l<f.m*.25;c.strokeStyle=lk?'rgba(255,255,255,.95)':'rgba(110,200,255,.95)';c.lineWidth=2.6;c.beginPath();c.arc(f.x,f.y,R,0,7);c.stroke();for(let i=0;i<4;i++){const a=i*1.5708+t*2;c.beginPath();c.moveTo(f.x+Math.cos(a)*(R-14),f.y+Math.sin(a)*(R-14));c.lineTo(f.x+Math.cos(a)*(R+22),f.y+Math.sin(a)*(R+22));c.stroke()}lwBolt(c,f.x-R,f.y,f.x+R,f.y,.9,.8,i7(f),t);lwBolt(c,f.x,f.y-R,f.x,f.y+R,.9,.8,i7(f)+3,t);c.fillStyle='rgba(255,255,255,.9)';c.beginPath();c.arc(f.x,f.y,4,0,7);c.fill()}
+  else if(f.k==='zap'){const R=(26+q*54)*f.s,P=f.pal||'b';lwPx(c,lwSpr('burst',P,q),f.x,f.y,R*2.4);for(let i=0;i<5;i++){const a=i*1.2566+f.m*9;lwBolt(c,f.x,f.y,f.x+Math.cos(a)*R,f.y+Math.sin(a)*R,.8,al,i+f.m*50,t,P)}}
+  else if(f.k==='cut'){const ea=f.echo?al*1.2:al;c.strokeStyle=`rgba(${f.echo?'255,255,255':'205,240,255'},${Math.min(1,ea)})`;c.lineWidth=f.w*(1-q*.6)+.8;c.lineCap='round';c.beginPath();c.moveTo(f.x,f.y);c.lineTo(f.x2,f.y2);c.stroke();c.strokeStyle=`rgba(140,120,255,${al*.5})`;c.lineWidth=f.w*3;c.stroke()}
+  else if(f.k==='ex'){if(f.d&&f.m-f.l<f.d)continue;const P=f.pal||'o',R=f.r;lwPx(c,lwSpr('burst',P,q),f.x,f.y,R*2.6);c.strokeStyle=`rgba(${LWC[P][2]},${al})`;c.lineWidth=4;c.beginPath();c.arc(f.x,f.y,R*(.2+q*.9),0,7);c.stroke();const g=c.createRadialGradient(f.x,f.y,1,f.x,f.y,R);g.addColorStop(0,`rgba(${LWC[P][2]},${al*.8})`);g.addColorStop(.5,`rgba(${LWC[P][0]},${al*.3})`);g.addColorStop(1,`rgba(${LWC[P][0]},0)`);c.fillStyle=g;c.beginPath();c.arc(f.x,f.y,R,0,7);c.fill()}
+  else if(f.k==='sm'){const h=Math.min(1,q*2.2)*320,w=44+q*48;let g=c.createLinearGradient(f.x,f.y,f.x,f.y-h);g.addColorStop(0,`rgba(255,150,50,${al*.7})`);g.addColorStop(.35,`rgba(200,110,60,${al*.4})`);g.addColorStop(1,'rgba(120,120,125,0)');c.fillStyle=g;c.beginPath();c.moveTo(f.x-w,f.y);c.quadraticCurveTo(f.x-w*.5,f.y-h*.6,f.x-w*.2,f.y-h);c.lineTo(f.x+w*.2,f.y-h);c.quadraticCurveTo(f.x+w*.5,f.y-h*.6,f.x+w,f.y);c.fill();c.globalCompositeOperation='source-over';c.fillStyle=`rgba(90,90,95,${al*.35})`;for(let i=0;i<7;i++){const yy=f.y-h*(.15+i*.12),xx=f.x+Math.sin(i*2+f.s)*w*.5;c.beginPath();c.arc(xx,yy,22+i*5+q*14,0,7);c.fill()}c.fillStyle=`rgba(150,130,100,${al*.3})`;c.beginPath();c.ellipse(f.x,f.y,60+q*130,20+q*40,0,0,7);c.fill();c.globalCompositeOperation='lighter'}
+  else if(f.k==='rg')lwRing(c,f,q,t);else if(f.k==='gb'){c.fillStyle=`rgba(${LWC[f.pal||'b'][1]},${al*.8})`;c.fillRect(C-R0-60,C-R0-60,2*R0+120,2*R0+120)}}
+ for(const p of W.pt){const q=p.l/p.m;c.fillStyle=`rgba(${p.c},${q})`;c.beginPath();c.arc(p.x,p.y,p.r*(.4+q*.6),0,7);c.fill()}
+ if(W.fl>0){c.fillStyle=`rgba(200,235,255,${W.fl*.22})`;c.fillRect(C-R0-60,C-R0-60,2*R0+120,2*R0+120)}
+ c.restore()}
+const i7=f=>Math.round(f.m*1000)%97;
+function lwBlade(c,len,glow,t){c.fillStyle='#0b0e17';c.fillRect(-24,-3.4,26,6.8);c.fillStyle='#8a4b2a';for(let i=0;i<5;i++)c.fillRect(-22+i*5,-3,3,6);c.fillStyle='#111827';c.beginPath();c.arc(3,0,6,0,7);c.fill();c.strokeStyle='#e5e7eb';c.lineWidth=1.4;c.stroke();
+ const g=c.createLinearGradient(0,-4,0,4);g.addColorStop(0,'#f1f5f9');g.addColorStop(.5,'#9fb4cc');g.addColorStop(1,'#e2eaf5');c.fillStyle=g;c.strokeStyle='#0a0d16';c.lineWidth=2;c.beginPath();c.moveTo(8,-3.4);c.lineTo(len,-1.6);c.lineTo(len+8,1);c.lineTo(8,3.4);c.closePath();c.fill();c.stroke();
+ if(glow>.05){c.save();c.globalCompositeOperation='lighter';c.strokeStyle=`rgba(120,200,255,${glow})`;c.lineWidth=9;c.beginPath();c.moveTo(8,0);c.lineTo(len+6,0);c.stroke();for(let i=0;i<3;i++)lwBolt(c,10,0,len+6,0,.8,glow,i*7,t);c.restore()}}
+function lwDraw(){const b=boss,W=b.W,c=ctx,t=time;b.ldT=t;const cf=Math.cos(b.ang),f=cf<-.15?-1:cf>.15?1:(W.fdir||1);W.fdir=f;const u=b.r/54,la=f>0?b.ang:Math.PI-b.ang;
+ const wk=Math.min(1,Math.hypot(W.mv[0],W.mv[1])*1.2),gs=W.gait,bob=Math.sin(gs*2)*2.5*wk+Math.sin(t*2)*1.2;
+ lwWorld(c,t);
+ c.save();c.fillStyle='rgba(0,0,0,.32)';c.beginPath();c.ellipse(b.x,b.y+88*u,44*u,11*u,0,0,7);c.fill();
+ if(W.rmOn){c.globalCompositeOperation='lighter';const g=c.createRadialGradient(b.x,b.y,10,b.x,b.y,150*u);g.addColorStop(0,'rgba(120,200,255,.22)');g.addColorStop(1,'rgba(120,200,255,0)');c.fillStyle=g;c.fillRect(b.x-160*u,b.y-160*u,320*u,320*u);c.globalCompositeOperation='source-over'}
+ c.translate(b.x,b.y-bob);c.scale(f*u,u);if(b.flash>0)c.globalAlpha=.75;c.lineCap='round';c.lineJoin='round';
+ const OL='#070a12',SK='#e6bf9a',CT='#1b2640',CT2='#2e3d66',FUR='#0c111c',YL='#f2c316',YD='#b88a0a',PT='#d3d9e4',PS='#262e40',HW='#f6f3ec',HS='#222a3c';
+ const lm=(pts,w,col)=>{c.strokeStyle=OL;c.lineWidth=w+5;c.beginPath();pts.forEach((p,i)=>i?c.lineTo(p[0],p[1]):c.moveTo(p[0],p[1]));c.stroke();c.strokeStyle=col;c.lineWidth=w;c.stroke()},jt=(x,y,r,col)=>{c.fillStyle=col;c.strokeStyle=OL;c.lineWidth=2.4;c.beginPath();c.arc(x,y,r,0,7);c.fill();c.stroke()};
+ const ga=Math.sin(gs)*.55*wk,leg=(hx,ph,col)=>{const k=[hx+Math.sin(ph)*20,46],ft=[hx+Math.sin(ph)*36+6,88-Math.max(0,Math.cos(ph))*8*wk];lm([[hx,6],k,ft],13,col);jt(k[0],k[1],6,col);c.fillStyle=PS;for(const[x,y]of[[hx*.5+k[0]*.5,26],[k[0]+(ft[0]-k[0])*.4,k[1]+(ft[1]-k[1])*.3]]){c.beginPath();c.ellipse(x,y,3.4,2.4,0,0,7);c.fill()}c.fillStyle='#10131d';c.strokeStyle=OL;c.lineWidth=2.4;c.beginPath();c.ellipse(ft[0]+6,ft[1]+2,13,6.5,0,0,7);c.fill();c.stroke()};
+ const S=[7,-52],sc=W.swV>.5,hd=W.handV>.4;
+ /* kiếm đeo sau lưng khi chưa rút */
+ if(!sc){c.save();c.translate(-30,-10);c.rotate(-.93);c.fillStyle='#10131c';c.strokeStyle=OL;c.lineWidth=2.6;c.fillRect(-4,-5,138,10);c.strokeRect(-4,-5,138,10);c.fillStyle='#e9edf5';for(let i=0;i<4;i++){const x=22+i*28;c.fillRect(x-1.6,-3.6,3.2,7.2);c.fillRect(x-4,-1.2,8,2.4)}c.fillStyle='#8a4b2a';c.fillRect(134,-4,24,8);c.strokeRect(134,-4,24,8);c.restore()}
+ leg(-2,-ga,'#aab2c2');
+ /* áo khoác sau */
+ c.fillStyle=CT;c.strokeStyle=OL;c.lineWidth=3.6;c.beginPath();c.moveTo(-8,-56);c.quadraticCurveTo(-34,0,-30,50+Math.sin(t*2)*3);c.lineTo(-6,52);c.lineTo(6,-4);c.closePath();c.fill();c.stroke();c.strokeStyle=YL;c.lineWidth=3;c.beginPath();c.moveTo(-28,46);c.lineTo(-6,50);c.stroke();
+ /* chân gần */
+ leg(5,ga,PT);
+ /* thân: áo vàng */
+ c.fillStyle=YL;c.strokeStyle=OL;c.lineWidth=3.6;c.beginPath();c.moveTo(-10,-56);c.lineTo(16,-56);c.quadraticCurveTo(18,-26,14,8);c.lineTo(-8,8);c.quadraticCurveTo(-13,-26,-10,-56);c.closePath();c.fill();c.stroke();
+ c.fillStyle='#10131d';c.beginPath();c.arc(3,-30,7.4,0,7);c.fill();c.fillStyle='#fff';for(const x of[-2.6,2.6]){c.beginPath();c.arc(3+x,-32,1.8,0,7);c.fill()}c.strokeStyle='#fff';c.lineWidth=1.3;c.beginPath();c.moveTo(-1.6,-26.4);c.lineTo(7.6,-26.4);c.moveTo(.6,-27);c.lineTo(.6,-24.6);c.moveTo(3,-27);c.lineTo(3,-24.6);c.moveTo(5.4,-27);c.lineTo(5.4,-24.6);c.stroke();
+ c.strokeStyle=OL;c.lineWidth=3.4;c.beginPath();c.moveTo(-10,2);c.lineTo(15,2);c.stroke();c.fillStyle='#3a2a1a';c.fillRect(-2,-1,10,6);
+ /* vạt áo khoác trước */
+ c.fillStyle=CT2;c.strokeStyle=OL;c.lineWidth=3.4;c.beginPath();c.moveTo(14,-56);c.quadraticCurveTo(30,-10,26,50+Math.sin(t*2+1)*3);c.lineTo(10,48);c.quadraticCurveTo(14,0,10,-52);c.closePath();c.fill();c.stroke();c.strokeStyle=YL;c.lineWidth=2.6;c.beginPath();c.moveTo(11,-50);c.quadraticCurveTo(15,0,11,46);c.stroke();
+ /* cổ + lông cổ áo */
+ c.fillStyle=SK;c.strokeStyle=OL;c.lineWidth=3;c.beginPath();c.moveTo(-3,-70);c.lineTo(11,-70);c.lineTo(11,-56);c.lineTo(-3,-56);c.closePath();c.fill();c.stroke();
+ c.fillStyle=FUR;c.beginPath();c.moveTo(-18,-50);for(const[x,y]of[[-20,-60],[-12,-58],[-14,-68],[-4,-62],[-2,-72],[6,-64],[14,-72],[20,-62],[28,-62],[24,-54],[26,-48]])c.lineTo(x,y);c.lineTo(14,-44);c.lineTo(-10,-44);c.closePath();c.fill();c.strokeStyle=OL;c.lineWidth=2.4;c.stroke();
+ /* tay xa (phía sau) */
+ const cs=Math.cos(la),sn=Math.sin(la),swg=W.swing,bla=la-1.5*swg;
+ if(hd){const E=[S[0]+10,S[1]-22],H=[S[0]+26,S[1]-52];lm([[S[0]-4,S[1]],E,H],10,CT);jt(E[0],E[1],5,CT);jt(H[0],H[1],5.5,SK);
+  const p=Math.max(.15,W.rmP),R=14+p*12;c.save();c.globalCompositeOperation='lighter';const g=c.createRadialGradient(H[0]+4,H[1]-14,2,H[0]+4,H[1]-14,R*2);g.addColorStop(0,'rgba(255,255,255,.95)');g.addColorStop(.4,'rgba(120,205,255,.6)');g.addColorStop(1,'rgba(60,160,255,0)');c.fillStyle=g;c.beginPath();c.arc(H[0]+4,H[1]-14,R*2,0,7);c.fill();c.strokeStyle='rgba(220,245,255,.95)';c.lineWidth=2;c.beginPath();c.arc(H[0]+4,H[1]-14,R,0,7);c.stroke();c.beginPath();c.ellipse(H[0]+4,H[1]-14,R,R*.35,t*3,0,7);c.stroke();c.restore()}
+ else{const E=[S[0]-14,S[1]+26],H=[S[0]-8,S[1]+52];lm([[S[0]-4,S[1]],E,H],10,CT);jt(E[0],E[1],5,CT);jt(H[0],H[1],5.5,SK)}
+ /* đầu */
+ c.fillStyle=SK;c.strokeStyle=OL;c.lineWidth=3.2;c.beginPath();c.ellipse(5,-84,13,15,.05,0,7);c.fill();c.stroke();
+ c.fillStyle='#17110d';c.beginPath();c.moveTo(0,-72);c.quadraticCurveTo(6,-62,14,-72);c.quadraticCurveTo(8,-69,0,-72);c.fill();c.fillRect(8,-76,5,2.6);
+ c.strokeStyle=OL;c.lineWidth=2.6;c.beginPath();c.moveTo(7,-86);c.lineTo(15,-85);c.stroke();c.fillStyle='#8a1f1f';c.beginPath();c.arc(12,-83.4,1.7,0,7);c.fill();c.strokeStyle=OL;c.lineWidth=1.8;c.beginPath();c.moveTo(7,-77);c.quadraticCurveTo(12,-73,17,-78);c.stroke();
+ c.fillStyle='#f2c316';c.beginPath();c.arc(-6,-80,2.4,0,7);c.fill();c.strokeStyle=OL;c.lineWidth=1;c.stroke();
+ /* mũ */
+ c.fillStyle=HW;c.strokeStyle=OL;c.lineWidth=3.4;c.beginPath();c.moveTo(-10,-90);c.quadraticCurveTo(-14,-118,6,-118);c.quadraticCurveTo(26,-118,24,-90);c.quadraticCurveTo(26,-84,18,-86);c.lineTo(-6,-86);c.quadraticCurveTo(-12,-84,-10,-90);c.closePath();c.fill();c.stroke();
+ c.fillStyle=HS;for(const[x,y,r]of[[-3,-108,4],[7,-112,4.4],[16,-106,4],[-6,-97,3.4],[4,-100,4],[14,-96,3.6],[21,-93,2.6]]){c.beginPath();c.ellipse(x,y,r,r*.8,.3,0,7);c.fill()}
+ c.fillStyle='#d9d4c8';c.beginPath();c.moveTo(14,-90);c.quadraticCurveTo(26,-86,32,-80);c.lineTo(20,-82);c.closePath();c.fill();c.strokeStyle=OL;c.lineWidth=2.4;c.stroke();
+ /* tay gần + kiếm */
+ const E1=sc?[S[0]+cs*24,S[1]+sn*24+3]:[S[0]+16,S[1]+16],H1=sc?[S[0]+cs*54,S[1]+sn*54]:[S[0]+18,S[1]-14];
+ lm([S,E1,H1],11,CT2);jt(E1[0],E1[1],5.6,CT2);jt(H1[0],H1[1],6,SK);c.fillStyle='#10131d';for(const dx of[-2.4,2.4]){c.beginPath();c.arc(H1[0]+dx,H1[1]+1,1.1,0,7);c.fill()}
+ if(sc){c.save();c.translate(H1[0],H1[1]);c.rotate(bla);lwBlade(c,118,W.lift?0:(b.act&&b.act.id===0?.9:.0),t);c.restore();
+  if(swg>0){c.save();c.globalCompositeOperation='lighter';c.strokeStyle=`rgba(210,240,255,${swg})`;c.lineWidth=5*swg+1;c.beginPath();c.arc(H1[0],H1[1],110,la-1.5*swg-.1,la+.3);c.stroke();c.restore()}}
+ c.restore();lwTop(c,t);
+ if(b.stun>0){c.font='34px serif';c.textAlign='center';c.fillStyle='#fff';c.fillText('💫',b.x,b.y-130*u)}}
+
 /* ---------- Boss 6: Nữ Hoàng Săn Bắt · Thần Tiễn Của Vương Quốc Ánh Sáng ---------- */
 const QN={res:.3,dres:-.15,v:640,dv:14,dT:40};
 const qnRes=b=>b.dz>0?QN.dres:QN.res;
@@ -8227,7 +8446,7 @@ function drawBoss(){
   else{const g=c.createRadialGradient(s.x,s.y,s.rad*.1,s.x,s.y,s.rad);g.addColorStop(0,'rgba(2,6,15,.85)');g.addColorStop(.7,'rgba(8,20,40,.5)');g.addColorStop(1,'rgba(8,20,40,0)');c.fillStyle=g;c.beginPath();c.arc(s.x,s.y,s.rad,0,7);c.fill()}
   c.restore()}c.restore();
  drawBossFx(0);
- if(b.kind==='queen'){qnDraw();drawBossFx(1);return}if(b.kind==='beast'){bsDraw();drawBossFx(1);return}
+ if(b.kind==='law'){lwDraw();drawBossFx(1);return}if(b.kind==='queen'){qnDraw();drawBossFx(1);return}if(b.kind==='beast'){bsDraw();drawBossFx(1);return}
  if(b.kind==='mahoraga'){mhDraw();drawBossFx(1);return}
  if(b.kind==='sentinel'){if(b.sun)sunPlatform();snDraw();if(b.sun)sunDome();drawBossFx(1);return}
  const fa=b.ang,ca=Math.cos(fa),sa=Math.sin(fa),bob=b.walking?Math.sin(t*7)*3:0,hot=b.brave,lf=b.lf||0,cr=b.cr||0,ln=b.lean||0,coil=b.coil||0,dr=b.drink;
@@ -8460,7 +8679,11 @@ boss_beast:{lead:'Vua thú có hai thanh máu. Mất thanh đầu là Cuồng N�
 boss_queen:{lead:'Nữ hoàng cung thủ bước chậm rãi, luôn nhìn thẳng bạn, mỗi chiêu cách nhau khoảng 5–7 giây. Mũi tên thường bay thẳng; khi Thông Suốt Nữ Đế thì cực nhanh.',
  slides:[
  gM('👑 Thông Suốt Nữ Đế',[['⏱️','Cứ {{15–25 giây}} ở trạng thái thường, boss vào Thông Suốt kéo dài {{40 giây}}.'],['⚡','Mũi tên bay gần như tức thời (chỉ thấy một tia sáng): phải né ngay khi thấy đường ngắm.'],['💔','Boss kháng chỉ còn {{-15%}}: dồn sát thương!'],['🆕','Có thêm chiêu Thiên Hỏa Tiễn Vũ: khoảng {{80 mũi}} tên lửa dày đặc trong {{5 giây}}, mỗi mũi chỉ {{7}} sát thương.']],{t:'bar',dur:9,st:[[0,'🏹'],[2.6,'👑'],[7.6,'🏹']],bars:[{n:'Thời gian Thông Suốt',c:'#fde68a',kf:[[0,0],[2.5,0],[2.6,1],[7.5,0],[9,0]],u:40,s:'s'}],ev:[[.2,'Trạng thái thường: kháng 30%'],[2.7,'THÔNG SUỐT: mũi tên cực nhanh, kháng −15%'],[4.5,'Né ngay khi thấy đường ngắm, rồi dồn đòn!'],[7.6,'Hết 40 giây: về trạng thái thường']]}),
- gM('🌬️ Thoái Quang Bộ',[['👥','Khi từ {{2 người chơi}} trở lên áp sát (trong {{300}}), boss lập tức lùi rất xa.'],['✂️','Boss cắt ngang chiêu đang tụ (trừ Thiên Lộ Tiễn và Thiên Hỏa Tiễn Vũ).'],['🏹','Rồi phản công ngay: hãy sẵn sàng né.'],['⏳','Chiêu này hồi {{7 giây}}: đừng cả đội cùng bu sát.']],{t:'bar',dur:8,st:[[0,'🏹'],[1.6,'💨'],[3,'🏹']],bars:[{n:'Hồi chiêu lùi (7 giây)',c:'#60a5fa',kf:[[0,0],[1.5,0],[1.6,1],[8,0]],u:7,s:'s'}],ev:[[.2,'2 người cùng áp sát boss'],[1.7,'Boss lùi rất xa, cắt ngang chiêu'],[3.2,'Rồi phản công: hãy sẵn sàng né'],[6.5,'Còn hồi chiêu ~7 giây mới lùi lại được']]})]}
+ gM('🌬️ Thoái Quang Bộ',[['👥','Khi từ {{2 người chơi}} trở lên áp sát (trong {{300}}), boss lập tức lùi rất xa.'],['✂️','Boss cắt ngang chiêu đang tụ (trừ Thiên Lộ Tiễn và Thiên Hỏa Tiễn Vũ).'],['🏹','Rồi phản công ngay: hãy sẵn sàng né.'],['⏳','Chiêu này hồi {{7 giây}}: đừng cả đội cùng bu sát.']],{t:'bar',dur:8,st:[[0,'🏹'],[1.6,'💨'],[3,'🏹']],bars:[{n:'Hồi chiêu lùi (7 giây)',c:'#60a5fa',kf:[[0,0],[1.5,0],[1.6,1],[8,0]],u:7,s:'s'}],ev:[[.2,'2 người cùng áp sát boss'],[1.7,'Boss lùi rất xa, cắt ngang chiêu'],[3.2,'Rồi phản công: hãy sẵn sàng né'],[6.5,'Còn hồi chiêu ~7 giây mới lùi lại được']]})]},
+boss_law:{lead:'Bác sĩ phẫu thuật Kikoku có 3 thanh máu. Ngoài Room bắn sét xanh; trong Room cả sân bị cắt xẻ. Cạn thanh đầu thì Room liên tục.',
+ slides:[
+ gM('🔵 Room',[['🌐','Room lớn dần từ tay boss phủ cả sân, kéo dài {{30 giây}}, hồi {{7 giây}}.'],['⚡','Boss nhanh hơn {{20%}}, người chơi bị chậm {{50%}}.'],['🗡️','Trong Room boss dùng bộ chiêu khác: Tách Chém, Thạch Cắt, Dán Trời, Gamma Knife.'],['🔁','Khi Room tan, boss quay lại chiêu sét.']],{t:'bar',dur:8,st:[[0,'🗡️'],[1.6,'🔵'],[6.5,'🗡️']],bars:[{n:'Thời gian Room (30 giây)',c:'#7dd3fc',kf:[[0,0],[1.5,0],[1.6,1],[6.5,0],[8,0]],u:30,s:'s'}],ev:[[.2,'Boss giơ tay mở Room'],[1.7,'Room phủ sân: boss +20% tốc, bạn -50% tốc'],[6.5,'Room tan, hồi 7 giây']]}),
+ gM('❤️ Ba thanh máu',[['×3','Boss có {{3 thanh máu}}, mỗi thanh {{7000}} (nhân theo độ khó).'],['🔵','Cạn thanh thứ nhất: boss dùng {{Room liên tục}} đến khi chết.'],['🛡️','Boss kháng {{20%}}.']],{t:'bar',dur:8,st:[[0,'🗡️'],[3.5,'🔵']],bars:[{n:'Thanh máu  ×3',c:'#7dd3fc',back:'#1d4ed8',kf:[[0,1],[3,0],[3.5,0],[4.2,1],[8,1]]}],ev:[[.2,'Thanh máu 1 nằm trên'],[3.3,'Hết thanh 1: Room liên tục'],[4.4,'Thanh 2 hiện ra']]})]}
 };
 
 /* ===== CẨM NANG: trình chiếu slide ===== */
@@ -8505,7 +8728,7 @@ function topPick(id){
 $('#bossPick').onclick=()=>openModePicker(TOP_IDS,SPM(bossMode)?bossMode:'boss',topPick,'🎯 Chọn Chế Độ');
 $('#modeCur').onclick=()=>{if(SPM(bossMode))openModePicker(TOP_IDS,bossMode,topPick,'🎯 Chọn Chế Độ');else openModePicker(BOSS_IDS,bossMode,setMode,'🎯 Chọn Chế Độ Boss')};
 
-const BOSS_LIST=['boss_anchor','boss_sentinel','boss_sun','boss_mahoraga','boss_beast','boss_queen'];let bossPickId='boss_anchor';
+const BOSS_LIST=['boss_anchor','boss_sentinel','boss_sun','boss_mahoraga','boss_beast','boss_queen','boss_law'];let bossPickId='boss_anchor';
 MODES.boss_anchor={n:'Kẻ Neo Sóng',e:'⚓',ac:'#38bdf8',tag:'Tham Lam Mưu Cầu Giữa Sóng Gió · Máu cơ bản 5000',pl:'1–4',title:'Kẻ Neo Sóng',sub:'',
  chips:[],
  sum:'Gã khổng lồ vác mỏ neo, ra chiêu theo xác suất. Uống đủ rượu sẽ vào trạng thái <i><b>Dũng Mãnh</b></i>.',
@@ -8552,6 +8775,14 @@ MODES.boss_queen={n:'Nữ Hoàng Săn Bắt',e:'🏹',ac:'#fde68a',tag:'Thần T
  '<i><b>Thông Suốt Nữ Đế</b></i>: sau {{15–25 giây}} ở trạng thái thường, boss vào Thông Suốt trong {{40 giây}}: mũi tên bay với <b>tốc độ ánh sáng</b> (gần như tức thời, chỉ còn tia sáng xuyên sân), tạo sóng xung kích siêu thanh, kháng giảm còn {{-15%}}, di chuyển nhanh hơn và nghỉ giữa các chiêu ngắn hơn. Boss nhận thêm chiêu:<br>– <b>Thiên Hỏa Tiễn Vũ</b>: vứt cung, giơ tay tụ lực gọi hàng loạt mũi tên lửa từ trên cao, trong khoảng {{5 giây}} bắn liên tục khoảng {{80 mũi}} (rất dày) xuống vị trí người chơi đang đứng (vị trí đổi liên tục), mỗi mũi chỉ gây {{7}} sát thương và có vòng cảnh báo ngắn',
  'Hết {{40 giây}}, boss về trạng thái thường và đếm lại {{15–25 giây}} cho lần Thông Suốt kế tiếp.'],
  win:'Hạ boss trước khi hết giờ. Sau trận có <i><b>3 biểu đồ tròn</b></i>: sát thương gây ra, lượng hồi phục, sát thương nhận.',tips:['Mũi tên thường bay thẳng và có vòng cảnh báo: đi ngang tia, đừng chạy thẳng lùi.','Thông Suốt mũi tên cực nhanh, hãy né ngay khi thấy đường ngắm hiện ra, vì mũi tên gần như không thể né khi đã bắn.','Thiên Lộ Tiễn đuổi theo bạn tới phút cuối: cứ chạy rồi đổi hướng đột ngột khi vòng đổi màu đỏ.','Kháng chỉ còn {{-15%}} trong Thông Suốt, đây là lúc dồn sát thương.']};
+MODES.boss_law={n:'Trafalgar D. Water Law',e:'🗡️',ac:'#7dd3fc',tag:'Giả Phẫu Học Sư · Máu cơ bản 7000×3',pl:'1–4',title:'Trafalgar D. Water Law',sub:'',
+ chips:[],
+ sum:'Bác sĩ phẫu thuật rút <i><b>Kikoku</b></i>, bắn sét xanh ngoài Room và mở <i><b>Room</b></i> phủ cả sân để cắt xẻ. Có {{3 thanh máu}}: cạn thanh đầu là Room chạy liên tục đến khi chết.',
+ how:[
+ 'Boss kháng {{20%}}, đi giữ khoảng cách và luôn nhìn mục tiêu. Ngoài Room có 2 chiêu:<br>– <b>Kikoku · Lôi Xạ</b>: rút kiếm chĩa vào mục tiêu, hiện tâm ngắm sét xanh, tụ lực {{1 giây}} rồi bắn tia sét thẳng tắp trong chớp mắt, dính sẽ bị nổ sét nhẹ<br>– <b>Lôi Xung Xuyên</b>: lao nhanh xuyên qua mục tiêu gần nhất, ngay sau đó sét cực hạn giáng xuống cả đường vừa lao qua, {{3 đợt}} sát thương trong {{1 giây}}',
+ '<i><b>Room</b></i>: boss mở khu vực xanh dương từ bàn tay lớn dần phủ cả sân, kéo dài {{30 giây}}, hồi {{7 giây}}. Trong Room boss nhanh hơn {{20%}}, người chơi chậm {{50%}} và boss chỉ dùng bộ chiêu Room:<br>– <b>Tách Chém</b>: {{3–8}} nhát chém quét cả Room qua tâm sân, cách nhau {{0.75 giây}}, có vệt báo trước<br>– <b>Thạch Cắt</b>: cắt ra một tảng đá lơ lửng {{3 giây}}, nâng lên rồi bay vòng cung xuống chỗ một người chơi, nổ cột khói lửa<br>– <b>Dịch Chuyển</b>: thường xuyên nhảy tới vị trí xa người chơi nhất, để lại dư ảnh và tia tím<br>– <b>Dán Trời</b>: rút kiếm lao vào người chơi xa nhất, nếu trúng sẽ bị dán lên không và chém liên hoàn {{10–15}} nhát rồi nhát kết liễu<br>– <b>Gamma Knife</b>: lướt {{10}} lần trên mép Room, {{1 giây}} sau gây sát thương lớn lên cả sân',
+ 'Khi hết thanh máu thứ nhất, boss dùng Room liên tục, không còn chiêu ngoài Room.'],
+ win:'Hạ cả 3 thanh máu trước khi hết giờ. Sau trận có <i><b>3 biểu đồ tròn</b></i>: sát thương gây ra, lượng hồi phục, sát thương nhận.',tips:['Né ngay khi thấy tâm ngắm sét xanh khóa lại.','Vệt sáng báo trước của Tách Chém: bước ra khỏi dải ngay trước nhát chém.','Đứng cách xa tảng đá bị nâng, vòng đỏ chỉ hiện khi nó bắt đầu bay.','Gamma Knife không né được: giữ đủ máu khi thấy các đường lam nối nhau.']};
 MODES.boss_mahoraga={n:'Mahoraga',e:'☸️',ac:'#cbd5e1',tag:'Bát Ác Kiếm · Dị Giới Thần Tướng · Máu cơ bản 5000',pl:'1–4',title:'Mahoraga',sub:'',
  chips:[],
  sum:'Thần tướng thích nghi với mọi đòn đánh: bị dồn sát thương càng lâu, <i><b>Thanh Thích Nghi</b></i> càng đầy và kháng càng cao, cho tới khi vào <i><b>Siêu Thích Ứng</b></i>.',
